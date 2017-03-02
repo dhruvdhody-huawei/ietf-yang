@@ -1,0 +1,55 @@
+module: ietf-te-service-mapping
+    +--rw te-service-mapping
+    |  +--rw service-mapping
+    |  |  +--rw mapping-list* [map-id]
+    |  |     +--rw map-id            uint32
+    |  |     +--rw map-type?         map-type
+    |  |     +--rw (service)?
+    |  |     |  +--:(l3vpn)
+    |  |     |  |  +--rw l3vpn-ref?        -> /l3:l3vpn-svc/vpn-services/vpn-service/vpn-id
+    |  |     |  +--:(l2vpn)
+    |  |     |     +--rw l2vpn-ref?        -> /l2:l2vpn-svc/vpn-services/vpn-svc/vpn-id
+    |  |     +--rw (te)?
+    |  |        +--:(actn-vn)
+    |  |        |  +--rw actn-vn-ref?      -> /vn:actn/vn/vn-list/vn-id
+    |  |        +--:(te)
+    |  |           +--rw te-tunnel-list*   te:tunnel-ref
+    |  +--rw site-mapping
+    |     +--rw mapping-list* [map-id]
+    |        +--rw map-id         uint32
+    |        +--rw (service)?
+    |        |  +--:(l3vpn)
+    |        |  |  +--rw l3vpn-ref?     -> /l3:l3vpn-svc/sites/site/site-id
+    |        |  +--:(l2vpn)
+    |        |     +--rw l2vpn-ref?     -> /l2:l2vpn-svc/sites/site/site-id
+    |        +--rw (te)?
+    |           +--:(actn-vn)
+    |           |  +--rw actn-vn-ref?   -> /vn:actn/ap/access-point-list/access-point-id
+    |           +--:(te)
+    +--ro te-service-mapping-state
+       +--ro service-mapping
+       |  +--ro mapping-list* [map-id]
+       |     +--ro map-id            uint32
+       |     +--ro map-type?         map-type
+       |     +--ro (service)?
+       |     |  +--:(l3vpn)
+       |     |  |  +--ro l3vpn-ref?        -> /l3:l3vpn-svc/vpn-services/vpn-service/vpn-id
+       |     |  +--:(l2vpn)
+       |     |     +--ro l2vpn-ref?        -> /l2:l2vpn-svc/vpn-services/vpn-svc/vpn-id
+       |     +--ro (te)?
+       |        +--:(actn-vn)
+       |        |  +--ro actn-vn-ref?      -> /vn:actn/vn/vn-list/vn-id
+       |        +--:(te)
+       |           +--ro te-tunnel-list*   te:tunnel-ref
+       +--ro site-mapping
+          +--ro mapping-list* [map-id]
+             +--ro map-id         uint32
+             +--ro (service)?
+             |  +--:(l3vpn)
+             |  |  +--ro l3vpn-ref?     -> /l3:l3vpn-svc/sites/site/site-id
+             |  +--:(l2vpn)
+             |     +--ro l2vpn-ref?     -> /l2:l2vpn-svc/sites/site/site-id
+             +--ro (te)?
+                +--:(actn-vn)
+                |  +--ro actn-vn-ref?   -> /vn:actn/ap/access-point-list/access-point-id
+                +--:(te)
