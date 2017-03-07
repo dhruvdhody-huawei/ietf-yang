@@ -36,7 +36,7 @@
            architecture where the CNC is the actor of a VN Instantiation
            /modification /deletion.";
 
-       revision 2016-10-29 {
+       revision 2017-03-07 {
            description
                "initial version.";
            reference
@@ -61,12 +61,6 @@
             "loss path metric";
         }
 
-        identity path-metric-hop {
-          base te-types:path-metric-type;
-          description
-            "hop path metric";
-        }
-
        /*
         * Groupings
         */
@@ -86,19 +80,12 @@
                    "ap name";
            }
            leaf max-bandwidth {
-               type decimal64 {
-
-                   fraction-digits 2;
-                   range "0..max";
-               }
+               type tet:te-bandwidth;		
                description
                    "max bandwidth of the AP";
            }
            leaf avl-bandwidth {
-               type decimal64 {
-                   fraction-digits 2;
-                   range "0..max";
-               }
+               type tet:te-bandwidth;
                description
                    "available bandwidth of the AP";
            }
@@ -249,11 +236,7 @@
            uses metrics;
 
            leaf bandwidth {
-               type decimal64 {
-                   fraction-digits 2;
-
-                   range "0..max";
-               }
+               type tet:te-bandwidth;
                description
                    "bandwidth requested/required for
                    vn-member-id";
