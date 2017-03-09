@@ -79,6 +79,18 @@
                description
                    "ap name";
            }
+           /*using direct tp-id for now as per ietf-te
+             should check if reference is better*/
+           leaf src-tp-id {
+		      type binary;
+		      description
+		        "TE tunnel source termination point identifier.";
+		   } 
+		   leaf dst-tp-id {
+		      type binary;
+		      description
+		        "TE tunnel destination termination point identifier.";
+		   }
            leaf max-bandwidth {
                type tet:te-bandwidth;		
                description
@@ -93,8 +105,6 @@
            not associated by a VN
            CE port, PE port etc.
 
-           This link may not be in the TE topology model(?)
-           thus reference to that model would be incorrect
            */
        }//access-point
 

@@ -4,6 +4,8 @@ module: ietf-actn-vn
     |  |  +--rw access-point-list* [access-point-id]
     |  |     +--rw access-point-id      uint32
     |  |     +--rw access-point-name?   string
+    |  |     +--rw src-tp-id?           binary
+    |  |     +--rw dst-tp-id?           binary
     |  |     +--rw max-bandwidth?       tet:te-bandwidth
     |  |     +--rw avl-bandwidth?       tet:te-bandwidth
     |  +--rw vn
@@ -40,6 +42,8 @@ module: ietf-actn-vn
        |  +--ro access-point-list* [access-point-id]
        |     +--ro access-point-id      uint32
        |     +--ro access-point-name?   string
+       |     +--ro src-tp-id?           binary
+       |     +--ro dst-tp-id?           binary
        |     +--ro max-bandwidth?       tet:te-bandwidth
        |     +--ro avl-bandwidth?       tet:te-bandwidth
        +--ro vn
