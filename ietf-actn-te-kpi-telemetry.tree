@@ -1,0 +1,43 @@
+module: ietf-actn-te-kpi-telemetry
+  augment /actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list:
+    +--ro vn-telemetry
+       +--ro one-way-delay?             uint32
+       +--ro two-way-delay?             uint32
+       +--ro one-way-delay-min?         uint32
+       +--ro one-way-delay-max?         uint32
+       +--ro two-way-delay-min?         uint32
+       +--ro two-way-delay-max?         uint32
+       +--ro one-way-delay-variation?   uint32
+       +--ro two-way-delay-variation?   uint32
+       +--ro one-way-packet-loss?       decimal64
+       +--ro two-way-packet-loss?       decimal64
+       +--ro utilized-bandwidth?        tet:te-bandwidth
+  augment /actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list/actn-vn:vn-member-list:
+    +--ro vn-telemetry
+       +--ro one-way-delay?             uint32
+       +--ro two-way-delay?             uint32
+       +--ro one-way-delay-min?         uint32
+       +--ro one-way-delay-max?         uint32
+       +--ro two-way-delay-min?         uint32
+       +--ro two-way-delay-max?         uint32
+       +--ro one-way-delay-variation?   uint32
+       +--ro two-way-delay-variation?   uint32
+       +--ro one-way-packet-loss?       decimal64
+       +--ro two-way-packet-loss?       decimal64
+       +--ro utilized-bandwidth?        tet:te-bandwidth
+  augment /actn-vn:actn/actn-vn:vn/actn-vn:vn-list:
+    +--rw vn-scaling-intent
+       +--rw scale-in-intent
+       |  +--rw threshold-time?      uint32
+       |  +--rw cooldown-time?       uint32
+       |  +--rw operation-type?      scaling-criteria-operation
+       |  +--rw scaling-condition* [performance-type]
+       |     +--rw performance-type     identityref
+       |     +--rw performance-value?   binary
+       +--rw scale-out-intent
+          +--rw threshold-time?      uint32
+          +--rw cooldown-time?       uint32
+          +--rw operation-type?      scaling-criteria-operation
+          +--rw scaling-condition* [performance-type]
+             +--rw performance-type     identityref
+             +--rw performance-value?   binary

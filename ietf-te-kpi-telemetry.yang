@@ -9,23 +9,24 @@ module ietf-te-kpi-telemetry {
         prefix "te";
     }
     
-   import ietf-te-topology {
-       prefix "tet";
+   import ietf-routing-types {
+       prefix "rt";
    }
 
     organization
-        "IETF PCE (Path Computation Element) Working Group";
+        "IETF Traffic Engineering Architecture and Signaling (TEAS)
+        Working Group";
 
     contact
         "Editor: Young Lee <leeyoung@huawei.com>
          Editor: Dhruv Dhody <dhruv.ietf@gmail.com>
          Editor: Ricard Vilalta <ricard.vilalta@cttc.es>
-         Editor: Satish Karunanithi <satish.Karunanithi@gmail.com>";
+         Editor: Satish Karunanithi <satish.karunanithi@gmail.com>";
 
     description
         "This module describes telemetry for teas tunnel model";
 
-    revision 2017-03-09 {
+    revision 2017-03-10 {
         description
             "Initial revision. This YANG file defines
             the reusable base types for TE telemetry.";
@@ -223,10 +224,12 @@ module ietf-te-kpi-telemetry {
         description
 			"Base telemetry bandwidth parameters";
 	    leaf utilized-bandwidth {
-            type tet:te-bandwidth;
+            type rt:bandwidth-ieee-float32;
 			description
 		   		"To specify utilized bandwidth over the specified source
-            	 and destination in bytes per second.";
+            	 and destination in bytes per seconds.";
+            reference
+                "RFC 3471";     
 	    }
 	}
 
