@@ -1323,6 +1323,8 @@ module ietf-te-topology {
             "Identifies the tunnel termination points, that this
              tunnel termination point is depending on.";
           leaf node-ref {
+            type string;
+            /*            
             type union {
               type leafref {
                 path "../../../../nw:supporting-node/nw:node-ref";
@@ -1344,12 +1346,14 @@ module ietf-te-topology {
                   "network-ref]/nw:node/nw:node-id";
                 require-instance false;
               }
-            }
+            }*/
             description
               "This leaf identifies in which node the supporting
                tunnel termination point is present.";
           }
           leaf tunnel-tp-ref {
+            type string;
+            /*
             type union {
               type leafref {
                 path "/nw:networks/nw:network"+
@@ -1380,7 +1384,7 @@ module ietf-te-topology {
                   "tunnel-termination-point/tunnel-tp-id";
                 require-instance false;
               }
-            }
+            }*/
             description
               "Reference to the underlay node, must be in a
                different topology";

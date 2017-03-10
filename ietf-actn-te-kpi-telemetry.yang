@@ -26,7 +26,7 @@ module ietf-actn-te-kpi-telemetry {
         "This module describes telemetry for actn vn model";
     
     
-    revision 2017-03-09 {
+    revision 2017-03-10 {
         description
             "Initial revision. This YANG file defines
             the ACTN VN telemetry.";
