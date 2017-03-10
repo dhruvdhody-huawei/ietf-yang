@@ -1,0 +1,463 @@
+> list
+List of the loaded models (mod-set-id 18):
+	ietf-yang-metadata@2016-08-05
+	yang@2017-02-20
+	ietf-inet-types@2013-07-15
+	ietf-yang-types@2013-07-15
+	ietf-yang-library@2016-06-21
+	ietf-netconf-acm@2012-02-22
+	ietf-te-types@2016-10-26
+	ietf-network@2017-03-01
+	ietf-network-topology@2017-03-01
+	ietf-interfaces@2014-05-08
+	ietf-routing@2016-08-18
+	ietf-mpls@2016-07-05
+	ietf-te-mpls-types@2016-10-26
+	ietf-te@2016-10-26
+	ietf-key-chain@2017-01-20
+	ietf-pcep@2017-03-09
+	ietf-pcep-stats@2017-03-09
+
+> print ietf-pcep
+module: ietf-pcep
+    +--rw pcep!
+    |  +--rw entity
+    |     +--rw addr                          ietf-inet-types:ip-address
+    |     +--rw enabled?                      boolean <true>
+    |     +--rw role                          pcep-role
+    |     +--rw description?                  string
+    |     +--rw domain
+    |     |  +--rw domain* [domain-type domain]
+    |     |     +--rw domain-type    domain-type
+    |     |     +--rw domain         domain
+    |     +--rw capability
+    |     |  +--rw bi-dir?                boolean
+    |     |  +--rw diverse?               boolean
+    |     |  +--rw load-balance?          boolean
+    |     |  +--rw add-path-constraint?   boolean
+    |     |  +--rw prioritization?        boolean
+    |     |  +--rw multi-request?         boolean
+    |     +--rw pce-info
+    |     |  +--rw scope
+    |     |  |  +--rw intra-area-scope?           boolean <true>
+    |     |  |  +--rw intra-area-pref?            uint8
+    |     |  |  +--rw inter-area-scope?           boolean <false>
+    |     |  |  +--rw inter-area-scope-default?   boolean <false>
+    |     |  |  +--rw inter-area-pref?            uint8
+    |     |  |  +--rw inter-as-scope?             boolean <false>
+    |     |  |  +--rw inter-as-scope-default?     boolean <false>
+    |     |  |  +--rw inter-as-pref?              uint8
+    |     |  |  +--rw inter-layer-scope?          boolean <false>
+    |     |  |  +--rw inter-layer-pref?           uint8
+    |     |  +--rw neigh-domains
+    |     |     +--rw domain* [domain-type domain]
+    |     |        +--rw domain-type    domain-type
+    |     |        +--rw domain         domain
+    |     +--rw (auth-type-selection)?
+    |     |  +--:(auth-key-chain)
+    |     |  |  +--rw key-chain?        ietf-key-chain:key-chain-ref
+    |     |  +--:(auth-key)
+    |     |     +--rw key?              string
+    |     |     +--rw crypto-algorithm
+    |     |        +--rw (algorithm)?
+    |     |           +--:(md5)
+    |     |           |  +--rw md5?                      empty
+    |     |           +--:(sha-1)
+    |     |           |  +--rw sha-1?                    empty
+    |     |           +--:(hmac-sha-1)
+    |     |           |  +--rw hmac-sha-1?               empty
+    |     |           +--:(hmac-sha-256)
+    |     |           |  +--rw hmac-sha-256?             empty
+    |     |           +--:(hmac-sha-384)
+    |     |           |  +--rw hmac-sha-384?             empty
+    |     |           +--:(hmac-sha-512)
+    |     |              +--rw hmac-sha-512?             empty
+    |     +--rw connect-timer?                uint32 <60>
+    |     +--rw connect-max-retry?            uint32 <5>
+    |     +--rw init-backoff-timer?           uint32
+    |     +--rw max-backoff-timer?            uint32
+    |     +--rw open-wait-timer?              uint32 <60>
+    |     +--rw keep-wait-timer?              uint32 <60>
+    |     +--rw keep-alive-timer?             uint32 <30>
+    |     +--rw dead-timer?                   uint32 <120>
+    |     +--rw allow-negotiation?            boolean
+    |     +--rw max-keep-alive-timer?         uint32
+    |     +--rw max-dead-timer?               uint32
+    |     +--rw min-keep-alive-timer?         uint32
+    |     +--rw min-dead-timer?               uint32
+    |     +--rw request-timer?                uint32
+    |     +--rw max-sessions?                 uint32
+    |     +--rw max-unknown-reqs?             uint32 <5>
+    |     +--rw max-unknown-msgs?             uint32 <5>
+    |     +--rw pcep-notification-max-rate    uint32
+    |     +--rw peers
+    |        +--rw peer* [addr]
+    |           +--rw addr                   ietf-inet-types:ip-address
+    |           +--rw description?           string
+    |           +--rw domain
+    |           |  +--rw domain* [domain-type domain]
+    |           |     +--rw domain-type    domain-type
+    |           |     +--rw domain         domain
+    |           +--rw capability
+    |           |  +--rw bi-dir?                boolean
+    |           |  +--rw diverse?               boolean
+    |           |  +--rw load-balance?          boolean
+    |           |  +--rw add-path-constraint?   boolean
+    |           |  +--rw prioritization?        boolean
+    |           |  +--rw multi-request?         boolean
+    |           +--rw scope
+    |           |  +--rw intra-area-scope?           boolean <true>
+    |           |  +--rw intra-area-pref?            uint8
+    |           |  +--rw inter-area-scope?           boolean <false>
+    |           |  +--rw inter-area-scope-default?   boolean <false>
+    |           |  +--rw inter-area-pref?            uint8
+    |           |  +--rw inter-as-scope?             boolean <false>
+    |           |  +--rw inter-as-scope-default?     boolean <false>
+    |           |  +--rw inter-as-pref?              uint8
+    |           |  +--rw inter-layer-scope?          boolean <false>
+    |           |  +--rw inter-layer-pref?           uint8
+    |           +--rw neigh-domains
+    |           |  +--rw domain* [domain-type domain]
+    |           |     +--rw domain-type    domain-type
+    |           |     +--rw domain         domain
+    |           +--rw (auth-type-selection)?
+    |              +--:(auth-key-chain)
+    |              |  +--rw key-chain?        ietf-key-chain:key-chain-ref
+    |              +--:(auth-key)
+    |                 +--rw key?              string
+    |                 +--rw crypto-algorithm
+    |                    +--rw (algorithm)?
+    |                       +--:(md5)
+    |                       |  +--rw md5?                      empty
+    |                       +--:(sha-1)
+    |                       |  +--rw sha-1?                    empty
+    |                       +--:(hmac-sha-1)
+    |                       |  +--rw hmac-sha-1?               empty
+    |                       +--:(hmac-sha-256)
+    |                       |  +--rw hmac-sha-256?             empty
+    |                       +--:(hmac-sha-384)
+    |                       |  +--rw hmac-sha-384?             empty
+    |                       +--:(hmac-sha-512)
+    |                          +--rw hmac-sha-512?             empty
+    +--ro pcep-state
+       +--ro entity
+          +--ro addr?                   ietf-inet-types:ip-address
+          +--ro index?                  uint32
+          +--ro admin-status?           pcep-admin-status
+          +--ro oper-status?            pcep-admin-status
+          +--ro role?                   pcep-role
+          +--ro description?            string
+          +--ro domain
+          |  +--ro domain* [domain-type domain]
+          |     +--ro domain-type    domain-type
+          |     +--ro domain         domain
+          +--ro capability
+          |  +--ro bi-dir?                boolean
+          |  +--ro diverse?               boolean
+          |  +--ro load-balance?          boolean
+          |  +--ro add-path-constraint?   boolean
+          |  +--ro prioritization?        boolean
+          |  +--ro multi-request?         boolean
+          +--ro pce-info
+          |  +--ro scope
+          |  |  +--ro intra-area-scope?           boolean <true>
+          |  |  +--ro intra-area-pref?            uint8
+          |  |  +--ro inter-area-scope?           boolean <false>
+          |  |  +--ro inter-area-scope-default?   boolean <false>
+          |  |  +--ro inter-area-pref?            uint8
+          |  |  +--ro inter-as-scope?             boolean <false>
+          |  |  +--ro inter-as-scope-default?     boolean <false>
+          |  |  +--ro inter-as-pref?              uint8
+          |  |  +--ro inter-layer-scope?          boolean <false>
+          |  |  +--ro inter-layer-pref?           uint8
+          |  +--ro neigh-domains
+          |     +--ro domain* [domain-type domain]
+          |        +--ro domain-type    domain-type
+          |        +--ro domain         domain
+          +--ro (auth-type-selection)?
+          |  +--:(auth-key-chain)
+          |  |  +--ro key-chain?        ietf-key-chain:key-chain-ref
+          |  +--:(auth-key)
+          |     +--ro key?              string
+          |     +--ro crypto-algorithm
+          |        +--ro (algorithm)?
+          |           +--:(md5)
+          |           |  +--ro md5?                      empty
+          |           +--:(sha-1)
+          |           |  +--ro sha-1?                    empty
+          |           +--:(hmac-sha-1)
+          |           |  +--ro hmac-sha-1?               empty
+          |           +--:(hmac-sha-256)
+          |           |  +--ro hmac-sha-256?             empty
+          |           +--:(hmac-sha-384)
+          |           |  +--ro hmac-sha-384?             empty
+          |           +--:(hmac-sha-512)
+          |              +--ro hmac-sha-512?             empty
+          +--ro connect-timer?          uint32 <60>
+          +--ro connect-max-retry?      uint32 <5>
+          +--ro init-backoff-timer?     uint32
+          +--ro max-backoff-timer?      uint32
+          +--ro open-wait-timer?        uint32 <60>
+          +--ro keep-wait-timer?        uint32 <60>
+          +--ro keep-alive-timer?       uint32 <30>
+          +--ro dead-timer?             uint32 <120>
+          +--ro allow-negotiation?      boolean
+          +--ro max-keep-alive-timer?   uint32
+          +--ro max-dead-timer?         uint32
+          +--ro min-keep-alive-timer?   uint32
+          +--ro min-dead-timer?         uint32
+          +--ro request-timer?          uint32
+          +--ro max-sessions?           uint32
+          +--ro max-unknown-reqs?       uint32 <5>
+          +--ro max-unknown-msgs?       uint32 <5>
+          +--ro peers
+             +--ro peer* [addr]
+                +--ro addr                                   ietf-inet-types:ip-address
+                +--ro role?                                  pcep-role
+                +--ro domain
+                |  +--ro domain* [domain-type domain]
+                |     +--ro domain-type    domain-type
+                |     +--ro domain         domain
+                +--ro capability
+                |  +--ro bi-dir?                boolean
+                |  +--ro diverse?               boolean
+                |  +--ro load-balance?          boolean
+                |  +--ro add-path-constraint?   boolean
+                |  +--ro prioritization?        boolean
+                |  +--ro multi-request?         boolean
+                +--ro pce-info
+                |  +--ro scope
+                |  |  +--ro intra-area-scope?           boolean <true>
+                |  |  +--ro intra-area-pref?            uint8
+                |  |  +--ro inter-area-scope?           boolean <false>
+                |  |  +--ro inter-area-scope-default?   boolean <false>
+                |  |  +--ro inter-area-pref?            uint8
+                |  |  +--ro inter-as-scope?             boolean <false>
+                |  |  +--ro inter-as-scope-default?     boolean <false>
+                |  |  +--ro inter-as-pref?              uint8
+                |  |  +--ro inter-layer-scope?          boolean <false>
+                |  |  +--ro inter-layer-pref?           uint8
+                |  +--ro neigh-domains
+                |     +--ro domain* [domain-type domain]
+                |        +--ro domain-type    domain-type
+                |        +--ro domain         domain
+                +--ro (auth-type-selection)?
+                |  +--:(auth-key-chain)
+                |  |  +--ro key-chain?        ietf-key-chain:key-chain-ref
+                |  +--:(auth-key)
+                |     +--ro key?              string
+                |     +--ro crypto-algorithm
+                |        +--ro (algorithm)?
+                |           +--:(md5)
+                |           |  +--ro md5?                      empty
+                |           +--:(sha-1)
+                |           |  +--ro sha-1?                    empty
+                |           +--:(hmac-sha-1)
+                |           |  +--ro hmac-sha-1?               empty
+                |           +--:(hmac-sha-256)
+                |           |  +--ro hmac-sha-256?             empty
+                |           +--:(hmac-sha-384)
+                |           |  +--ro hmac-sha-384?             empty
+                |           +--:(hmac-sha-512)
+                |              +--ro hmac-sha-512?             empty
+                +--ro discontinuity-time?                    ietf-yang-types:timestamp
+                +--ro initiate-session?                      boolean
+                +--ro session-exists?                        boolean
+                +--ro session-up-time?                       ietf-yang-types:timestamp
+                +--ro session-fail-time?                     ietf-yang-types:timestamp
+                +--ro session-fail-up-time?                  ietf-yang-types:timestamp
+                +--ro sessions
+                   +--ro session* [initiator]
+                      +--ro initiator                     pcep-initiator
+                      +--ro role?                         -> ../../../role
+                      +--ro state-last-change?            ietf-yang-types:timestamp
+                      +--ro state?                        pcep-sess-state
+                      +--ro session-creation?             ietf-yang-types:timestamp
+                      +--ro connect-retry?                ietf-yang-types:counter32
+                      +--ro local-id?                     uint32
+                      +--ro remote-id?                    uint32
+                      +--ro keepalive-timer?              uint32
+                      +--ro peer-keepalive-timer?         uint32
+                      +--ro dead-timer?                   uint32
+                      +--ro peer-dead-timer?              uint32
+                      +--ro ka-hold-time-rem?             uint32
+                      +--ro overloaded?                   boolean
+                      +--ro overload-time?                uint32
+                      +--ro peer-overloaded?              boolean
+                      +--ro peer-overload-time?           uint32
+                      +--ro discontinuity-time?           ietf-yang-types:timestamp
+                      +--ro ietf-pcep-stats:pcep-stats
+                         +--ro ietf-pcep-stats:avg-rsp-time?               uint32
+                         +--ro ietf-pcep-stats:lwm-rsp-time?               uint32
+                         +--ro ietf-pcep-stats:hwm-rsp-time?               uint32
+                         +--ro ietf-pcep-stats:num-pcreq-sent?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-pcreq-rcvd?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-pcrep-sent?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-pcrep-rcvd?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-pcerr-sent?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-pcerr-rcvd?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-pcntf-sent?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-pcntf-rcvd?             ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-keepalive-sent?         ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-keepalive-rcvd?         ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-unknown-rcvd?           ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-corrupt-rcvd?           ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent?               ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent-pend-rep?      ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent-ero-rcvd?      ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent-nopath-rcvd?   ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent-cancel-rcvd?   ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent-error-rcvd?    ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent-timeout?       ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-sent-cancel-sent?   ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd?               ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd-pend-rep?      ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd-ero-sent?      ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd-nopath-sent?   ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd-cancel-sent?   ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd-error-sent?    ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd-cancel-rcvd?   ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-rep-rcvd-unknown?       ietf-yang-types:counter32
+                         +--ro ietf-pcep-stats:num-req-rcvd-unknown?       ietf-yang-types:counter32
+                +--ro ietf-pcep-stats:num-sess-setup-ok?     ietf-yang-types:counter32
+                +--ro ietf-pcep-stats:num-sess-setup-fail?   ietf-yang-types:counter32
+                +--ro ietf-pcep-stats:pcep-stats
+                   +--ro ietf-pcep-stats:avg-rsp-time?               uint32
+                   +--ro ietf-pcep-stats:lwm-rsp-time?               uint32
+                   +--ro ietf-pcep-stats:hwm-rsp-time?               uint32
+                   +--ro ietf-pcep-stats:num-pcreq-sent?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-pcreq-rcvd?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-pcrep-sent?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-pcrep-rcvd?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-pcerr-sent?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-pcerr-rcvd?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-pcntf-sent?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-pcntf-rcvd?             ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-keepalive-sent?         ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-keepalive-rcvd?         ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-unknown-rcvd?           ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-corrupt-rcvd?           ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent?               ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-pend-rep?      ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-ero-rcvd?      ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-nopath-rcvd?   ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-cancel-rcvd?   ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-error-rcvd?    ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-timeout?       ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-cancel-sent?   ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd?               ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-pend-rep?      ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-ero-sent?      ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-nopath-sent?   ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-cancel-sent?   ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-error-sent?    ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-cancel-rcvd?   ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-rep-rcvd-unknown?       ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-unknown?       ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-sent-closed?        ietf-yang-types:counter32
+                   +--ro ietf-pcep-stats:num-req-rcvd-closed?        ietf-yang-types:counter32
+
+  notifications:
+    +---n pcep-session-up
+    |  +--ro peer-addr?           -> /pcep-state/entity/peers/peer/addr
+    |  +--ro session-initiator?   -> /pcep-state/entity/peers/peer/sessions/session/initiator
+    |  +--ro state-last-change?   ietf-yang-types:timestamp
+    |  +--ro state?               pcep-sess-state
+    +---n pcep-session-down
+    |  +--ro peer-addr?           -> /pcep-state/entity/peers/peer/addr
+    |  +--ro session-initiator?   pcep-initiator
+    |  +--ro state-last-change?   ietf-yang-types:timestamp
+    |  +--ro state?               pcep-sess-state
+    +---n pcep-session-local-overload
+    |  +--ro peer-addr?           -> /pcep-state/entity/peers/peer/addr
+    |  +--ro session-initiator?   -> /pcep-state/entity/peers/peer/sessions/session/initiator
+    |  +--ro overloaded?          boolean
+    |  +--ro overload-time?       uint32
+    +---n pcep-session-local-overload-clear
+    |  +--ro peer-addr?    -> /pcep-state/entity/peers/peer/addr
+    |  +--ro overloaded?   boolean
+    +---n pcep-session-peer-overload
+    |  +--ro peer-addr?            -> /pcep-state/entity/peers/peer/addr
+    |  +--ro session-initiator?    -> /pcep-state/entity/peers/peer/sessions/session/initiator
+    |  +--ro peer-overloaded?      boolean
+    |  +--ro peer-overload-time?   uint32
+    +---n pcep-session-peer-overload-clear
+       +--ro peer-addr?         -> /pcep-state/entity/peers/peer/addr
+       +--ro peer-overloaded?   boolean
+> print ietf-pcep-stats
+module: ietf-pcep-stats
+
+  augment /ietf-pcep:pcep-state/ietf-pcep:entity/ietf-pcep:peers/ietf-pcep:peer:
+    +--ro num-sess-setup-ok?              ietf-yang-types:counter32
+    +--ro num-sess-setup-fail?                ietf-yang-types:counter32
+    +--ro pcep-stats
+       +--ro avg-rsp-time?               uint32
+       +--ro lwm-rsp-time?               uint32
+       +--ro hwm-rsp-time?               uint32
+       +--ro num-pcreq-sent?             ietf-yang-types:counter32
+       +--ro num-pcreq-rcvd?             ietf-yang-types:counter32
+       +--ro num-pcrep-sent?             ietf-yang-types:counter32
+       +--ro num-pcrep-rcvd?             ietf-yang-types:counter32
+       +--ro num-pcerr-sent?             ietf-yang-types:counter32
+       +--ro num-pcerr-rcvd?             ietf-yang-types:counter32
+       +--ro num-pcntf-sent?             ietf-yang-types:counter32
+       +--ro num-pcntf-rcvd?             ietf-yang-types:counter32
+       +--ro num-keepalive-sent?         ietf-yang-types:counter32
+       +--ro num-keepalive-rcvd?         ietf-yang-types:counter32
+       +--ro num-unknown-rcvd?           ietf-yang-types:counter32
+       +--ro num-corrupt-rcvd?           ietf-yang-types:counter32
+       +--ro num-req-sent?               ietf-yang-types:counter32
+       +--ro num-req-sent-pend-rep?      ietf-yang-types:counter32
+       +--ro num-req-sent-ero-rcvd?      ietf-yang-types:counter32
+       +--ro num-req-sent-nopath-rcvd?   ietf-yang-types:counter32
+       +--ro num-req-sent-cancel-rcvd?   ietf-yang-types:counter32
+       +--ro num-req-sent-error-rcvd?    ietf-yang-types:counter32
+       +--ro num-req-sent-timeout?       ietf-yang-types:counter32
+       +--ro num-req-sent-cancel-sent?   ietf-yang-types:counter32
+       +--ro num-req-rcvd?               ietf-yang-types:counter32
+       +--ro num-req-rcvd-pend-rep?      ietf-yang-types:counter32
+       +--ro num-req-rcvd-ero-sent?      ietf-yang-types:counter32
+       +--ro num-req-rcvd-nopath-sent?   ietf-yang-types:counter32
+       +--ro num-req-rcvd-cancel-sent?   ietf-yang-types:counter32
+       +--ro num-req-rcvd-error-sent?    ietf-yang-types:counter32
+       +--ro num-req-rcvd-cancel-rcvd?   ietf-yang-types:counter32
+       +--ro num-rep-rcvd-unknown?       ietf-yang-types:counter32
+       +--ro num-req-rcvd-unknown?       ietf-yang-types:counter32
+       +--ro num-req-sent-closed?        ietf-yang-types:counter32
+       +--ro num-req-rcvd-closed?        ietf-yang-types:counter32
+
+  augment /ietf-pcep:pcep-state/ietf-pcep:entity/ietf-pcep:peers/ietf-pcep:peer/ietf-pcep:sessions/ietf-pcep:session:
+    +--ro pcep-stats
+       +--ro avg-rsp-time?               uint32
+       +--ro lwm-rsp-time?               uint32
+       +--ro hwm-rsp-time?               uint32
+       +--ro num-pcreq-sent?             ietf-yang-types:counter32
+       +--ro num-pcreq-rcvd?             ietf-yang-types:counter32
+       +--ro num-pcrep-sent?             ietf-yang-types:counter32
+       +--ro num-pcrep-rcvd?             ietf-yang-types:counter32
+       +--ro num-pcerr-sent?             ietf-yang-types:counter32
+       +--ro num-pcerr-rcvd?             ietf-yang-types:counter32
+       +--ro num-pcntf-sent?             ietf-yang-types:counter32
+       +--ro num-pcntf-rcvd?             ietf-yang-types:counter32
+       +--ro num-keepalive-sent?         ietf-yang-types:counter32
+       +--ro num-keepalive-rcvd?         ietf-yang-types:counter32
+       +--ro num-unknown-rcvd?           ietf-yang-types:counter32
+       +--ro num-corrupt-rcvd?           ietf-yang-types:counter32
+       +--ro num-req-sent?               ietf-yang-types:counter32
+       +--ro num-req-sent-pend-rep?      ietf-yang-types:counter32
+       +--ro num-req-sent-ero-rcvd?      ietf-yang-types:counter32
+       +--ro num-req-sent-nopath-rcvd?   ietf-yang-types:counter32
+       +--ro num-req-sent-cancel-rcvd?   ietf-yang-types:counter32
+       +--ro num-req-sent-error-rcvd?    ietf-yang-types:counter32
+       +--ro num-req-sent-timeout?       ietf-yang-types:counter32
+       +--ro num-req-sent-cancel-sent?   ietf-yang-types:counter32
+       +--ro num-req-rcvd?               ietf-yang-types:counter32
+       +--ro num-req-rcvd-pend-rep?      ietf-yang-types:counter32
+       +--ro num-req-rcvd-ero-sent?      ietf-yang-types:counter32
+       +--ro num-req-rcvd-nopath-sent?   ietf-yang-types:counter32
+       +--ro num-req-rcvd-cancel-sent?   ietf-yang-types:counter32
+       +--ro num-req-rcvd-error-sent?    ietf-yang-types:counter32
+       +--ro num-req-rcvd-cancel-rcvd?   ietf-yang-types:counter32
+       +--ro num-rep-rcvd-unknown?       ietf-yang-types:counter32
+       +--ro num-req-rcvd-unknown?       ietf-yang-types:counter32
+> 
