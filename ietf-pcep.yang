@@ -27,6 +27,10 @@ module ietf-pcep {
        prefix "key-chain";
     }
 
+    import ietf-netconf-acm {
+       prefix nacm;
+     }    
+
 
     organization
         "IETF PCE (Path Computation Element) Working Group";
@@ -1417,17 +1421,42 @@ module ietf-pcep {
                 }
             }
             case auth-key {
-                leaf key {
-                    type string;
-                description
-                    "Key string in ASCII format.";
-                }
-                container crypto-algorithm {
-                    uses key-chain:crypto-algorithm-types;
-                        description
-                            "Cryptographic algorithm associated
-                             with key.";
-                }
+               leaf crypto-algorithm {
+                 type identityref {
+                   base key-chain:crypto-algorithm;
+                 }
+                 mandatory true;
+                 description
+                   "Cryptographic algorithm associated with key.";
+               }
+               container key-string {
+                 description
+                   "The key string.";
+                 nacm:default-deny-all;
+                 choice key-string-style {
+                   description
+                     "Key string styles";
+                   case keystring {
+                     leaf keystring {
+                       type string;
+                       description
+                         "Key string in ASCII format.";
+                     }
+                   }
+                   case hexadecimal {
+                     if-feature "key-chain:hex-key-string";
+                     leaf hexadecimal-string {
+                       type yang:hex-string;
+                       description
+                         "Key in hexadecimal string format. When compared
+                          to ASCII, specification in  hexadecimal affords
+                          greater key entropy with the same number of
+                          octets. Additionally, it discourages usage of
+                          well-known words or numbers.";
+                     }
+                   }
+                 }
+               }
             }
             case auth-tls {
                 if-feature tls;

@@ -57,29 +57,13 @@ module: ietf-pcep
     |     |  +--:(auth-key-chain)
     |     |  |  +--rw key-chain?                    key-chain:key-chain-ref
     |     |  +--:(auth-key)
-    |     |  |  +--rw key?                          string
-    |     |  |  +--rw crypto-algorithm
-    |     |  |     +--rw (algorithm)?
-    |     |  |        +--:(hmac-sha-1-12) {crypto-hmac-sha-1-12}?
-    |     |  |        |  +--rw hmac-sha1-12?             empty
-    |     |  |        +--:(aes-cmac-prf-128) {aes-cmac-prf-128}?
-    |     |  |        |  +--rw aes-cmac-prf-128?         empty
-    |     |  |        +--:(md5)
-    |     |  |        |  +--rw md5?                      empty
-    |     |  |        +--:(sha-1)
-    |     |  |        |  +--rw sha-1?                    empty
-    |     |  |        +--:(hmac-sha-1)
-    |     |  |        |  +--rw hmac-sha-1?               empty
-    |     |  |        +--:(hmac-sha-256)
-    |     |  |        |  +--rw hmac-sha-256?             empty
-    |     |  |        +--:(hmac-sha-384)
-    |     |  |        |  +--rw hmac-sha-384?             empty
-    |     |  |        +--:(hmac-sha-512)
-    |     |  |        |  +--rw hmac-sha-512?             empty
-    |     |  |        +--:(clear-text) {clear-text}?
-    |     |  |        |  +--rw clear-text?               empty
-    |     |  |        +--:(replay-protection-only) {replay-protection-only}?
-    |     |  |           +--rw replay-protection-only?   empty
+    |     |  |  +--rw crypto-algorithm              identityref
+    |     |  |  +--rw key-string
+    |     |  |     +--rw (key-string-style)?
+    |     |  |        +--:(keystring)
+    |     |  |        |  +--rw keystring?            string
+    |     |  |        +--:(hexadecimal) {key-chain:hex-key-string}?
+    |     |  |           +--rw hexadecimal-string?   yang:hex-string
     |     |  +--:(auth-tls) {tls}?
     |     |     +--rw tls
     |     +--rw connect-timer?                uint32
@@ -158,29 +142,13 @@ module: ietf-pcep
     |              +--:(auth-key-chain)
     |              |  +--rw key-chain?          key-chain:key-chain-ref
     |              +--:(auth-key)
-    |              |  +--rw key?                string
-    |              |  +--rw crypto-algorithm
-    |              |     +--rw (algorithm)?
-    |              |        +--:(hmac-sha-1-12) {crypto-hmac-sha-1-12}?
-    |              |        |  +--rw hmac-sha1-12?             empty
-    |              |        +--:(aes-cmac-prf-128) {aes-cmac-prf-128}?
-    |              |        |  +--rw aes-cmac-prf-128?         empty
-    |              |        +--:(md5)
-    |              |        |  +--rw md5?                      empty
-    |              |        +--:(sha-1)
-    |              |        |  +--rw sha-1?                    empty
-    |              |        +--:(hmac-sha-1)
-    |              |        |  +--rw hmac-sha-1?               empty
-    |              |        +--:(hmac-sha-256)
-    |              |        |  +--rw hmac-sha-256?             empty
-    |              |        +--:(hmac-sha-384)
-    |              |        |  +--rw hmac-sha-384?             empty
-    |              |        +--:(hmac-sha-512)
-    |              |        |  +--rw hmac-sha-512?             empty
-    |              |        +--:(clear-text) {clear-text}?
-    |              |        |  +--rw clear-text?               empty
-    |              |        +--:(replay-protection-only) {replay-protection-only}?
-    |              |           +--rw replay-protection-only?   empty
+    |              |  +--rw crypto-algorithm    identityref
+    |              |  +--rw key-string
+    |              |     +--rw (key-string-style)?
+    |              |        +--:(keystring)
+    |              |        |  +--rw keystring?            string
+    |              |        +--:(hexadecimal) {key-chain:hex-key-string}?
+    |              |           +--rw hexadecimal-string?   yang:hex-string
     |              +--:(auth-tls) {tls}?
     |                 +--rw tls
     +--ro pcep-state
@@ -243,29 +211,13 @@ module: ietf-pcep
           |  +--:(auth-key-chain)
           |  |  +--ro key-chain?              key-chain:key-chain-ref
           |  +--:(auth-key)
-          |  |  +--ro key?                    string
-          |  |  +--ro crypto-algorithm
-          |  |     +--ro (algorithm)?
-          |  |        +--:(hmac-sha-1-12) {crypto-hmac-sha-1-12}?
-          |  |        |  +--ro hmac-sha1-12?             empty
-          |  |        +--:(aes-cmac-prf-128) {aes-cmac-prf-128}?
-          |  |        |  +--ro aes-cmac-prf-128?         empty
-          |  |        +--:(md5)
-          |  |        |  +--ro md5?                      empty
-          |  |        +--:(sha-1)
-          |  |        |  +--ro sha-1?                    empty
-          |  |        +--:(hmac-sha-1)
-          |  |        |  +--ro hmac-sha-1?               empty
-          |  |        +--:(hmac-sha-256)
-          |  |        |  +--ro hmac-sha-256?             empty
-          |  |        +--:(hmac-sha-384)
-          |  |        |  +--ro hmac-sha-384?             empty
-          |  |        +--:(hmac-sha-512)
-          |  |        |  +--ro hmac-sha-512?             empty
-          |  |        +--:(clear-text) {clear-text}?
-          |  |        |  +--ro clear-text?               empty
-          |  |        +--:(replay-protection-only) {replay-protection-only}?
-          |  |           +--ro replay-protection-only?   empty
+          |  |  +--ro crypto-algorithm        identityref
+          |  |  +--ro key-string
+          |  |     +--ro (key-string-style)?
+          |  |        +--:(keystring)
+          |  |        |  +--ro keystring?            string
+          |  |        +--:(hexadecimal) {key-chain:hex-key-string}?
+          |  |           +--ro hexadecimal-string?   yang:hex-string
           |  +--:(auth-tls) {tls}?
           |     +--ro tls
           +--ro connect-timer?          uint32
@@ -416,29 +368,13 @@ module: ietf-pcep
                 |  +--:(auth-key-chain)
                 |  |  +--ro key-chain?              key-chain:key-chain-ref
                 |  +--:(auth-key)
-                |  |  +--ro key?                    string
-                |  |  +--ro crypto-algorithm
-                |  |     +--ro (algorithm)?
-                |  |        +--:(hmac-sha-1-12) {crypto-hmac-sha-1-12}?
-                |  |        |  +--ro hmac-sha1-12?             empty
-                |  |        +--:(aes-cmac-prf-128) {aes-cmac-prf-128}?
-                |  |        |  +--ro aes-cmac-prf-128?         empty
-                |  |        +--:(md5)
-                |  |        |  +--ro md5?                      empty
-                |  |        +--:(sha-1)
-                |  |        |  +--ro sha-1?                    empty
-                |  |        +--:(hmac-sha-1)
-                |  |        |  +--ro hmac-sha-1?               empty
-                |  |        +--:(hmac-sha-256)
-                |  |        |  +--ro hmac-sha-256?             empty
-                |  |        +--:(hmac-sha-384)
-                |  |        |  +--ro hmac-sha-384?             empty
-                |  |        +--:(hmac-sha-512)
-                |  |        |  +--ro hmac-sha-512?             empty
-                |  |        +--:(clear-text) {clear-text}?
-                |  |        |  +--ro clear-text?               empty
-                |  |        +--:(replay-protection-only) {replay-protection-only}?
-                |  |           +--ro replay-protection-only?   empty
+                |  |  +--ro crypto-algorithm        identityref
+                |  |  +--ro key-string
+                |  |     +--ro (key-string-style)?
+                |  |        +--:(keystring)
+                |  |        |  +--ro keystring?            string
+                |  |        +--:(hexadecimal) {key-chain:hex-key-string}?
+                |  |           +--ro hexadecimal-string?   yang:hex-string
                 |  +--:(auth-tls) {tls}?
                 |     +--ro tls
                 +--ro discontinuity-time?     yang:timestamp
