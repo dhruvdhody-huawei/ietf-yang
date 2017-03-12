@@ -46,7 +46,7 @@ module ietf-te {
                <mailto:hshah@ciena.com>
 
      Editor:   Xufeng Liu
-               <mailto:xufeng.liu@ericsson.com>
+               <mailto:Xufeng_Liu@jabil.com>
 
      Editor:   Xia Chen
                <mailto:jescia.chenxia@huawei.com>
@@ -61,7 +61,7 @@ module ietf-te {
     "YANG data module for TE configuration,
     state, RPC and notifications.";
 
-  revision "2016-10-26" {
+  revision "2017-03-10" {
     description "Latest update to TE generic YANG module.";
     reference "TBD";
   }
@@ -363,7 +363,8 @@ module ietf-te {
         }
         leaf extended-tunnel-id {
           type leafref {
-            path "../../../../../../../../lsps-state/lsp/extended-tunnel-id";
+            path "../../../../../../../../lsps-state/lsp/" +
+                 "extended-tunnel-id";
           }
           description
             "Extended Tunnel ID of the LSP.";
@@ -890,6 +891,12 @@ module ietf-te {
       description
         "Textual description for this TE tunnel";
     }
+    leaf encoding {
+      type identityref {
+        base te-types:lsp-encoding-types;
+      }
+      description "LSP encoding type";
+    }
     leaf protection-type {
       type identityref {
         base te-types:lsp-prot-type;
@@ -910,37 +917,6 @@ module ietf-te {
       description
         "Specifies a preference for this tunnel.
         A lower number signifies a better preference";
-    }
-    leaf metric-type {
-      type identityref {
-        base te-types:LSP_METRIC_TYPE;
-      }
-      default te-types:LSP_METRIC_INHERITED;
-      description
-        "The type of metric specification that should be used to set
-        the LSP(s) metric";
-    }
-    leaf metric {
-      type int32;
-      description
-        "The value of the metric that should be specified. The value
-        supplied in this leaf is used in conjunction with the metric
-        type to determine the value of the metric used by the system.
-        Where the metric-type is set to LSP_METRIC_ABSOLUTE - the
-        value of this leaf is used directly; where it is set to
-        LSP_METRIC_RELATIVE, the relevant (positive or negative)
-        offset is used to formulate the metric; where metric-type
-        is LSP_METRIC_INHERITED, the value of this leaf is not
-        utilised";
-    }
-    leaf shortcut-eligible {
-      type boolean;
-      default "true";
-      description
-        "Whether this LSP is considered to be eligible for us as a
-        shortcut in the IGP. In the case that this leaf is set to
-        true, the IGP SPF calculation uses the metric specified to
-        determine whether traffic should be carried over this LSP";
     }
     leaf reoptimize-timer {
       type uint16;

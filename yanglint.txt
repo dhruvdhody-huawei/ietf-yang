@@ -1,11 +1,12 @@
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-netconf-acm.yang
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-routing-types.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-types.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-network.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-network-topology.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-interfaces.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-routing.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-mpls.yang
-add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-routing-types.yang
+
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-mpls-types.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-key-chain.yang
@@ -13,8 +14,17 @@ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-pcep.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-pcep-stats.yang
 
 
-add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-kpi-telemetry.yang
+
 
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-topology.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-actn-vn.yang
+
+
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-l3vpn-svc.yang
+add /home/root1/Documents/IETF/yang/map/ietf-yang/iana-if-type.yang
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-l2vpn-svc.yang
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-service-mapping.yang
+
+
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-kpi-telemetry.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-actn-te-kpi-telemetry.yang
