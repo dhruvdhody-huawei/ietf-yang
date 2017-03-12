@@ -5,7 +5,8 @@ module: ietf-pcep
     |     +--rw enabled?                      boolean
     |     +--rw role                          pcep-role
     |     +--rw description?                  string
-    |     +--rw speaker-entity-id?            string {stateful-sync-opt}?
+    |     +--rw speaker-entity-id?            string
+    |     |       {stateful-sync-opt}?
     |     +--rw domain
     |     |  +--rw domain* [domain-type domain]
     |     |     +--rw domain-type    domain-type
@@ -16,7 +17,8 @@ module: ietf-pcep
     |     |  +--rw diverse?               boolean
     |     |  +--rw load-balance?          boolean
     |     |  +--rw synchronize?           boolean {svec}?
-    |     |  +--rw objective-function?    boolean {objective-function}?
+    |     |  +--rw objective-function?    boolean
+    |     |  |       {objective-function}?
     |     |  +--rw add-path-constraint?   boolean
     |     |  +--rw prioritization?        boolean
     |     |  +--rw multi-request?         boolean
@@ -25,11 +27,16 @@ module: ietf-pcep
     |     |  +--rw stateful {stateful}?
     |     |  |  +--rw enabled?                boolean
     |     |  |  +--rw active?                 boolean
-    |     |  |  +--rw pce-initiated?          boolean {pce-initiated}?
-    |     |  |  +--rw include-db-ver?         boolean {stateful-sync-opt}?
-    |     |  |  +--rw trigger-resync?         boolean {stateful-sync-opt}?
-    |     |  |  +--rw trigger-initial-sync?   boolean {stateful-sync-opt}?
-    |     |  |  +--rw incremental-sync?       boolean {stateful-sync-opt}?
+    |     |  |  +--rw pce-initiated?          boolean
+    |     |  |  |       {pce-initiated}?
+    |     |  |  +--rw include-db-ver?         boolean
+    |     |  |  |       {stateful-sync-opt}?
+    |     |  |  +--rw trigger-resync?         boolean
+    |     |  |  |       {stateful-sync-opt}?
+    |     |  |  +--rw trigger-initial-sync?   boolean
+    |     |  |  |       {stateful-sync-opt}?
+    |     |  |  +--rw incremental-sync?       boolean
+    |     |  |          {stateful-sync-opt}?
     |     |  +--rw sr {sr}?
     |     |     +--rw enabled?   boolean
     |     +--rw pce-info
@@ -55,14 +62,16 @@ module: ietf-pcep
     |     |     +--rw pce-id?          inet:ip-address
     |     +--rw (auth-type-selection)?
     |     |  +--:(auth-key-chain)
-    |     |  |  +--rw key-chain?                    key-chain:key-chain-ref
+    |     |  |  +--rw key-chain?
+    |     |  |          key-chain:key-chain-ref
     |     |  +--:(auth-key)
     |     |  |  +--rw crypto-algorithm              identityref
     |     |  |  +--rw key-string
     |     |  |     +--rw (key-string-style)?
     |     |  |        +--:(keystring)
     |     |  |        |  +--rw keystring?            string
-    |     |  |        +--:(hexadecimal) {key-chain:hex-key-string}?
+    |     |  |        +--:(hexadecimal)
+    |     |  |                 {key-chain:hex-key-string}?
     |     |  |           +--rw hexadecimal-string?   yang:hex-string
     |     |  +--:(auth-tls) {tls}?
     |     |     +--rw tls
@@ -106,7 +115,8 @@ module: ietf-pcep
     |           |  +--rw diverse?               boolean
     |           |  +--rw load-balance?          boolean
     |           |  +--rw synchronize?           boolean {svec}?
-    |           |  +--rw objective-function?    boolean {objective-function}?
+    |           |  +--rw objective-function?    boolean
+    |           |  |       {objective-function}?
     |           |  +--rw add-path-constraint?   boolean
     |           |  +--rw prioritization?        boolean
     |           |  +--rw multi-request?         boolean
@@ -115,11 +125,16 @@ module: ietf-pcep
     |           |  +--rw stateful {stateful}?
     |           |  |  +--rw enabled?                boolean
     |           |  |  +--rw active?                 boolean
-    |           |  |  +--rw pce-initiated?          boolean {pce-initiated}?
-    |           |  |  +--rw include-db-ver?         boolean {stateful-sync-opt}?
-    |           |  |  +--rw trigger-resync?         boolean {stateful-sync-opt}?
-    |           |  |  +--rw trigger-initial-sync?   boolean {stateful-sync-opt}?
-    |           |  |  +--rw incremental-sync?       boolean {stateful-sync-opt}?
+    |           |  |  +--rw pce-initiated?          boolean
+    |           |  |  |       {pce-initiated}?
+    |           |  |  +--rw include-db-ver?         boolean
+    |           |  |  |       {stateful-sync-opt}?
+    |           |  |  +--rw trigger-resync?         boolean
+    |           |  |  |       {stateful-sync-opt}?
+    |           |  |  +--rw trigger-initial-sync?   boolean
+    |           |  |  |       {stateful-sync-opt}?
+    |           |  |  +--rw incremental-sync?       boolean
+    |           |  |          {stateful-sync-opt}?
     |           |  +--rw sr {sr}?
     |           |     +--rw enabled?   boolean
     |           +--rw scope
@@ -140,15 +155,18 @@ module: ietf-pcep
     |           +--rw delegation-pref?    uint8 {stateful}?
     |           +--rw (auth-type-selection)?
     |              +--:(auth-key-chain)
-    |              |  +--rw key-chain?          key-chain:key-chain-ref
+    |              |  +--rw key-chain?
+    |              |          key-chain:key-chain-ref
     |              +--:(auth-key)
     |              |  +--rw crypto-algorithm    identityref
     |              |  +--rw key-string
     |              |     +--rw (key-string-style)?
     |              |        +--:(keystring)
     |              |        |  +--rw keystring?            string
-    |              |        +--:(hexadecimal) {key-chain:hex-key-string}?
-    |              |           +--rw hexadecimal-string?   yang:hex-string
+    |              |        +--:(hexadecimal)
+    |              |                 {key-chain:hex-key-string}?
+    |              |           +--rw hexadecimal-string?
+    |              |                   yang:hex-string
     |              +--:(auth-tls) {tls}?
     |                 +--rw tls
     +--ro pcep-state
@@ -159,7 +177,8 @@ module: ietf-pcep
           +--ro oper-status?            pcep-admin-status
           +--ro role?                   pcep-role
           +--ro description?            string
-          +--ro speaker-entity-id?      string {stateful-sync-opt}?
+          +--ro speaker-entity-id?      string
+          |       {stateful-sync-opt}?
           +--ro domain
           |  +--ro domain* [domain-type domain]
           |     +--ro domain-type    domain-type
@@ -170,7 +189,8 @@ module: ietf-pcep
           |  +--ro diverse?               boolean
           |  +--ro load-balance?          boolean
           |  +--ro synchronize?           boolean {svec}?
-          |  +--ro objective-function?    boolean {objective-function}?
+          |  +--ro objective-function?    boolean
+          |  |       {objective-function}?
           |  +--ro add-path-constraint?   boolean
           |  +--ro prioritization?        boolean
           |  +--ro multi-request?         boolean
@@ -179,11 +199,16 @@ module: ietf-pcep
           |  +--ro stateful {stateful}?
           |  |  +--ro enabled?                boolean
           |  |  +--ro active?                 boolean
-          |  |  +--ro pce-initiated?          boolean {pce-initiated}?
-          |  |  +--ro include-db-ver?         boolean {stateful-sync-opt}?
-          |  |  +--ro trigger-resync?         boolean {stateful-sync-opt}?
-          |  |  +--ro trigger-initial-sync?   boolean {stateful-sync-opt}?
-          |  |  +--ro incremental-sync?       boolean {stateful-sync-opt}?
+          |  |  +--ro pce-initiated?          boolean
+          |  |  |       {pce-initiated}?
+          |  |  +--ro include-db-ver?         boolean
+          |  |  |       {stateful-sync-opt}?
+          |  |  +--ro trigger-resync?         boolean
+          |  |  |       {stateful-sync-opt}?
+          |  |  +--ro trigger-initial-sync?   boolean
+          |  |  |       {stateful-sync-opt}?
+          |  |  +--ro incremental-sync?       boolean
+          |  |          {stateful-sync-opt}?
           |  +--ro sr {sr}?
           |     +--ro enabled?   boolean
           +--ro pce-info
@@ -209,14 +234,16 @@ module: ietf-pcep
           |     +--ro pce-id?          inet:ip-address
           +--ro (auth-type-selection)?
           |  +--:(auth-key-chain)
-          |  |  +--ro key-chain?              key-chain:key-chain-ref
+          |  |  +--ro key-chain?
+          |  |          key-chain:key-chain-ref
           |  +--:(auth-key)
           |  |  +--ro crypto-algorithm        identityref
           |  |  +--ro key-string
           |  |     +--ro (key-string-style)?
           |  |        +--:(keystring)
           |  |        |  +--ro keystring?            string
-          |  |        +--:(hexadecimal) {key-chain:hex-key-string}?
+          |  |        +--:(hexadecimal)
+          |  |                 {key-chain:hex-key-string}?
           |  |           +--ro hexadecimal-string?   yang:hex-string
           |  +--:(auth-tls) {tls}?
           |     +--ro tls
@@ -243,43 +270,53 @@ module: ietf-pcep
           |  +--ro redelegation-timeout?   uint32
           |  +--ro rpt-non-pcep-lsp?       boolean
           +--ro lsp-db {stateful}?
-          |  +--ro db-ver?             uint64 {stateful-sync-opt}?
-          |  +--ro association-list* [id source global-source extended-id]
+          |  +--ro db-ver?             uint64
+          |  |       {stateful-sync-opt}?
+          |  +--ro association-list*
+          |  |       [id source global-source extended-id]
           |  |  +--ro type?            assoc-type
           |  |  +--ro id               uint16
           |  |  +--ro source           inet:ip-address
           |  |  +--ro global-source    uint32
           |  |  +--ro extended-id      string
           |  |  +--ro lsp* [plsp-id pcc-id]
-          |  |     +--ro plsp-id    -> /pcep-state/entity/lsp-db/lsp/plsp-id
-          |  |     +--ro pcc-id     -> /pcep-state/entity/lsp-db/lsp/pcc-id
+          |  |     +--ro plsp-id    leafref
+          |  |     +--ro pcc-id     leafref
           |  +--ro lsp* [plsp-id pcc-id]
           |     +--ro plsp-id               uint32
           |     +--ro pcc-id                inet:ip-address
           |     +--ro lsp-ref
-          |     |  +--ro source?               -> /te:te/lsps-state/lsp/source
-          |     |  +--ro destination?          -> /te:te/lsps-state/lsp/destination
-          |     |  +--ro tunnel-id?            -> /te:te/lsps-state/lsp/tunnel-id
-          |     |  +--ro lsp-id?               -> /te:te/lsps-state/lsp/lsp-id
-          |     |  +--ro extended-tunnel-id?   -> /te:te/lsps-state/lsp/extended-tunnel-id
-          |     |  +--ro type?                 -> /te:te/lsps-state/lsp/type
+          |     |  +--ro source?
+          |     |  |       -> /te:te/lsps-state/lsp/source
+          |     |  +--ro destination?
+          |     |  |       -> /te:te/lsps-state/lsp/destination
+          |     |  +--ro tunnel-id?
+          |     |  |       -> /te:te/lsps-state/lsp/tunnel-id
+          |     |  +--ro lsp-id?
+          |     |  |       -> /te:te/lsps-state/lsp/lsp-id
+          |     |  +--ro extended-tunnel-id?   leafref
+          |     |  +--ro type?
+          |     |          -> /te:te/lsps-state/lsp/type
           |     +--ro admin-state?          boolean
           |     +--ro operational-state?    operational-state
           |     +--ro delegated
           |     |  +--ro enabled?   boolean
-          |     |  +--ro peer?      -> /pcep-state/entity/peers/peer/addr
+          |     |  +--ro peer?
+          |     |  |       -> /pcep-state/entity/peers/peer/addr
           |     |  +--ro srp-id?    uint32
           |     +--ro initiation {pce-initiated}?
           |     |  +--ro enabled?   boolean
-          |     |  +--ro peer?      -> /pcep-state/entity/peers/peer/addr
+          |     |  +--ro peer?
+          |     |          -> /pcep-state/entity/peers/peer/addr
           |     +--ro symbolic-path-name?   string
           |     +--ro last-error?           lsp-error
           |     +--ro pst?                  pst
-          |     +--ro association-list* [id source global-source extended-id]
-          |        +--ro id               -> /pcep-state/entity/lsp-db/association-list/id
-          |        +--ro source           -> /pcep-state/entity/lsp-db/association-list/source
-          |        +--ro global-source    -> /pcep-state/entity/lsp-db/association-list/global-source
-          |        +--ro extended-id      -> /pcep-state/entity/lsp-db/association-list/extended-id
+          |     +--ro association-list*
+          |             [id source global-source extended-id]
+          |        +--ro id               leafref
+          |        +--ro source           leafref
+          |        +--ro global-source    leafref
+          |        +--ro extended-id      leafref
           +--ro path-keys {path-key}?
           |  +--ro path-keys* [path-key]
           |     +--ro path-key         uint16
@@ -303,14 +340,18 @@ module: ietf-pcep
           |     |        |     +--ro hop-type?       te-hop-type
           |     |        +--:(label)
           |     |        |  +--ro label-hop
-          |     |        |     +--ro value?   te-types:generalized-label
+          |     |        |     +--ro value?
+          |     |        |             rt-types:generalized-label
           |     |        +--:(sid)
           |     |           +--ro sid-hop
-          |     |              +--ro sid?   te-types:generalized-label
-          |     +--ro pcc-original?    -> /pcep-state/entity/peers/peer/addr
+          |     |              +--ro sid?
+          |     |                      rt-types:generalized-label
+          |     +--ro pcc-original?
+          |     |       -> /pcep-state/entity/peers/peer/addr
           |     +--ro req-id?          uint32
           |     +--ro retrieved?       boolean
-          |     +--ro pcc-retrieved?   -> /pcep-state/entity/peers/peer/addr
+          |     +--ro pcc-retrieved?
+          |     |       -> /pcep-state/entity/peers/peer/addr
           |     +--ro creation-time?   yang:timestamp
           |     +--ro discard-time?    uint32
           |     +--ro reuse-time?      uint32
@@ -331,7 +372,8 @@ module: ietf-pcep
                 |  +--ro diverse?               boolean
                 |  +--ro load-balance?          boolean
                 |  +--ro synchronize?           boolean {svec}?
-                |  +--ro objective-function?    boolean {objective-function}?
+                |  +--ro objective-function?    boolean
+                |  |       {objective-function}?
                 |  +--ro add-path-constraint?   boolean
                 |  +--ro prioritization?        boolean
                 |  +--ro multi-request?         boolean
@@ -340,11 +382,16 @@ module: ietf-pcep
                 |  +--ro stateful {stateful}?
                 |  |  +--ro enabled?                boolean
                 |  |  +--ro active?                 boolean
-                |  |  +--ro pce-initiated?          boolean {pce-initiated}?
-                |  |  +--ro include-db-ver?         boolean {stateful-sync-opt}?
-                |  |  +--ro trigger-resync?         boolean {stateful-sync-opt}?
-                |  |  +--ro trigger-initial-sync?   boolean {stateful-sync-opt}?
-                |  |  +--ro incremental-sync?       boolean {stateful-sync-opt}?
+                |  |  +--ro pce-initiated?          boolean
+                |  |  |       {pce-initiated}?
+                |  |  +--ro include-db-ver?         boolean
+                |  |  |       {stateful-sync-opt}?
+                |  |  +--ro trigger-resync?         boolean
+                |  |  |       {stateful-sync-opt}?
+                |  |  +--ro trigger-initial-sync?   boolean
+                |  |  |       {stateful-sync-opt}?
+                |  |  +--ro incremental-sync?       boolean
+                |  |          {stateful-sync-opt}?
                 |  +--ro sr {sr}?
                 |     +--ro enabled?   boolean
                 +--ro pce-info
@@ -366,15 +413,18 @@ module: ietf-pcep
                 +--ro delegation-pref?        uint8 {stateful}?
                 +--ro (auth-type-selection)?
                 |  +--:(auth-key-chain)
-                |  |  +--ro key-chain?              key-chain:key-chain-ref
+                |  |  +--ro key-chain?
+                |  |          key-chain:key-chain-ref
                 |  +--:(auth-key)
                 |  |  +--ro crypto-algorithm        identityref
                 |  |  +--ro key-string
                 |  |     +--ro (key-string-style)?
                 |  |        +--:(keystring)
                 |  |        |  +--ro keystring?            string
-                |  |        +--:(hexadecimal) {key-chain:hex-key-string}?
-                |  |           +--ro hexadecimal-string?   yang:hex-string
+                |  |        +--:(hexadecimal)
+                |  |                 {key-chain:hex-key-string}?
+                |  |           +--ro hexadecimal-string?
+                |  |                   yang:hex-string
                 |  +--:(auth-tls) {tls}?
                 |     +--ro tls
                 +--ro discontinuity-time?     yang:timestamp
@@ -402,12 +452,15 @@ module: ietf-pcep
                       +--ro overload-time?          uint32
                       +--ro peer-overloaded?        boolean
                       +--ro peer-overload-time?     uint32
-                      +--ro lspdb-sync?             sync-state {stateful}?
-                      +--ro recv-db-ver?            uint64 {stateful,stateful-sync-opt}?
+                      +--ro lspdb-sync?             sync-state
+                      |       {stateful}?
+                      +--ro recv-db-ver?            uint64
+                      |       {stateful,stateful-sync-opt}?
                       +--ro of-list {objective-function}?
                       |  +--ro objective-function* [of]
                       |     +--ro of    objective-function
-                      +--ro speaker-entity-id?      string {stateful-sync-opt}?
+                      +--ro speaker-entity-id?      string
+                      |       {stateful-sync-opt}?
                       +--ro discontinuity-time?     yang:timestamp
 
   rpcs:
@@ -417,28 +470,33 @@ module: ietf-pcep
 
   notifications:
     +---n pcep-session-up
-    |  +--ro peer-addr?           -> /pcep-state/entity/peers/peer/addr
-    |  +--ro session-initiator?   -> /pcep-state/entity/peers/peer/sessions/session/initiator
+    |  +--ro peer-addr?
+    |  |       -> /pcep-state/entity/peers/peer/addr
+    |  +--ro session-initiator?   leafref
     |  +--ro state-last-change?   yang:timestamp
     |  +--ro state?               pcep-sess-state
     +---n pcep-session-down
-    |  +--ro peer-addr?           -> /pcep-state/entity/peers/peer/addr
+    |  +--ro peer-addr?
+    |  |       -> /pcep-state/entity/peers/peer/addr
     |  +--ro session-initiator?   pcep-initiator
     |  +--ro state-last-change?   yang:timestamp
     |  +--ro state?               pcep-sess-state
     +---n pcep-session-local-overload
-    |  +--ro peer-addr?           -> /pcep-state/entity/peers/peer/addr
-    |  +--ro session-initiator?   -> /pcep-state/entity/peers/peer/sessions/session/initiator
+    |  +--ro peer-addr?
+    |  |       -> /pcep-state/entity/peers/peer/addr
+    |  +--ro session-initiator?   leafref
     |  +--ro overloaded?          boolean
     |  +--ro overload-time?       uint32
     +---n pcep-session-local-overload-clear
     |  +--ro peer-addr?    -> /pcep-state/entity/peers/peer/addr
     |  +--ro overloaded?   boolean
     +---n pcep-session-peer-overload
-    |  +--ro peer-addr?            -> /pcep-state/entity/peers/peer/addr
-    |  +--ro session-initiator?    -> /pcep-state/entity/peers/peer/sessions/session/initiator
+    |  +--ro peer-addr?
+    |  |       -> /pcep-state/entity/peers/peer/addr
+    |  +--ro session-initiator?    leafref
     |  +--ro peer-overloaded?      boolean
     |  +--ro peer-overload-time?   uint32
     +---n pcep-session-peer-overload-clear
-       +--ro peer-addr?         -> /pcep-state/entity/peers/peer/addr
+       +--ro peer-addr?
+       |       -> /pcep-state/entity/peers/peer/addr
        +--ro peer-overloaded?   boolean

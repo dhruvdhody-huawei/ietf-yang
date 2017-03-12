@@ -1,10 +1,10 @@
 module ietf-pcep-stats {
-    
+
     yang-version 1.1;
 
     namespace "urn:ietf:params:xml:ns:yang:ietf-pcep-stats";
     prefix ps;
-    
+
 
     import ietf-pcep {
        prefix p;
@@ -36,7 +36,7 @@ module ietf-pcep-stats {
         model with statistics, counters and telemetry data";
 
 
-    revision 2017-03-09 {
+    revision 2017-03-12 {
         description "Initial revision.";
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
@@ -57,15 +57,15 @@ module ietf-pcep-stats {
              for both peer and current session.";
         leaf avg-rsp-time{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
+                description
+                    "Valid for PCEP Peer as PCE";
             }
             type uint32;
             units "milliseconds";
-            
+
             description
               "The average response time.
                If an average response time has not been
@@ -74,15 +74,15 @@ module ietf-pcep-stats {
 
         leaf lwm-rsp-time{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type uint32;
             units "milliseconds";
-            
+
             description
              "The smallest (low-water mark) response time seen.
               If no responses have been received then this
@@ -91,12 +91,12 @@ module ietf-pcep-stats {
 
         leaf hwm-rsp-time{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }         	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type uint32;
             units "milliseconds";
 
@@ -108,12 +108,12 @@ module ietf-pcep-stats {
 
         leaf num-pcreq-sent{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }         	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
              "The number of PCReq messages sent.";
@@ -121,12 +121,12 @@ module ietf-pcep-stats {
 
         leaf num-pcreq-rcvd{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }         	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
               "The number of PCReq messages received.";
@@ -134,12 +134,12 @@ module ietf-pcep-stats {
 
         leaf num-pcrep-sent{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }         	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
 
             type yang:counter32;
             description
@@ -148,12 +148,12 @@ module ietf-pcep-stats {
 
         leaf num-pcrep-rcvd{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }         	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
 
             type yang:counter32;
             description
@@ -210,12 +210,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
               "The number of requests sent.  A request corresponds
@@ -227,12 +227,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent-pend-rep{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
               "The number of requests that have been sent for
@@ -241,12 +241,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent-ero-rcvd{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
                "The number of requests that have been sent for
@@ -257,12 +257,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent-nopath-rcvd{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
               "The number of requests that have been sent for
@@ -274,12 +274,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent-cancel-rcvd{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
               "The number of requests that were cancelled with
@@ -292,12 +292,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent-error-rcvd{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
              "The number of requests that were rejected with a
@@ -310,12 +310,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent-timeout{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
              "The number of requests that have been sent to a peer
@@ -325,12 +325,12 @@ module ietf-pcep-stats {
 
         leaf num-req-sent-cancel-sent{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
              "The number of requests that were sent to the peer and
@@ -340,12 +340,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }        	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
              "The number of requests received.  A request
@@ -358,12 +358,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd-pend-rep{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
              "The number of requests that have been received for
@@ -372,12 +372,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd-ero-sent{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
              "The number of requests that have been received for
@@ -388,12 +388,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd-nopath-sent{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
              "The number of requests that have been received for
@@ -404,12 +404,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd-cancel-sent{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
              "The number of requests received that were cancelled
@@ -422,12 +422,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd-error-sent{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
              "The number of requests received that were cancelled
@@ -440,12 +440,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd-cancel-rcvd{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
              "The number of requests that were received from the
@@ -455,12 +455,12 @@ module ietf-pcep-stats {
 
         leaf num-rep-rcvd-unknown{
             when "../../p:role = 'pce'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCE";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCE";
+            }
             type yang:counter32;
             description
               "The number of responses to unknown requests
@@ -472,12 +472,12 @@ module ietf-pcep-stats {
 
         leaf num-req-rcvd-unknown{
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }          	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             type yang:counter32;
             description
               "The number of unknown requests that have been
@@ -491,13 +491,13 @@ module ietf-pcep-stats {
             description
                 "If synchronized path computation is supported";
             leaf num-svec-sent{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }              	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                   "The number of SVEC objects sent in PCReq messages.
@@ -506,13 +506,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-svec-req-sent{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }            	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                   "The number of requests sent that appeared in one
@@ -520,13 +520,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-svec-rcvd{
-	            when "../../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }            	
+                when "../../../p:role = 'pcc'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                  "The number of SVEC objects received in PCReq
@@ -535,13 +535,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-svec-req-rcvd{
-	            when "../../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }              	
+                when "../../../p:role = 'pcc'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                   "The number of requests received that appeared
@@ -553,65 +553,65 @@ module ietf-pcep-stats {
             description
                 "Stateful PCE related statistics";
             leaf num-pcrpt-sent{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }             	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                  "The number of PCRpt messages sent.";
             }
 
             leaf num-pcrpt-rcvd{
-	            when "../../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }             	
+                when "../../../p:role = 'pcc'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                   "The number of PCRpt messages received.";
             }
 
             leaf num-pcupd-sent{
-	            when "../../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }              	
+                when "../../../p:role = 'pcc'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                  "The number of PCUpd messages sent.";
             }
 
             leaf num-pcupd-rcvd{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }             	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                   "The number of PCUpd messages received.";
             }
 
             leaf num-rpt-sent{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }              	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                   "The number of LSP Reports sent.  A LSP report
@@ -622,13 +622,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-rpt-rcvd{
-	            when "../../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }              	
+                when "../../../p:role = 'pcc'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                  "The number of LSP Reports received.  A LSP report
@@ -640,13 +640,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-rpt-rcvd-error-sent{
-	            when "../../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }              	
+                when "../../../p:role = 'pcc'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                   "The number of reports of LSPs received that were
@@ -655,13 +655,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-upd-sent{
-	            when "../../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }             	
+                when "../../../p:role = 'pcc'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                   "The number of LSP updates sent.  A LSP update
@@ -672,13 +672,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-upd-rcvd{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }             	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                  "The number of LSP Updates received.  A LSP update
@@ -690,13 +690,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-upd-rcvd-unknown{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }            	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                   "The number of updates to unknown LSPs
@@ -707,13 +707,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-upd-rcvd-undelegated{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }            	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                   "The number of updates to not delegated LSPs
@@ -724,13 +724,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-upd-rcvd-error-sent{
-	            when "../../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }            	
+                when "../../../p:role = 'pce'" +
+                     "or " +
+                     "../../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                   "The number of updates to LSPs received that were
@@ -742,39 +742,39 @@ module ietf-pcep-stats {
                 description
                     "PCE-Initiated related statistics";
                 leaf num-pcinitiate-sent{
-		            when "../../../../p:role = 'pcc'" +
-		                 "or " + 
-		                 "../../../../p:role = 'pcc-and-pce'"
-		            {
-		            	description
-		            		"Valid for PCEP Peer as PCC";
-		            }                	
+                    when "../../../../p:role = 'pcc'" +
+                         "or " +
+                         "../../../../p:role = 'pcc-and-pce'"
+                    {
+                        description
+                            "Valid for PCEP Peer as PCC";
+                    }
                     type yang:counter32;
                     description
                      "The number of PCInitiate messages sent.";
                 }
 
                 leaf num-pcinitiate-rcvd{
-		            when "../../../../p:role = 'pce'" +
-		                 "or " + 
-		                 "../../../../p:role = 'pcc-and-pce'"
-		            {
-		            	description
-		            		"Valid for PCEP Peer as PCE";
-		            }                   	
+                    when "../../../../p:role = 'pce'" +
+                         "or " +
+                         "../../../../p:role = 'pcc-and-pce'"
+                    {
+                        description
+                            "Valid for PCEP Peer as PCE";
+                    }
                     type yang:counter32;
                     description
                       "The number of PCInitiate messages received.";
                 }
 
                 leaf num-initiate-sent{
-		            when "../../../../p:role = 'pcc'" +
-		                 "or " + 
-		                 "../../../../p:role = 'pcc-and-pce'"
-		            {
-		            	description
-		            		"Valid for PCEP Peer as PCC";
-		            }                   	
+                    when "../../../../p:role = 'pcc'" +
+                         "or " +
+                         "../../../../p:role = 'pcc-and-pce'"
+                    {
+                        description
+                            "Valid for PCEP Peer as PCC";
+                    }
                     type yang:counter32;
                     description
                       "The number of LSP Initiation sent via PCE.
@@ -786,13 +786,13 @@ module ietf-pcep-stats {
                 }
 
                 leaf num-initiate-rcvd{
-		            when "../../../../p:role = 'pce'" +
-		                 "or " + 
-		                 "../../../../p:role = 'pcc-and-pce'"
-		            {
-		            	description
-		            		"Valid for PCEP Peer as PCE";
-		            }                   	
+                    when "../../../../p:role = 'pce'" +
+                         "or " +
+                         "../../../../p:role = 'pcc-and-pce'"
+                    {
+                        description
+                            "Valid for PCEP Peer as PCE";
+                    }
                     type yang:counter32;
                     description
                       "The number of LSP Initiation received from
@@ -804,13 +804,13 @@ module ietf-pcep-stats {
                 }
 
                 leaf num-initiate-rcvd-error-sent{
-		            when "../../../../p:role = 'pce'" +
-		                 "or " + 
-		                 "../../../../p:role = 'pcc-and-pce'"
-		            {
-		            	description
-		            		"Valid for PCEP Peer as PCE";
-		            }                 	
+                    when "../../../../p:role = 'pce'" +
+                         "or " +
+                         "../../../../p:role = 'pcc-and-pce'"
+                    {
+                        description
+                            "Valid for PCEP Peer as PCE";
+                    }
                     type yang:counter32;
                     description
                       "The number of initiations of LSPs received
@@ -821,39 +821,39 @@ module ietf-pcep-stats {
         }
         container path-key {
             when "../../p:role = 'pcc'" +
-                 "or " + 
+                 "or " +
                  "../../p:role = 'pcc-and-pce'"
             {
-            	description
-            		"Valid for PCEP Peer as PCC";
-            }         	
+                description
+                    "Valid for PCEP Peer as PCC";
+            }
             if-feature p:path-key;
             description
                 "If Path-Key is supported";
             leaf num-unknown-path-key{
                 type yang:counter32;
                 description
-                 "The number of attempts to expand an unknown 
+                 "The number of attempts to expand an unknown
                  path-key.";
             }
             leaf num-exp-path-key{
                 type yang:counter32;
                 description
-                 "The number of attempts to expand an expired 
+                 "The number of attempts to expand an expired
                  path-key.";
-            }   
+            }
             leaf num-dup-path-key{
                 type yang:counter32;
                 description
                  "The number of duplicate attempts to expand same
                  path-key.";
-            }      
+            }
             leaf num-path-key-no-attempt{
                 type yang:counter32;
                 description
                  "The number of expired path-keys with no attempt to
                  expand it.";
-            }              
+            }
         }
     }//pcep-stats
 
@@ -883,7 +883,7 @@ module ietf-pcep-stats {
                 before being fully established. This
                 counter is incremented each time a
                 session retry to this peer fails.";
-        }            
+        }
         container pcep-stats {
             description
                 "The container for all statistics at peer
@@ -900,13 +900,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-req-sent-closed{
-	            when "../../p:role = 'pce'" +
-	                 "or " + 
-	                 "../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCE";
-	            }             	
+                when "../../p:role = 'pce'" +
+                     "or " +
+                     "../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
                 type yang:counter32;
                 description
                     "The number of requests that were
@@ -916,13 +916,13 @@ module ietf-pcep-stats {
             }
 
             leaf num-req-rcvd-closed{
-	            when "../../p:role = 'pcc'" +
-	                 "or " + 
-	                 "../../p:role = 'pcc-and-pce'"
-	            {
-	            	description
-	            		"Valid for PCEP Peer as PCC";
-	            }            	
+                when "../../p:role = 'pcc'" +
+                     "or " +
+                     "../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
                 type yang:counter32;
                 description
                     "The number of requests that were

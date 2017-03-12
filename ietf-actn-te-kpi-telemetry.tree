@@ -1,43 +1,79 @@
 module: ietf-actn-te-kpi-telemetry
+  augment /actn-vn:actn/actn-vn:vn/actn-vn:vn-list:
+    +--rw vn-telemetry
+    |  +--rw grouping-op
+    |     +--rw delay-op?                grouping-operation
+    |     +--rw delay-variation-op?      grouping-operation
+    |     +--rw packet-loss-op?          grouping-operation
+    |     +--rw utilized-bandwidth-op?   grouping-operation
+    +--rw vn-scaling-intent
+       +--rw scale-in
+       |  +--rw scale-in-operation-type?   scaling-criteria-operation
+       |  +--rw threshold-time?            uint32
+       |  +--rw scale-in-condition* [performance-type]
+       |     +--rw performance-type    identityref
+       |     +--rw performance-data?   binary
+       +--rw scale-down
+          +--rw cooldown-time?              uint32
+          +--rw scale-out-operation-type?   scaling-criteria-operation
+          +--rw scale-out-condition* [performance-type]
+             +--rw performance-type    identityref
+             +--rw performance-data?   binary
   augment /actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list:
     +--ro vn-telemetry
-       +--ro one-way-delay?             uint32
-       +--ro two-way-delay?             uint32
-       +--ro one-way-delay-min?         uint32
-       +--ro one-way-delay-max?         uint32
-       +--ro two-way-delay-min?         uint32
-       +--ro two-way-delay-max?         uint32
-       +--ro one-way-delay-variation?   uint32
-       +--ro two-way-delay-variation?   uint32
-       +--ro one-way-packet-loss?       decimal64
-       +--ro two-way-packet-loss?       decimal64
-       +--ro utilized-bandwidth?        rt:bandwidth-ieee-float32
+    |  +--ro grouping-op
+    |  |  +--ro delay-op?                grouping-operation
+    |  |  +--ro delay-variation-op?      grouping-operation
+    |  |  +--ro packet-loss-op?          grouping-operation
+    |  |  +--ro utilized-bandwidth-op?   grouping-operation
+    |  +--ro data
+    |     +--ro one-way-delay?             uint32
+    |     +--ro two-way-delay?             uint32
+    |     +--ro one-way-delay-min?         uint32
+    |     +--ro one-way-delay-max?         uint32
+    |     +--ro two-way-delay-min?         uint32
+    |     +--ro two-way-delay-max?         uint32
+    |     +--ro one-way-delay-variation?   uint32
+    |     +--ro two-way-delay-variation?   uint32
+    |     +--ro one-way-packet-loss?       decimal64
+    |     +--ro two-way-packet-loss?       decimal64
+    |     +--ro utilized-bandwidth?        rt:bandwidth-ieee-float32
+    +--ro vn-scaling-intent
+       +--ro scale-in
+       |  +--ro scale-in-operation-type?   scaling-criteria-operation
+       |  +--ro threshold-time?            uint32
+       |  +--ro scale-in-condition* [performance-type]
+       |     +--ro performance-type    identityref
+       |     +--ro performance-data?   binary
+       +--ro scale-down
+          +--ro cooldown-time?              uint32
+          +--ro scale-out-operation-type?   scaling-criteria-operation
+          +--ro scale-out-condition* [performance-type]
+             +--ro performance-type    identityref
+             +--ro performance-data?   binary
+  augment /actn-vn:actn/actn-vn:vn/actn-vn:vn-list/actn-vn:vn-member-list:
+    +--rw vn-telemetry
+       +--rw grouping-op
+          +--rw delay-op?                grouping-operation
+          +--rw delay-variation-op?      grouping-operation
+          +--rw packet-loss-op?          grouping-operation
+          +--rw utilized-bandwidth-op?   grouping-operation
   augment /actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list/actn-vn:vn-member-list:
     +--ro vn-telemetry
-       +--ro one-way-delay?             uint32
-       +--ro two-way-delay?             uint32
-       +--ro one-way-delay-min?         uint32
-       +--ro one-way-delay-max?         uint32
-       +--ro two-way-delay-min?         uint32
-       +--ro two-way-delay-max?         uint32
-       +--ro one-way-delay-variation?   uint32
-       +--ro two-way-delay-variation?   uint32
-       +--ro one-way-packet-loss?       decimal64
-       +--ro two-way-packet-loss?       decimal64
-       +--ro utilized-bandwidth?        rt:bandwidth-ieee-float32
-  augment /actn-vn:actn/actn-vn:vn/actn-vn:vn-list:
-    +--rw vn-scaling-intent
-       +--rw scale-in-intent
-       |  +--rw threshold-time?      uint32
-       |  +--rw cooldown-time?       uint32
-       |  +--rw operation-type?      scaling-criteria-operation
-       |  +--rw scaling-condition* [performance-type]
-       |     +--rw performance-type     identityref
-       |     +--rw performance-value?   binary
-       +--rw scale-out-intent
-          +--rw threshold-time?      uint32
-          +--rw cooldown-time?       uint32
-          +--rw operation-type?      scaling-criteria-operation
-          +--rw scaling-condition* [performance-type]
-             +--rw performance-type     identityref
-             +--rw performance-value?   binary
+       +--ro grouping-op
+       |  +--ro delay-op?                grouping-operation
+       |  +--ro delay-variation-op?      grouping-operation
+       |  +--ro packet-loss-op?          grouping-operation
+       |  +--ro utilized-bandwidth-op?   grouping-operation
+       +--ro data
+          +--ro one-way-delay?             uint32
+          +--ro two-way-delay?             uint32
+          +--ro one-way-delay-min?         uint32
+          +--ro one-way-delay-max?         uint32
+          +--ro two-way-delay-min?         uint32
+          +--ro two-way-delay-max?         uint32
+          +--ro one-way-delay-variation?   uint32
+          +--ro two-way-delay-variation?   uint32
+          +--ro one-way-packet-loss?       decimal64
+          +--ro two-way-packet-loss?       decimal64
+          +--ro utilized-bandwidth?        rt:bandwidth-ieee-float32

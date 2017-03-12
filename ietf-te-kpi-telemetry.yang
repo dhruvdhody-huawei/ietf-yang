@@ -26,7 +26,7 @@ module ietf-te-kpi-telemetry {
     description
         "This module describes telemetry for teas tunnel model";
 
-    revision 2017-03-10 {
+    revision 2017-03-12 {
         description
             "Initial revision. This YANG file defines
             the reusable base types for TE telemetry.";
@@ -233,25 +233,6 @@ module ietf-te-kpi-telemetry {
 	    }
 	}
 
-    grouping scaling-duration {
-    	description
-    	    "Base scaling criteria durations";
-    	leaf threshold-time {
-            type uint32;
-            units "seconds";
-            description
-                "The duration for which the criteria must hold true";
-        }
-
-        leaf cooldown-time {
-            type uint32;
-            units "seconds";
-            description
-            "The duration after a scaling-in/scaling-out action has been
-            triggered, for which there will be no further operation";
-        }
-    }
-
     grouping scaling-criteria {
         description
             "Grouping for scaling criteria";
@@ -263,31 +244,71 @@ module ietf-te-kpi-telemetry {
       		    "Reference to the tunnel level telemetry type";
     	}
 
-    	leaf performance-value {
+    	leaf performance-data {
     		type binary;
     		description
-    			"value associated with the tunnel level telemetry type";
+    			"The encoding and meaning of this field is 
+    			 based on the performance-type";
     	}
     }
 
     grouping scaling-intent {
     	description
-    		"Basic sclaing intent";
+    		"Basic scaling intent";
 
-    	uses scaling-duration;
+        container scale-in {
+            description
+    		    "Basic scaling-in intent";
+        
+            leaf scale-in-operation-type {
+                type scaling-criteria-operation;
+                default AND;
+                description
+                    "Operation to be applied to check between scaling criterias to 
+                    check if the scale in threshold condition has been met.
+                    Defaults to AND";
+            }
 
-    	leaf operation-type {
-      		type scaling-criteria-operation;
-      		description
-        		"Scaling operation type.";
-    	}
+        	leaf threshold-time {
+                type uint32;
+                units "seconds";
+                description
+                    "The duration for which the criteria must hold true";
+            }
+	    	list scale-in-condition {
+	    		key "performance-type";
+	    		description
+	    			"Scaling conditions";
+	    		uses scaling-criteria;
+	    	}            
+        }
+        container scale-down {
+            description
+    		    "Basic scaling-out intent";
+            leaf cooldown-time {
+                type uint32;
+                units "seconds";
+                description
+                "The duration after a scaling-in/scaling-out action has been
+                triggered, for which there will be no further operation";
+            }
+            leaf scale-out-operation-type {
+                type scaling-criteria-operation;
+                default OR;
+                description
+                    "Operation to be applied to check between scaling criterias to 
+                    check if the scale out threshold condition has been met.
+                    Defauls to OR";
+            }
+	    	list scale-out-condition {
+	    		key "performance-type";
+	    		description
+	    			"Scaling conditions";
+	    		uses scaling-criteria;
+	    	}
 
-    	list scaling-condition {
-    		key "performance-type";
-    		description
-    			"Scaling conditions";
-    		uses scaling-criteria;
-    	}
+        }
+
 
     }
 
@@ -296,20 +317,42 @@ module ietf-te-kpi-telemetry {
 
         description
 			"Base telemetry parameters";
+		container data {
+			description
+				"The telemetry data";	
 
-        uses telemetry-delay;
+        	uses telemetry-delay;
 
-        uses telemetry-delay-variance;
+        	uses telemetry-delay-variance;
 
-        uses telemetry-packet-loss;
+        	uses telemetry-packet-loss;
 
-        uses telemetry-bandwidth;   
-
+        	uses telemetry-bandwidth;   
+    	}
+        
     }
 
     /*
      * Augments
      */
+    augment "/te:te/te:tunnels/te:tunnel/te:config" {
+
+        description
+            "Augmentation parameters for config scaling-criteria
+            TE tunnel topologies. Scale in/out criteria might be used
+            for network autonomics in order the controller
+            to react to a certain set of monitored params.";
+
+        container te-scaling-intent {
+        	description
+        		"scaling intent";
+            uses scaling-intent;
+            
+        }
+
+    }
+
+
 
     augment "/te:te/te:tunnels/te:tunnel/te:state" {
 
@@ -324,29 +367,6 @@ module ietf-te-kpi-telemetry {
     }
 
 
-    augment "/te:te/te:tunnels/te:tunnel/te:config" {
 
-        description
-            "Augmentation parameters for config scaling-criteria
-            TE tunnel topologies. Scale in/out criteria might be used
-            for network autonomics in order the controller
-            to react to a certain set of monitored params.";
-
-        container te-scaling-intent {
-        	description
-        		"scaling intent";
-
-        	container scale-in-intent{
-                description
-                    "scale-in";
-                uses scaling-intent;
-            }
-        	container scale-out-intent{
-                description
-                    "scale-out";                
-                uses scaling-intent;
-            }
-        }
-    }
 
 }
