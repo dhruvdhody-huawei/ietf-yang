@@ -1,13 +1,14 @@
 module ietf-actn-te-kpi-telemetry {
 
-    namespace "urn:ietf:params:xml:ns:yang:ietf-actn-te-kpi-telemetry";
+    namespace
+      "urn:ietf:params:xml:ns:yang:ietf-actn-te-kpi-telemetry";
 
     prefix "actn-tel";
 
     import ietf-actn-vn {
         prefix "actn-vn";
     }
-    
+
     import ietf-te-kpi-telemetry {
         prefix "te-kpi";
     }
@@ -24,9 +25,9 @@ module ietf-actn-te-kpi-telemetry {
 
     description
         "This module describes telemetry for actn vn model";
-    
-    
-    revision 2017-03-12 {
+
+
+    revision 2017-03-13 {
         description
             "Initial revision. This YANG file defines
             the ACTN VN telemetry.";
@@ -37,41 +38,41 @@ module ietf-actn-te-kpi-telemetry {
     /*
      * Typedefs
      */
-    
+
     typedef grouping-operation {
         type enumeration {
-            enum MINIMUM { 
-                description 
-                    "Select the minimum param"; 
+            enum MINIMUM {
+                description
+                    "Select the minimum param";
             }
-            enum MAXIMUM { 
-                description 
-                    "Select the maximum param"; 
+            enum MAXIMUM {
+                description
+                    "Select the maximum param";
             }
-            enum MEAN { 
-                description 
-                    "Select the MEAN of the params"; 
+            enum MEAN {
+                description
+                    "Select the MEAN of the params";
             }
-            enum STD_DEV { 
-                description 
-                    "Select the standard deviation of the 
-                     monitored params"; 
+            enum STD_DEV {
+                description
+                    "Select the standard deviation of the
+                     monitored params";
             }
-            enum SUM { 
-                description 
-                    "Select the sum of the monitored params"; 
+            enum SUM {
+                description
+                    "Select the sum of the monitored params";
                 reference
-                    "RFC 7823";                      
-            }            
-            enum LOSS_PERCENT { 
-                description 
-                    "Select the packet loss percentage 
-                     calulation"; 
+                    "RFC 7823";
+            }
+            enum LOSS_PERCENT {
+                description
+                    "Select the packet loss percentage
+                     calulation";
                 reference
-                    "RFC 7823";     
-            }         
+                    "RFC 7823";
+            }
         }
-        description 
+        description
             "Operations to analize list of monitored params";
     }
 
@@ -79,7 +80,7 @@ module ietf-actn-te-kpi-telemetry {
      * Groupings
      */
     grouping vn-telemetry-param {
-        description 
+        description
             "telemetry-parameter for VN";
         uses te-kpi:telemetry-param;
     }
@@ -87,16 +88,16 @@ module ietf-actn-te-kpi-telemetry {
     grouping telemetry-grouping-op {
         description
             "Config how the VN telemetry should be applied";
-        container grouping-op {   
+        container grouping-op {
             description
-                "The grouping operations"; 
+                "The grouping operations";
             leaf delay-op {
                 type grouping-operation;
                 default MAXIMUM;
                 description
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
-            }    
+            }
 
             leaf delay-variation-op {
                 type grouping-operation;
@@ -104,7 +105,7 @@ module ietf-actn-te-kpi-telemetry {
                 description
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
-            }  
+            }
 
             leaf packet-loss-op {
                 type grouping-operation;
@@ -112,7 +113,7 @@ module ietf-actn-te-kpi-telemetry {
                 description
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
-            }  
+            }
 
             leaf utilized-bandwidth-op {
                 type grouping-operation;
@@ -120,7 +121,7 @@ module ietf-actn-te-kpi-telemetry {
                 description
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
-            }  
+            }
         }
 
     }
@@ -135,15 +136,15 @@ module ietf-actn-te-kpi-telemetry {
             "Augmentation parameters for state TE VN topologies.";
 
         container vn-telemetry {
-        	description
-        		"VN telemetry configurations";
-            uses telemetry-grouping-op; 
+          description
+            "VN telemetry configurations";
+            uses telemetry-grouping-op;
         }
         container vn-scaling-intent {
             description
                 "scaling intent";
             uses te-kpi:scaling-intent;
-        }        
+        }
     }
     augment "/actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list" {
 
@@ -153,37 +154,41 @@ module ietf-actn-te-kpi-telemetry {
         container vn-telemetry {
             description
                 "VN telemetry params";
-            uses telemetry-grouping-op; 
+            uses telemetry-grouping-op;
             uses vn-telemetry-param;
         }
         container vn-scaling-intent {
             description
                 "scaling intent";
             uses te-kpi:scaling-intent;
-        }        
+        }
     }
 
 
     /*
      * VN-member augment
      */
-    augment "/actn-vn:actn/actn-vn:vn/actn-vn:vn-list/actn-vn:vn-member-list" {
+    augment "/actn-vn:actn/actn-vn:vn/actn-vn:vn-list/" +
+            "actn-vn:vn-member-list" {
         description
-            "Augmentation parameters for state TE vn member topologies.";
+            "Augmentation parameters for state TE vn member
+            topologies.";
         container vn-telemetry {
             description
                 "VN Member config";
             uses telemetry-grouping-op;
         }
     }
-    augment "/actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list/actn-vn:vn-member-list" {
+    augment "/actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list/" +
+            "actn-vn:vn-member-list" {
         description
-            "Augmentation parameters for state TE vn member topologies.";
+            "Augmentation parameters for state TE vn member
+            topologies.";
         container vn-telemetry {
-        	description
-        		"VN telemetry params";
-            uses telemetry-grouping-op;    
-        	uses vn-telemetry-param;
+          description
+            "VN telemetry params";
+            uses telemetry-grouping-op;
+          uses vn-telemetry-param;
         }
     }
 }

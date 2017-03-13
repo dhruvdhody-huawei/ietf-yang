@@ -2,14 +2,16 @@ module: ietf-te-kpi-telemetry
   augment /te:te/te:tunnels/te:tunnel/te:config:
     +--rw te-scaling-intent
        +--rw scale-in
-       |  +--rw scale-in-operation-type?   scaling-criteria-operation
+       |  +--rw scale-in-operation-type?
+       |  |       scaling-criteria-operation
        |  +--rw threshold-time?            uint32
        |  +--rw scale-in-condition* [performance-type]
        |     +--rw performance-type    identityref
        |     +--rw performance-data?   binary
        +--rw scale-down
           +--rw cooldown-time?              uint32
-          +--rw scale-out-operation-type?   scaling-criteria-operation
+          +--rw scale-out-operation-type?
+          |       scaling-criteria-operation
           +--rw scale-out-condition* [performance-type]
              +--rw performance-type    identityref
              +--rw performance-data?   binary

@@ -1,17 +1,16 @@
 module ietf-te-kpi-telemetry {
+  namespace "urn:ietf:params:xml:ns:yang:ietf-te-kpi-telemetry";
 
-	namespace "urn:ietf:params:xml:ns:yang:ietf-te-kpi-telemetry";
-
-	prefix "te-tel";
+    prefix "te-tel";
 
 
-	import ietf-te {
+    import ietf-te {
         prefix "te";
     }
-    
-   import ietf-routing-types {
+
+    import ietf-routing-types {
        prefix "rt";
-   }
+    }
 
     organization
         "IETF Traffic Engineering Architecture and Signaling (TEAS)
@@ -26,7 +25,7 @@ module ietf-te-kpi-telemetry {
     description
         "This module describes telemetry for teas tunnel model";
 
-    revision 2017-03-12 {
+    revision 2017-03-13 {
         description
             "Initial revision. This YANG file defines
             the reusable base types for TE telemetry.";
@@ -42,7 +41,7 @@ module ietf-te-kpi-telemetry {
         description
             "Base identity for telemetry param types";
     }
-    
+
     identity one-way-delay {
         base telemetry-param-type;
         description
@@ -59,16 +58,17 @@ module ietf-te-kpi-telemetry {
     identity one-way-delay-variation {
         base telemetry-param-type;
         description
-            "To specify average Delay Variation in one (forward) direction";
+            "To specify average Delay Variation in one (forward)
+            direction";
     }
 
     identity two-way-delay-variation {
         base telemetry-param-type;
         description
-            "To specify average Delay Variation in both (forward and reverse)
-             directions";
+            "To specify average Delay Variation in both (forward
+            and reverse) directions";
     }
-    
+
     identity one-way-packet-loss {
         base telemetry-param-type;
         description
@@ -82,7 +82,7 @@ module ietf-te-kpi-telemetry {
              directions";
     }
 
-    
+
     identity utilized-bandwidth {
         base telemetry-param-type;
         description
@@ -100,8 +100,8 @@ module ietf-te-kpi-telemetry {
                  "AND operation";
             }
             enum OR {
-            	description
-            	 "OR operation";
+              description
+               "OR operation";
             }
         }
         description
@@ -109,203 +109,208 @@ module ietf-te-kpi-telemetry {
     }
 
 
-    
+
     /*
      * Groupings
      */
 
     grouping telemetry-delay {
-    	description
-			"Base telemetry delay parameters";
+      description
+      "Base telemetry delay parameters";
 
-	    leaf one-way-delay {
+      leaf one-way-delay {
             type uint32;
             units "microseconds";
-			description
-		    	"To specify average Delay in one (forward) direction
+      description
+          "To specify average Delay in one (forward) direction
                 during the measurement interval";
-	    }
+      }
 
-	    leaf two-way-delay {
+      leaf two-way-delay {
             type uint32;
             units "microseconds";
-			description
-		    	"To specify average Delay in both (forward and reverse)
-            	 directions during the measurement interval";
-	    }
+      description
+          "To specify average Delay in both (forward and reverse)
+               directions during the measurement interval";
+      }
 
-	    leaf one-way-delay-min {
+      leaf one-way-delay-min {
             type uint32;
             units "microseconds";
-			description
-		    	"To specify minimum Delay in one (forward) direction
-		    	 during the measurement interval";
-	    }
+      description
+          "To specify minimum Delay in one (forward) direction
+           during the measurement interval";
+      }
 
-	    leaf one-way-delay-max {
+      leaf one-way-delay-max {
             type uint32;
             units "microseconds";
-			description
-		    	"To specify maximum Delay in one (forward) direction
-		    	 during the measurement interval";
-	    }
+      description
+          "To specify maximum Delay in one (forward) direction
+           during the measurement interval";
+      }
 
-	    leaf two-way-delay-min {
+      leaf two-way-delay-min {
             type uint32;
             units "microseconds";
-			description
-		    	"To specify minimum Delay in both (forward and reverse)
-             	 directions during the measurement interval";
-	    }
+      description
+          "To specify minimum Delay in both (forward and reverse)
+               directions during the measurement interval";
+      }
 
-	    leaf two-way-delay-max {
+      leaf two-way-delay-max {
             type uint32;
             units "microseconds";
-			description
-		    	"To specify maximum Delay in both (forward and reverse)
-            	 directions during the measurement interval";
-	    }
+      description
+          "To specify maximum Delay in both (forward and reverse)
+               directions during the measurement interval";
+      }
 
     }
 
 
     grouping telemetry-delay-variance {
 
-        description
-			"Base telemetry delay variance parameters";
-		leaf one-way-delay-variation {
-            type uint32;
-            units "microseconds";
-			description
-		    	"To specify average Delay Variation in one (forward)
-		    	 direction during the measurement interval";
-	    }
-	    
-	    leaf two-way-delay-variation {
-            type uint32;
-            units "microseconds";
-			description
-		    	 "To specify average Delay Variation in both
-		    	  (forward and reverse) directions during the 
-                  measurement interval";
-	    }
+    description
+      "Base telemetry delay variance parameters";
+    leaf one-way-delay-variation {
+      type uint32;
+      units "microseconds";
+      description
+        "To specify average Delay Variation in one (forward)
+        direction during the measurement interval";
+    }
 
-	}
+    leaf two-way-delay-variation {
+      type uint32;
+      units "microseconds";
+      description
+        "To specify average Delay Variation in both
+        (forward and reverse) directions during the
+        measurement interval";
+    }
+
+  }
 
 
-	grouping telemetry-packet-loss {
+    grouping telemetry-packet-loss {
 
-        description
-			"Base telemetry packet loss parameters";
-	    leaf one-way-packet-loss {
+      description
+          "Base telemetry packet loss parameters";
+        leaf one-way-packet-loss {
             type decimal64 {
                 fraction-digits 4;
                 range "0.0000..100.0000";
             }
             units "percent";
-			description
-		    	"To specify packet loss in one (forward) direction.";
-	    }
+        description
+          "To specify packet loss in one (forward) direction.";
+        }
 
-	    leaf two-way-packet-loss {
+        leaf two-way-packet-loss {
             type decimal64 {
                 fraction-digits 4;
                 range "0.0000..100.0000";
             }
             units "percent";
-			description
-		    	"To specify packet loss in in both (forward and reverse)
-             	 directions";
-	    }
-	}
-
-
-	grouping telemetry-bandwidth {
         description
-			"Base telemetry bandwidth parameters";
-	    leaf utilized-bandwidth {
+            "To specify packet loss in in both (forward and reverse)
+            directions";
+        }
+    }
+
+
+    grouping telemetry-bandwidth {
+      description
+          "Base telemetry bandwidth parameters";
+        leaf utilized-bandwidth {
             type rt:bandwidth-ieee-float32;
-			description
-		   		"To specify utilized bandwidth over the specified source
-            	 and destination in bytes per seconds.";
+        description
+          "To specify utilized bandwidth over the specified source
+            and destination in bytes per seconds.";
             reference
-                "RFC 3471";     
-	    }
-	}
+                "RFC 3471";
+        }
+    }
 
     grouping scaling-criteria {
-        description
+      description
             "Grouping for scaling criteria";
-    	leaf performance-type {
-      		type identityref {
-        		base telemetry-param-type;
-      		}
-      	     description
-      		    "Reference to the tunnel level telemetry type";
-    	}
+        leaf performance-type {
+          type identityref {
+              base telemetry-param-type;
+            }
+            description
+              "Reference to the tunnel level telemetry type";
+        }
 
-    	leaf performance-data {
-    		type binary;
-    		description
-    			"The encoding and meaning of this field is 
-    			 based on the performance-type";
-    	}
+        leaf performance-data {
+          type binary;
+          description
+              "The encoding and meaning of this field is
+              based on the performance-type";
+        }
     }
 
     grouping scaling-intent {
-    	description
-    		"Basic scaling intent";
+      description
+        "Basic scaling intent";
 
         container scale-in {
             description
-    		    "Basic scaling-in intent";
-        
+            "Basic scaling-in intent";
+
             leaf scale-in-operation-type {
                 type scaling-criteria-operation;
                 default AND;
                 description
-                    "Operation to be applied to check between scaling criterias to 
-                    check if the scale in threshold condition has been met.
+                    "Operation to be applied to check between
+                    scaling criterias to check if the scale in
+                    threshold condition has been met.
                     Defaults to AND";
             }
 
-        	leaf threshold-time {
+            leaf threshold-time {
                 type uint32;
                 units "seconds";
                 description
-                    "The duration for which the criteria must hold true";
+                    "The duration for which the criteria must
+                    hold true";
             }
-	    	list scale-in-condition {
-	    		key "performance-type";
-	    		description
-	    			"Scaling conditions";
-	    		uses scaling-criteria;
-	    	}            
+
+            list scale-in-condition {
+              key "performance-type";
+              description
+                "Scaling conditions";
+              uses scaling-criteria;
+          }
         }
         container scale-down {
             description
-    		    "Basic scaling-out intent";
+            "Basic scaling-out intent";
             leaf cooldown-time {
                 type uint32;
                 units "seconds";
                 description
-                "The duration after a scaling-in/scaling-out action has been
-                triggered, for which there will be no further operation";
+                "The duration after a scaling-in/scaling-out action
+                has been triggered, for which there will be no
+                further operation";
             }
             leaf scale-out-operation-type {
                 type scaling-criteria-operation;
                 default OR;
                 description
-                    "Operation to be applied to check between scaling criterias to 
-                    check if the scale out threshold condition has been met.
+                    "Operation to be applied to check between
+                    scaling criterias to check if the scale out
+                    threshold condition has been met.
                     Defauls to OR";
             }
-	    	list scale-out-condition {
-	    		key "performance-type";
-	    		description
-	    			"Scaling conditions";
-	    		uses scaling-criteria;
-	    	}
+            list scale-out-condition {
+              key "performance-type";
+              description
+                "Scaling conditions";
+              uses scaling-criteria;
+          }
 
         }
 
@@ -316,20 +321,20 @@ module ietf-te-kpi-telemetry {
     grouping telemetry-param {
 
         description
-			"Base telemetry parameters";
-		container data {
-			description
-				"The telemetry data";	
+      "Base telemetry parameters";
+    container data {
+      description
+        "The telemetry data";
 
-        	uses telemetry-delay;
+          uses telemetry-delay;
 
-        	uses telemetry-delay-variance;
+          uses telemetry-delay-variance;
 
-        	uses telemetry-packet-loss;
+          uses telemetry-packet-loss;
 
-        	uses telemetry-bandwidth;   
-    	}
-        
+          uses telemetry-bandwidth;
+      }
+
     }
 
     /*
@@ -339,15 +344,15 @@ module ietf-te-kpi-telemetry {
 
         description
             "Augmentation parameters for config scaling-criteria
-            TE tunnel topologies. Scale in/out criteria might be used
-            for network autonomics in order the controller
+            TE tunnel topologies. Scale in/out criteria might be
+            used for network autonomics in order the controller
             to react to a certain set of monitored params.";
 
         container te-scaling-intent {
-        	description
-        		"scaling intent";
+          description
+            "scaling intent";
             uses scaling-intent;
-            
+
         }
 
     }
@@ -357,16 +362,17 @@ module ietf-te-kpi-telemetry {
     augment "/te:te/te:tunnels/te:tunnel/te:state" {
 
         description
-            "Augmentation parameters for state TE tunnel topologies.";
+            "Augmentation parameters for state TE tunnel
+            topologies.";
 
         container te-telemetry {
-        	description
-        		"telemetry params";
-        	uses telemetry-param;
+          description
+            "telemetry params";
+          uses telemetry-param;
         }
     }
 
 
 
 
-}
+}//module

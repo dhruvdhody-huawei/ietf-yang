@@ -8,14 +8,16 @@ module: ietf-actn-te-kpi-telemetry
     |     +--rw utilized-bandwidth-op?   grouping-operation
     +--rw vn-scaling-intent
        +--rw scale-in
-       |  +--rw scale-in-operation-type?   scaling-criteria-operation
+       |  +--rw scale-in-operation-type?
+       |  |       scaling-criteria-operation
        |  +--rw threshold-time?            uint32
        |  +--rw scale-in-condition* [performance-type]
        |     +--rw performance-type    identityref
        |     +--rw performance-data?   binary
        +--rw scale-down
           +--rw cooldown-time?              uint32
-          +--rw scale-out-operation-type?   scaling-criteria-operation
+          +--rw scale-out-operation-type?
+          |       scaling-criteria-operation
           +--rw scale-out-condition* [performance-type]
              +--rw performance-type    identityref
              +--rw performance-data?   binary
@@ -40,14 +42,16 @@ module: ietf-actn-te-kpi-telemetry
     |     +--ro utilized-bandwidth?        rt:bandwidth-ieee-float32
     +--ro vn-scaling-intent
        +--ro scale-in
-       |  +--ro scale-in-operation-type?   scaling-criteria-operation
+       |  +--ro scale-in-operation-type?
+       |  |       scaling-criteria-operation
        |  +--ro threshold-time?            uint32
        |  +--ro scale-in-condition* [performance-type]
        |     +--ro performance-type    identityref
        |     +--ro performance-data?   binary
        +--ro scale-down
           +--ro cooldown-time?              uint32
-          +--ro scale-out-operation-type?   scaling-criteria-operation
+          +--ro scale-out-operation-type?
+          |       scaling-criteria-operation
           +--ro scale-out-condition* [performance-type]
              +--ro performance-type    identityref
              +--ro performance-data?   binary
