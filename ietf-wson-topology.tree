@@ -1,0 +1,57 @@
+module: ietf-wson-topology
+  augment /nd:networks/nd:network/nd:network-types:
+    +--rw wson-topology!
+  augment /nd:networks/nd:network/nd:node/tet:te/tet:config/tet:te-node-attributes/tet:connectivity-matrices/tet:connectivity-matrix:
+    +--rw matrix-interface* [in-port-id]
+       +--rw in-port-id     wson-interface-ref
+       +--rw out-port-id?   wson-interface-ref
+  augment /nd:networks/nd:network/nd:node/tet:te/tet:state/tet:te-node-attributes/tet:connectivity-matrices/tet:connectivity-matrix:
+    +--ro matrix-interface* [in-port-id]
+       +--ro in-port-id     wson-interface-ref
+       +--ro out-port-id?   wson-interface-ref
+  augment /nd:networks/nd:network/nd:node/tet:te/tet:state/tet:information-source-entry/tet:connectivity-matrices/tet:connectivity-matrix:
+    +--ro matrix-interface* [in-port-id]
+       +--ro in-port-id     wson-interface-ref
+       +--ro out-port-id?   wson-interface-ref
+  augment /nd:networks/nd:network/lnk:link/tet:te/tet:config/tet:te-link-attributes:
+    +--rw channel-max?                   int32
+    +--rw default-frequency?             decimal64
+    +--rw channel-spacing?               decimal64
+    +--rw wavelength-available-bitmap*   binary
+  augment /nd:networks/nd:network/lnk:link/tet:te/tet:state/tet:te-link-attributes:
+    +--ro channel-max?                   int32
+    +--ro default-frequency?             decimal64
+    +--ro channel-spacing?               decimal64
+    +--ro wavelength-available-bitmap*   binary
+  augment /nd:networks/nd:network/nd:node/tet:te/tet:config/tet:te-node-attributes:
+    +--rw wson-node
+    |  +--rw device-type?   devicetype
+    |  +--rw dir?           directionality
+    |  +--rw interfaces* [name]
+    |     +--rw name           string
+    |     +--rw port-number?   uint32
+    |     +--rw input-port?    boolean
+    |     +--rw output-port?   boolean
+    |     +--rw description?   string
+    +--rw resource-pool* [resource-pool-id]
+       +--rw resource-pool-id    uint32
+       +--rw pool-state?         boolean
+       +--rw matrix-interface* [in-port-id]
+          +--rw in-port-id     wson-interface-ref
+          +--rw out-port-id?   wson-interface-ref
+  augment /nd:networks/nd:network/nd:node/tet:te/tet:state/tet:te-node-attributes:
+    +--ro wson-node
+    |  +--ro device-type?   devicetype
+    |  +--ro dir?           directionality
+    |  +--ro interfaces* [name]
+    |     +--ro name           string
+    |     +--ro port-number?   uint32
+    |     +--ro input-port?    boolean
+    |     +--ro output-port?   boolean
+    |     +--ro description?   string
+    +--ro resource-pool* [resource-pool-id]
+       +--ro resource-pool-id    uint32
+       +--ro pool-state?         boolean
+       +--ro matrix-interface* [in-port-id]
+          +--ro in-port-id     wson-interface-ref
+          +--ro out-port-id?   wson-interface-ref

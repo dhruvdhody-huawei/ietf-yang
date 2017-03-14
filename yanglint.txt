@@ -28,3 +28,7 @@ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-service-mapping.yang
 
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-kpi-telemetry.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-actn-te-kpi-telemetry.yang
+
+
+
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-wson-topology.yang
