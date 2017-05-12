@@ -1,4 +1,411 @@
-//<CODE BEGINS> file "ietf-ntp@2017-05-12.yang"
+<?xml version="1.0" encoding="US-ASCII"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc toc="yes"?>
+<?rfc tocompact="yes"?>
+<?rfc tocdepth="3"?>
+<?rfc tocindent="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc sortrefs="yes"?>
+<?rfc comments="yes"?>
+<?rfc inline="yes"?>
+<?rfc compact="yes"?>
+<?rfc subcompact="no"?>
+<rfc category="std" docName="draft-wu-ntp-ntp-cfg-03" ipr="trust200902">
+  <front>
+    <title abbrev="YANG for NTP">A YANG Data Model for NTP</title>
+
+    <author fullname="Nan Wu" initials="N." surname="Wu">
+      <organization>Huawei</organization>
+
+      <address>
+        <postal>
+          <street>Huawei Bld., No.156 Beiqing Rd.</street>
+
+          <city>Beijing</city>
+
+          <code>100095</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>eric.wu@huawei.com</email>
+      </address>
+    </author>
+
+    <author fullname="Anil Kumar S N" initials="A." surname="Kumar S N">
+      <organization>RtBrick Inc.</organization>
+
+      <address>
+        <postal>
+          <street/>
+
+          <city>Bangalore</city>
+
+          <region>Kanataka</region>
+
+          <code>560037</code>
+
+          <country>India</country>
+        </postal>
+
+        <email>anil.ietf@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Yi Zhao" initials="Y." surname="Zhao">
+      <organization>Ericsson</organization>
+
+      <address>
+        <postal>
+          <street>China Digital Kingdom Bld., No.1 WangJing North Rd.</street>
+
+          <city>Beijing</city>
+
+          <code>100102</code>
+
+          <country>China</country>
+        </postal>
+
+        <email>yi.z.zhao@ericsson.com</email>
+      </address>
+    </author>
+
+    <author fullname="Dhruv Dhody" initials="D." surname="Dhody">
+      <organization>Huawei</organization>
+
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+
+          <city>Bangalore</city>
+
+          <region>Kanataka</region>
+
+          <code>560066</code>
+
+          <country>India</country>
+        </postal>
+
+        <email>dhruv.ietf@gmail.com</email>
+      </address>
+    </author>
+
+    <author fullname="Ankit kumar Sinha" initials="A." surname="Sinha">
+      <organization>Huawei</organization>
+
+      <address>
+        <postal>
+          <street>Divyashree Techno Park, Whitefield</street>
+
+          <city>Bangalore</city>
+
+          <region>Kanataka</region>
+
+          <code>560066</code>
+
+          <country>India</country>
+        </postal>
+
+        <email>ankit.ietf@gmail.com</email>
+      </address>
+    </author>
+
+    <date day="12" month="May" year="2017"/>
+
+    <abstract>
+      <t>This document defines a YANG data model for Network Time Protocol
+      implementations. The data model includes configuration data and state
+      data.</t>
+    </abstract>
+
+    <note title="Requirements Language">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+      document are to be interpreted as described in <xref
+      target="RFC2119">RFC 2119</xref>.</t>
+    </note>
+  </front>
+
+  <middle>
+    <section title="Introduction">
+      <t>This document defines a YANG <xref target="RFC6020"/> data model for
+      Network Time Protocol <xref target="RFC5905"/> implementations.</t>
+
+      <t>The data model convers configuration of system parameters of NTP,
+      such as access rules, authentication and VRF binding, and also
+      associations of NTP in different modes and parameters of per-interface.
+      It also provides information about running state of NTP
+      implementations.</t>
+
+      <section title="Operational State">
+        <t>NTP Operational State is included in the same tree as NTP configuration,
+        consistent with Network Management Datastore Architecture <xref target="I-D.ietf-netmod-revised-datastores"/>.
+        NTP current state and statistics are also maintained
+        in the operational state. Additionally, the operational state also
+        include the associations state.</t>
+      </section>
+
+
+      <section title="Terminology">
+      </section>
+
+      <section title="Tree Diagrams">
+        <t>A simplified graphical representation of the data model is used in
+        this document. The meaning of the symbols in these diagrams is as
+        follows:<list style="symbols">
+            <t>Brackets "[" and "]" enclose list keys.</t>
+
+            <t>Abbreviations before data node names: "rw" means configuration
+            data (read-write), and "ro" means state data (read-only).</t>
+
+            <t>Symbols after data node names: "?" means an optional node, "!"
+            means a presence container, and "*" denotes a list and
+            leaf-list.</t>
+
+            <t>Parentheses enclose choice and case nodes, and case nodes are
+            also marked with a colon (":").</t>
+
+            <t>Ellipsis ("...") stands for contents of subtrees that are not
+            shown.</t>
+          </list></t>
+      </section>
+    </section>
+
+    <section title="NTP data model">
+      <t>This document defines the YANG module "ietf-ntp", which has the
+      following structure:<figure align="center">
+          <artwork><![CDATA[module: ietf-ntp
+    +--rw ntp!
+    |  +--rw port?              uint16
+    |  +--rw refclock-master!
+    |  |  +--rw master-stratum?   ntp-stratum
+    |  +--rw authentication
+    |  |  +--rw auth-enabled?          boolean
+    |  |  +--rw trusted-keys* [key-id]
+    |  |  |  +--rw key-id    leafref
+    |  |  +--rw authentication-keys* [key-id]
+    |  |     +--rw key-id       uint32
+    |  |     +--rw algorithm?   identityref
+    |  |     +--rw password?    ianach:crypt-hash
+    |  +--rw access-rules
+    |  |  +--rw access-rule* [access-mode]
+    |  |     +--rw access-mode    access-modes
+    |  |     +--rw acl?           -> /acl:access-lists/acl/acl-name
+    |  +--ro clock-state
+    |  |  +--ro system-status
+    |  |     +--ro clock-state?       ntp-clock-status
+    |  |     +--ro clock-stratum?     ntp-stratum
+    |  |     +--ro clock-refid?       union
+    |  |     +--ro nominal-freq?      decimal64
+    |  |     +--ro actual-freq?       decimal64
+    |  |     +--ro clock-precision?   uint8
+    |  |     +--ro clock-offset?      decimal64
+    |  |     +--ro root-delay?        decimal64
+    |  |     +--ro root-dispersion?   decimal64
+    |  |     +--ro peer-dispersion?   decimal64
+    |  |     +--ro reference-time?    yang:date-and-time
+    |  |     +--ro sync-state?        ntp-sync-state
+    |  +--rw associations* [address association-type]
+    |  |  +--rw address             inet:host
+    |  |  +--rw association-type    association-modes
+    |  |  +--rw authentication
+    |  |  |  +--rw (authentication-type)?
+    |  |  |     +--:(symmetric-key)
+    |  |  |        +--rw key-id?   leafref
+    |  |  +--rw prefer?             boolean
+    |  |  +--rw burst?              boolean
+    |  |  +--rw iburst?             boolean
+    |  |  +--rw source?             if:interface-ref
+    |  |  +--rw minpoll?            ntp-minpoll
+    |  |  +--rw maxpoll?            ntp-maxpoll
+    |  |  +--rw port?               uint16
+    |  |  +--rw version?            ntp-version
+    |  |  +--ro stratum?            ntp-stratum
+    |  |  +--ro refid?              union
+    |  |  +--ro reach?              uint8
+    |  |  +--ro unreach?            uint8
+    |  |  +--ro poll?               uint8
+    |  |  +--ro now?                uint32
+    |  |  +--ro offset?             decimal64
+    |  |  +--ro delay?              decimal64
+    |  |  +--ro dispersion?         decimal64
+    |  |  +--ro originate-time?     yang:date-and-time
+    |  |  +--ro receive-time?       yang:date-and-time
+    |  |  +--ro transmit-time?      yang:date-and-time
+    |  |  +--ro input-time?         yang:date-and-time
+    |  |  +--ro ntp-statistics
+    |  |     +--ro packet-sent?        yang:counter32
+    |  |     +--ro packet-sent-fail?   yang:counter32
+    |  |     +--ro packet-received?    yang:counter32
+    |  |     +--ro packet-dropped?     yang:counter32
+    |  +--rw interface
+    |     +--rw interface* [interface]
+    |        +--rw interface           if:interface-ref
+    |        +--rw broadcast-server!
+    |        |  +--rw ttl?              uint8
+    |        |  +--rw authentication
+    |        |  |  +--rw (authentication-type)?
+    |        |  |     +--:(symmetric-key)
+    |        |  |        +--rw key-id?   leafref
+    |        |  +--rw minpoll?          ntp-minpoll
+    |        |  +--rw maxpoll?          ntp-maxpoll
+    |        |  +--rw port?             uint16
+    |        |  +--rw version?          ntp-version
+    |        +--rw broadcast-client!
+    |        +--rw multicast-server* [address]
+    |        |  +--rw address
+    |        |  |       rt-types:ip-multicast-group-address
+    |        |  +--rw ttl?              uint8
+    |        |  +--rw authentication
+    |        |  |  +--rw (authentication-type)?
+    |        |  |     +--:(symmetric-key)
+    |        |  |        +--rw key-id?   leafref
+    |        |  +--rw minpoll?          ntp-minpoll
+    |        |  +--rw maxpoll?          ntp-maxpoll
+    |        |  +--rw port?             uint16
+    |        |  +--rw version?          ntp-version
+    |        +--rw multicast-client* [address]
+    |        |  +--rw address    rt-types:ip-multicast-group-address
+    |        +--rw manycast-server* [address]
+    |        |  +--rw address    rt-types:ip-multicast-group-address
+    |        +--rw manycast-client* [address]
+    |           +--rw address
+    |           |       rt-types:ip-multicast-group-address
+    |           +--rw authentication
+    |           |  +--rw (authentication-type)?
+    |           |     +--:(symmetric-key)
+    |           |        +--rw key-id?   leafref
+    |           +--rw ttl?              uint8
+    |           +--rw minclock?         uint8
+    |           +--rw maxclock?         uint8
+    |           +--rw beacon?           uint8
+    |           +--rw minpoll?          ntp-minpoll
+    |           +--rw maxpoll?          ntp-maxpoll
+    |           +--rw port?             uint16
+    |           +--rw version?          ntp-version
+    +--ro ntp-statistics
+       +--ro packet-sent?        yang:counter32
+       +--ro packet-sent-fail?   yang:counter32
+       +--ro packet-received?    yang:counter32
+       +--ro packet-dropped?     yang:counter32]]></artwork>
+        </figure></t>
+
+      <t>This data model defines two primary containers, one for NTP
+      configuration and the other is for NTP running state. The NTP
+      configuration container includes data nodes for access rules,
+      authentication, associations and interfaces. In the NTP running state
+      container, there are data nodes for system status and associations.</t>
+    </section>
+
+    <section title="Relationship with NTPv4-MIB">
+      <t>If the device implements the NTPv4-MIB <xref target="RFC5907"/>, data
+      nodes in container ntp and ntp-state from YANG module can be mapped
+      to table entries in NTPv4-MIB.</t>
+
+      <t>The following tables list the YANG data nodes with corresponding
+      objects in the NTPv4-MIB.</t>
+      <texttable>
+          <ttcol align='center'>YANG data nodes in /ntp/</ttcol>
+          <ttcol align='center'>NTPv4-MIB objects</ttcol>
+          <c>ntp-enabled</c>
+          <c>ntpEntStatusCurrentMode </c>
+          <postamble></postamble>
+      </texttable>
+
+      <texttable>
+          <ttcol align='center'>YANG data nodes in /ntp/associations</ttcol>
+          <ttcol align='center'>NTPv4-MIB objects</ttcol>
+          <c>address</c>
+          <c>ntpAssocAddressType</c>
+          <c> </c>
+          <c>ntpAssocAddress</c>
+          <postamble></postamble>
+      </texttable>
+
+      <t>YANG NTP Configuration Data Nodes and Related NTPv4-MIB Objects</t>
+
+      <texttable>
+          <ttcol align='center'>YANG data nodes in /ntp-state/system-status</ttcol>
+          <ttcol align='center'>NTPv4-MIB objects</ttcol>
+          <c>clock-state</c>
+          <c>ntpEntStatusCurrentMode</c>
+          <c>clock-stratum</c>
+          <c>ntpEntStatusStratum</c>
+          <c>clock-refid</c>
+          <c>ntpEntStatusActiveRefSourceId</c>
+          <c> </c>
+          <c>ntpEntStatusActiveRefSourceName</c>
+          <c>clock-precision</c>
+          <c>ntpEntTimePrecision</c>
+          <c>clock-offset</c>
+          <c>ntpEntStatusActiveOffset</c>
+          <c>root-dispersion</c>
+          <c>ntpEntStatusDispersion</c>
+          <postamble></postamble>
+      </texttable>
+
+      <texttable>
+          <ttcol align='center'>YANG data nodes in /ntp-state/associations-status/association-status/</ttcol>
+          <ttcol align='center'>NTPv4-MIB objects</ttcol>
+          <c>association-source</c>
+          <c>ntpAssocAddressType</c>
+          <c> </c>
+          <c>ntpAssocAddress</c>
+          <c>association-stratum</c>
+          <c>ntpAssocStratum</c>
+          <c>association-refid</c>
+          <c>ntpAssocRefId</c>
+          <c>association-offset</c>
+          <c>ntpAssocOffset</c>
+          <c>association-delay</c>
+          <c>ntpAssocStatusDelay</c>
+          <c>association-dispersion</c>
+          <c>ntpAssocStatusDispersion</c>
+          <c>association-sent</c>
+          <c>ntpAssocStatOutPkts</c>
+          <c>association-received</c>
+          <c>ntpAssocStatInPkts</c>
+          <c>association-dropped</c>
+          <c>ntpAssocStatProtocolError</c>
+          <postamble></postamble>
+      </texttable>
+
+      <t>YANG NTP State Data Nodes and Related NTPv4-MIB Objects</t>
+    </section>
+
+    <section title="Relationship with RFC7317">
+      <t>This section describes the relationship with NTP definition in
+      Section 3.2 System Time Management of <xref target="RFC7317"/> .
+      YANG data nodes in /ntp/ also supports interface related
+      configurations which is not supported in /system/ntp </t>
+
+      <texttable>
+          <ttcol align='center'>YANG data nodes in /ntp/ </ttcol>
+          <ttcol align='center'>YANG data nodes in /system/ntp</ttcol>
+          <c>ntp-enabled</c>
+          <c>enabled</c>
+          <c>associations/association</c>
+          <c>server</c>
+          <c> </c>
+          <c>server/name</c>
+          <c>associations/association/address</c>
+          <c>server/transport/udp/address</c>
+          <c>ntp-enabled/port</c>
+          <c>server/transport/udp/port</c>
+          <c>associations/association-type</c>
+          <c>server/association-type</c>
+          <c>associations/association/iburst</c>
+          <c>server/iburst</c>
+          <c>associations/association/prefer</c>
+          <c>server/prefer</c>
+          <postamble>YANG NTP Configuration Data Nodes and counterparts in RFC7317 Objects</postamble>
+      </texttable>
+    </section>
+
+    <section title="NTP YANG Module">
+      <t><figure align="center">
+          <artwork><![CDATA[
+   <CODE BEGINS> file "ietf-ntp@2017-05-12.yang"
    module ietf-ntp {
 
      namespace "urn:ietf:params:xml:ns:yang:ietf-ntp";
@@ -836,4 +1243,80 @@
       }
     }
    }
-   //<CODE ENDS>
+   <CODE ENDS>]]></artwork>
+        </figure></t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This document registers a URI in the "IETF XML Registry" <xref
+      target="RFC3688"/>. Following the format in RFC 3688, the following
+      registration has been made.</t>
+
+      <t>URI: urn:ietf:params:xml:ns:yang:ietf-ntp</t>
+
+      <t>Registrant Contact: The NETMOD WG of the IETF.</t>
+
+      <t>XML: N/A; the requested URI is an XML namespace.</t>
+
+      <t>This document registers a YANG module in the "YANG Module Names"
+      registry [RFC6020].</t>
+
+      <t>Name: ietf-ntp</t>
+
+      <t>Namespace: urn:ietf:params:xml:ns:yang:ietf-ntp</t>
+
+      <t>Prefix: ntp</t>
+
+      <t>Reference: RFC XXXX</t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>The YANG module defined in this memo is designed to be accessed via
+      the NETCONF protocol <xref target="RFC6241"/>. The lowest NETCONF layer
+      is the secure transport layer and the mandatory-to-implement secure
+      transport is SSH <xref target="RFC6242"/>. The NETCONF access control
+      model <xref target="RFC6536"/> provides the means to restrict access for
+      particular NETCONF users to a pre-configured subset of all available
+      NETCONF protocol operations and content.</t>
+
+      <t>There are a number of data nodes defined in the YANG module which are
+      writable/creatable/deletable (i.e., config true, which is the default).
+      These data nodes may be considered sensitive or vulnerable in some
+      network environments. Write operations (e.g., &lt;edit-config&gt;) to
+      these data nodes without proper protection can have a negative effect on
+      network operations.</t>
+    </section>
+
+    <section title="Acknowledgments">
+      <t>The authors would like to express their thanks to Sladjana Zoric,
+      Danny Mayer, Harlan Stenn, Ulrich Windl and Miroslav Lichvar for their
+      review and suggestions.</t>
+    </section>
+  </middle>
+
+  <back>
+    <references title="Normative References">
+      <?rfc include="reference.RFC.5905"?>
+
+      <?rfc include="reference.RFC.6020"?>
+
+      <?rfc include="reference.RFC.3688"?>
+
+      <?rfc include="reference.RFC.6241"?>
+
+      <?rfc include="reference.RFC.6242"?>
+
+      <?rfc include="reference.RFC.6536"?>
+
+      <?rfc include="reference.RFC.5907"?>
+    </references>
+
+    <references title="Informative References">
+      <?rfc include="reference.RFC.2119"?>
+
+      <?rfc include="reference.RFC.7317"?>
+
+      <?rfc include="reference.I-D.ietf-netmod-revised-datastores"?>
+    </references>
+  </back>
+</rfc>
