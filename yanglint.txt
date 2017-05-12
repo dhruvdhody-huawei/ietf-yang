@@ -32,3 +32,21 @@ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-actn-te-kpi-telemetry.yan
 
 
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-wson-topology.yang
+
+
+
+
+
+
+======
+
+
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-netconf-acm.yang
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-routing-types.yang 
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-yang-types.yang 
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-inet-types.yang 
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-interfaces.yang 
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/iana-crypt-hash.yang 
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-key-chain.yang 
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-packet-fields.yang 
+ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-access-control-list.yang
