@@ -1,3 +1,5 @@
+
+
 module ietf-actn-te-kpi-telemetry {
 
     namespace
@@ -26,6 +28,12 @@ module ietf-actn-te-kpi-telemetry {
     description
         "This module describes telemetry for actn vn model";
 
+    revision 2017-06-20 {
+        description
+            "Removed references to technology specific kpi.";
+        reference
+            "draft-lee-teas-actn-pm-telemetry-autonomics-01";
+    }
 
     revision 2017-03-13 {
         description
@@ -36,44 +44,43 @@ module ietf-actn-te-kpi-telemetry {
     }
 
     /*
-     * Typedefs
+     * Identities
      */
 
-    typedef grouping-operation {
-        type enumeration {
-            enum MINIMUM {
-                description
-                    "Select the minimum param";
-            }
-            enum MAXIMUM {
-                description
-                    "Select the maximum param";
-            }
-            enum MEAN {
-                description
-                    "Select the MEAN of the params";
-            }
-            enum STD_DEV {
-                description
-                    "Select the standard deviation of the
-                     monitored params";
-            }
-            enum SUM {
-                description
-                    "Select the sum of the monitored params";
-                reference
-                    "RFC 7823";
-            }
-            enum LOSS_PERCENT {
-                description
-                    "Select the packet loss percentage
-                     calulation";
-                reference
-                    "RFC 7823";
-            }
-        }
+    identity grouping-operation {
+        description "Base identity for operations to analize list of monitored param";
+    }
+
+    identity minimum-grouping-operation {
+        base grouping-operation;
         description
-            "Operations to analize list of monitored params";
+            "Select the minimum param";
+    }
+
+    identity maximum-grouping-operation {
+        base grouping-operation;
+        description
+            "Select the maximum param";
+    }
+
+    identity mean-grouping-operation {
+        base grouping-operation;
+        description
+            "Select the MEAN of the params";
+    }
+
+    identity stddev-grouping-operation {
+        base grouping-operation;
+        description
+            "Select the STD deviation of the params";
+    }
+
+    identity sum-grouping-operation {
+        base grouping-operation;
+        description
+            "Select the sum of the params";
+       reference
+            "RFC 7823";
     }
 
     /*
@@ -84,7 +91,6 @@ module ietf-actn-te-kpi-telemetry {
             "telemetry-parameter for VN";
         uses te-kpi:telemetry-param;
     }
-
     grouping telemetry-grouping-op {
         description
             "Config how the VN telemetry should be applied";
@@ -92,32 +98,29 @@ module ietf-actn-te-kpi-telemetry {
             description
                 "The grouping operations";
             leaf delay-op {
-                type grouping-operation;
-                default MAXIMUM;
+                type identityref {
+                  base grouping-operation;
+                }
+                default maximum-grouping-operation;
                 description
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
             }
-
             leaf delay-variation-op {
-                type grouping-operation;
-                default MAXIMUM;
-                description
-                    "The operation that should be applied on the
-                     VN-member telemetry to get the VN telemetry";
-            }
-
-            leaf packet-loss-op {
-                type grouping-operation;
-                default MAXIMUM;
+                type identityref {
+                  base grouping-operation;
+                }
+                default maximum-grouping-operation;
                 description
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
             }
 
             leaf utilized-bandwidth-op {
-                type grouping-operation;
-                default MAXIMUM;
+                type identityref {
+                  base grouping-operation;
+                }
+                default maximum-grouping-operation;
                 description
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
@@ -125,7 +128,6 @@ module ietf-actn-te-kpi-telemetry {
         }
 
     }
-
 
     /*
      * Augments
@@ -163,7 +165,6 @@ module ietf-actn-te-kpi-telemetry {
             uses te-kpi:scaling-intent;
         }
     }
-
 
     /*
      * VN-member augment

@@ -1,15 +1,16 @@
+
+
 module ietf-te-kpi-telemetry {
   namespace "urn:ietf:params:xml:ns:yang:ietf-te-kpi-telemetry";
 
     prefix "te-tel";
 
-
     import ietf-te {
         prefix "te";
     }
 
-    import ietf-routing-types {
-       prefix "rt";
+    import ietf-te-topology {
+       prefix "tet";
     }
 
     organization
@@ -21,16 +22,22 @@ module ietf-te-kpi-telemetry {
          Editor: Dhruv Dhody <dhruv.ietf@gmail.com>
          Editor: Ricard Vilalta <ricard.vilalta@cttc.es>
          Editor: Satish Karunanithi <satish.karunanithi@gmail.com>";
-
     description
         "This module describes telemetry for teas tunnel model";
 
-    revision 2017-03-13 {
+    revision 2017-06-20 {
         description
             "Initial revision. This YANG file defines
             the reusable base types for TE telemetry.";
         reference
             "Derived from earlier versions of base YANG files";
+    }
+
+    revision 2017-03-13 {
+        description
+            "Removed references to technology specific kpi.";
+        reference
+            "draft-lee-teas-actn-pm-telemetry-autonomics-00";
     }
 
     /*
@@ -47,7 +54,6 @@ module ietf-te-kpi-telemetry {
         description
             "To specify average Delay in one (forward) direction";
     }
-
     identity two-way-delay {
         base telemetry-param-type;
         description
@@ -68,20 +74,6 @@ module ietf-te-kpi-telemetry {
             "To specify average Delay Variation in both (forward
             and reverse) directions";
     }
-
-    identity one-way-packet-loss {
-        base telemetry-param-type;
-        description
-            "To specify packet loss in one (forward) direction.";
-    }
-
-    identity two-way-packet-loss {
-        base telemetry-param-type;
-        description
-            "To specify packet loss in in both (forward and reverse)
-             directions";
-    }
-
 
     identity utilized-bandwidth {
         base telemetry-param-type;
@@ -108,8 +100,6 @@ module ietf-te-kpi-telemetry {
          "Operations to analize list of scaling criterias";
     }
 
-
-
     /*
      * Groupings
      */
@@ -125,7 +115,6 @@ module ietf-te-kpi-telemetry {
           "To specify average Delay in one (forward) direction
                 during the measurement interval";
       }
-
       leaf two-way-delay {
             type uint32;
             units "microseconds";
@@ -141,7 +130,6 @@ module ietf-te-kpi-telemetry {
           "To specify minimum Delay in one (forward) direction
            during the measurement interval";
       }
-
       leaf one-way-delay-max {
             type uint32;
             units "microseconds";
@@ -168,7 +156,6 @@ module ietf-te-kpi-telemetry {
 
     }
 
-
     grouping telemetry-delay-variance {
 
     description
@@ -189,42 +176,13 @@ module ietf-te-kpi-telemetry {
         (forward and reverse) directions during the
         measurement interval";
     }
-
   }
-
-
-    grouping telemetry-packet-loss {
-
-      description
-          "Base telemetry packet loss parameters";
-        leaf one-way-packet-loss {
-            type decimal64 {
-                fraction-digits 4;
-                range "0.0000..100.0000";
-            }
-            units "percent";
-        description
-          "To specify packet loss in one (forward) direction.";
-        }
-
-        leaf two-way-packet-loss {
-            type decimal64 {
-                fraction-digits 4;
-                range "0.0000..100.0000";
-            }
-            units "percent";
-        description
-            "To specify packet loss in in both (forward and reverse)
-            directions";
-        }
-    }
-
 
     grouping telemetry-bandwidth {
       description
           "Base telemetry bandwidth parameters";
         leaf utilized-bandwidth {
-            type rt:bandwidth-ieee-float32;
+            type tet:te-bandwidth;
         description
           "To specify utilized bandwidth over the specified source
             and destination in bytes per seconds.";
@@ -251,7 +209,6 @@ module ietf-te-kpi-telemetry {
               based on the performance-type";
         }
     }
-
     grouping scaling-intent {
       description
         "Basic scaling intent";
@@ -314,9 +271,7 @@ module ietf-te-kpi-telemetry {
 
         }
 
-
     }
-
 
     grouping telemetry-param {
 
@@ -329,8 +284,6 @@ module ietf-te-kpi-telemetry {
           uses telemetry-delay;
 
           uses telemetry-delay-variance;
-
-          uses telemetry-packet-loss;
 
           uses telemetry-bandwidth;
       }
@@ -357,8 +310,6 @@ module ietf-te-kpi-telemetry {
 
     }
 
-
-
     augment "/te:te/te:tunnels/te:tunnel/te:state" {
 
         description
@@ -372,7 +323,5 @@ module ietf-te-kpi-telemetry {
         }
     }
 
-
-
-
 }//module
+

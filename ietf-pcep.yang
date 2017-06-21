@@ -5,8 +5,6 @@ module ietf-pcep {
     namespace "urn:ietf:params:xml:ns:yang:ietf-pcep";
     prefix pcep;
 
-
-
     import ietf-inet-types {
         prefix "inet";
     }
@@ -28,9 +26,16 @@ module ietf-pcep {
     }
 
     import ietf-netconf-acm {
-       prefix nacm;
+       prefix "nacm";
      }
 
+    import ietf-tls-server {
+       prefix "tls-server";
+     }
+
+    import ietf-tls-client {
+       prefix "tls-client";
+    }
 
     organization
         "IETF PCE (Path Computation Element) Working Group";
@@ -53,7 +58,7 @@ module ietf-pcep {
          vendor implementations.";
 
 
-    revision 2017-03-12 {
+    revision 2017-06-21 {
         description "Initial revision.";
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
@@ -571,9 +576,6 @@ module ietf-pcep {
     /*
      * Groupings
      */
-
-
-
     grouping pcep-entity-info{
         description
             "This grouping defines the attributes for PCEP entity.";
@@ -1263,7 +1265,7 @@ module ietf-pcep {
             }
             leaf peer{
                 type leafref {
-                    path "/pcep-state/entity/peers/peer/addr";
+                    path "/pcep/entity/peers/peer/addr";
                 }
                 must "(../enabled = true())"
                 {
@@ -1296,7 +1298,7 @@ module ietf-pcep {
             }
             leaf peer{
                 type leafref {
-                    path "/pcep-state/entity/peers/peer/addr";
+                    path "/pcep/entity/peers/peer/addr";
                 }
                 must "(../enabled = true())"
                 {
@@ -1339,7 +1341,7 @@ module ietf-pcep {
 
         leaf peer-addr {
             type leafref {
-                path "/pcep-state/entity/peers/peer/addr";
+                path "/pcep/entity/peers/peer/addr";
             }
             description
                 "Reference to peer address";
@@ -1354,7 +1356,7 @@ module ietf-pcep {
 
         leaf session-initiator {
             type leafref {
-            path "/pcep-state/entity/peers/peer/sessions/" +
+            path "/pcep/entity/peers/peer/sessions/" +
                  "session/initiator";
             }
             description
@@ -1467,9 +1469,33 @@ module ietf-pcep {
             }
             case auth-tls {
                 if-feature tls;
-                container tls {
+                container tls-pce {
+                    when "../role = 'pce' or ../role = 'pcc-and-pce'" {
+                        description
+                            "Valid for PCEP Peer as PCE/PCC-PCE";
+                    }
+
+                    uses tls-server:tls-server-grouping {
+                        description
+                            "Server TLS information.";
+                    }
                     description
-                        "TLS related information - TBD";
+                        "TLS related information";
+                }
+
+                container tls-pcc {
+                    when "../role = 'pcc' or ../role = 'pcc-and-pce'" {
+                    description
+                        "Valid for PCEP Peer as PCC/PCC_PCE";
+                    }
+
+                    uses tls-client:tls-client-grouping {
+                        description
+                            "Client TLS information.";
+                    }
+
+                    description
+                        "TLS related information";
                 }
             }
         }
@@ -1540,7 +1566,7 @@ module ietf-pcep {
             }
             leaf pcc-original {
                 type leafref {
-                    path "/pcep-state/entity/peers/peer/addr";
+                    path "/pcep/entity/peers/peer/addr";
                 }
                 description
                     "Reference to PCC peer address of
@@ -1558,7 +1584,7 @@ module ietf-pcep {
             }
             leaf pcc-retrieved {
                 type leafref {
-                    path "/pcep-state/entity/peers/peer/addr";
+                    path "/pcep/entity/peers/peer/addr";
                 }
                 must "(../retrieved = true())"
                 {
@@ -1645,7 +1671,7 @@ module ietf-pcep {
             "Generic Association parameters";
         leaf id {
             type leafref {
-                path "/pcep-state/entity/lsp-db/"
+                path "/pcep/entity/lsp-db/"
                 + "association-list/id";
             }
             description
@@ -1653,7 +1679,7 @@ module ietf-pcep {
         }
         leaf source {
             type leafref {
-                path "/pcep-state/entity/lsp-db/"
+                path "/pcep/entity/lsp-db/"
                 + "association-list/source";
             }
           description
@@ -1661,7 +1687,7 @@ module ietf-pcep {
         }
         leaf global-source {
             type leafref {
-                path "/pcep-state/entity/lsp-db/"
+                path "/pcep/entity/lsp-db/"
                 + "association-list/global-source";
             }
           description
@@ -1670,13 +1696,321 @@ module ietf-pcep {
         }
         leaf extended-id{
             type leafref {
-                path "/pcep-state/entity/lsp-db/"
+                path "/pcep/entity/lsp-db/"
                 + "association-list/extended-id";
             }
             description
-                "Additional information to
-                support unique identification.";
+                "Additional information to support unique identification.";
         }
+    }
+
+    grouping session-grouping {
+        description
+                "Session grouping";
+        container sessions {
+                config false;
+                description
+                    "This entry represents a single PCEP
+                     session in which the local PCEP entity participates.
+                     This entry exists only if the corresponding PCEP session
+                     has been initialized by some event, such as manual user
+                     configuration, auto-discovery of a peer, or an incoming
+                     TCP connection.";
+
+                     list session {
+                         key "initiator";
+                         description
+                             "The list of sessions, note that
+                              for a time being two sessions
+                              may exist for a peer";
+
+                              leaf initiator {
+                                  type pcep-initiator;
+                                  description
+                                  "The initiator of the session,that is, whether
+                                   the TCP connection was initiated by the local
+                                   PCEP entity or the peer.
+                                   There is a window during session
+                                   initialization where two sessions can exist
+                                   between a pair of PCEP speakers, each
+                                   initiated by one of the speakers. One of
+                                   these sessions is always discarded before it
+                                   leaves OpenWait state. However, before it is
+                                   discarded, two sessions to the given peer
+                                   appear transiently in this MIB module. The
+                                   sessions are distinguished by who initiated
+                                   them, and so this field is the key.";
+                              }
+
+                              leaf role {
+                                  type leafref {
+                                      path "/pcep/entity/role";
+                                  }
+                                  description
+                                      "The reference to peer role .";
+                              }
+
+                              leaf state-last-change {
+                                  type yang:timestamp;
+                                  description
+                                      "The timestamp value at the time this
+                                       session entered its current state as
+                                       denoted by the state leaf.";
+                              }
+
+                              leaf state {
+                                  type pcep-sess-state;
+                                  description
+                                       "The current state of the session.
+                                        The set of possible states excludes the
+                                        idle state since entries do not exist
+                                        in the idle state.";
+                              }
+
+                              leaf session-creation {
+                                  type yang:timestamp;
+                                  description
+                                      "The timestamp value at the time this
+                                       session was created.";
+                              }
+
+                              leaf connect-retry {
+                                  type yang:counter32;
+                                  description
+                                      "The number of times that the local PCEP
+                                       entity has attempted to establish a TCP
+                                       connection for this session without
+                                       success. The PCEP entity gives up when
+                                       this reaches connect-max-retry.";
+                              }
+
+                              leaf local-id {
+                                  type uint32 {
+                                      range "0..255";
+                                  }
+                                  description
+                                      "The value of the PCEP session ID used by
+                                       the local PCEP entity in the Open message
+                                       for this session. If state is tcp-pending
+                                       then this is the session ID that will be
+                                       used in the Open message. Otherwise, this
+                                       is the session ID that was sent in the
+                                       Open message.";
+                              }
+
+                              leaf remote-id {
+                                  type uint32 {
+                                       range "0..255";
+                                  }
+                                  must "((../state != 'tcp-pending' and ../state != 'open-wait' )
+                                  or ((../state = 'tcp-pending' or ../state = 'open-wait' )
+                                  and (. = 0)))" {
+                                       error-message
+                                       "Invalid remote-id";
+                                       description
+                                           "If state is tcp-pending or open-wait
+                                            then this leaf is not used and MUST
+                                             be setto zero.";
+                                  }
+                                  description
+                                      "The value of the PCEP session
+                                       ID used by the peer in its
+                                       Open message for this session.";
+                              }
+
+                              leaf keepalive-timer {
+                                  type uint32 {
+                                      range "0..255";
+                                  }
+                                  units "seconds";
+                                  must "(../state = 'session-up'
+                                  or (../state != 'session-up' and (. = 0)))" {
+                                      error-message
+                                      "Invalid keepalive timer";
+                                      description
+                                          "This field is used if and only if
+                                           state is session-up. Otherwise, it
+                                           is not used and MUST be set to zero.";
+                                  }
+                                  description
+                                      "The agreed maximum interval at which the
+                                       local PCEP entity transmits PCEP messages
+                                       on this PCEP session.  Zero means that
+                                       the local PCEP entity never sends
+                                       Keepalives on this session.";
+                              }
+
+                              leaf peer-keepalive-timer {
+                                  type uint32 {
+                                      range "0..255";
+                                  }
+                                  units "seconds";
+                                  must "(../state = 'session-up'or (../state != 'session-up' and (. = 0)))" {
+                                      error-message
+                                          "Invalid Peer keepalive timer";
+                                      description
+                                          "This field is used if and only if state
+                                          session-up. Otherwise, it is not used and
+                                          MUST be set to zero.";
+                                  }
+                                  description
+                                      "The agreed maximum interval at which the
+                                       peer transmits PCEP messages on this PCEP
+                                       session. Zero means that the peer never
+                                       sends Keepalives on this session.";
+                              }
+
+                              leaf dead-timer {
+                                  type uint32 {
+                                      range "0..255";
+                                  }
+                                  units "seconds";
+                                      description
+                                          "The dead timer interval for
+                                           this PCEP session.";
+                              }
+
+                              leaf peer-dead-timer {
+                                  type uint32 {
+                                      range "0..255";
+                                  }
+                                  units "seconds";
+                                  must "((../state != 'tcp-pending' and ../state != 'open-wait' )
+                                   or ((../state = 'tcp-pending' or ../state = 'open-wait' ) and (. = 0)))" {
+                                      error-message
+                                          "Invalid Peer Dead timer";
+                                      description
+                                          "If state is tcp-pending or open-wait
+                                           then this leaf is not used and MUST be
+                                           set to zero.";
+                                      }
+                                      description
+                                          "The peer's dead-timer interval
+                                           for this PCEP session.";
+                              }
+
+                              leaf ka-hold-time-rem {
+                                  type uint32 {
+                                      range "0..255";
+                                  }
+                                  units "seconds";
+                                  must "((../state != 'tcp-pending' and ../state != 'open-wait' )
+                                   or ((../state = 'tcp-pending' or ../state = 'open-wait' ) and (. = 0)))" {
+                                      error-message
+                                          "Invalid Keepalive hold time remaining";
+                                      description
+                                          "If state is tcp-pending or open-wait
+                                           then this field is not used and MUST
+                                           be set to zero.";
+                                  }
+                                  description
+                                      "The keep alive hold time remaining for
+                                       this session.";
+                              }
+
+                              leaf overloaded {
+                                  type boolean;
+                                  description
+                                      "If the local PCEP entity has informed the
+                                       peer that it is currently overloaded,
+                                       then this is set to true. Otherwise, it
+                                       is set to false.";
+                              }
+
+                              leaf overload-time {
+                              type uint32;
+                              units "seconds";
+                              must "((../overloaded = true()) or ((../overloaded != true()) and (. = 0)))" {
+                                  error-message
+                                      "Invalid overload-time";
+                                  description
+                                      "This field is only used if overloaded is
+                                       set to true. Otherwise, it is not used
+                                       and MUST be set to zero.";
+                                  }
+                                  description
+                                      "The interval of time that is remaining
+                                       until the local PCEP entity will cease
+                                       to be overloaded on this session.";
+                              }
+
+                              leaf peer-overloaded {
+                                  type boolean;
+                                  description
+                                      "If the peer has informed thelocal PCEP
+                                       entity that it is currently overloaded,
+                                       then this is set to true. Otherwise, it
+                                       is set to false.";
+                              }
+
+                              leaf peer-overload-time {
+                                  type uint32;
+                                  units "seconds";
+                                  must "((../peer-overloaded = true()) or ((../peer-overloaded != true()) and (. = 0)))" {
+                                      error-message
+                                          "Invalid peer overload time";
+                                      description
+                                          "This field is only used if
+                                           peer-overloaded is set to true.
+                                           Otherwise, it is not used and MUST be
+                                           set to zero.";
+                                  }
+                                  description
+                                      "The interval of time that is remaining
+                                       until the peer will cease to be
+                                       overloaded.  If it is not known how long
+                                       the peer will stay in overloaded state,
+                                       this leaf is set to zero.";
+                              }
+                              leaf lspdb-sync {
+                                  if-feature stateful;
+                                  type sync-state;
+                                  description
+                                      "The LSP-DB state synchronization status.";
+                              }
+                              leaf recv-db-ver{
+                                  when "../role = 'pcc' or ../role = 'pcc-and-pce'" {
+                                      description
+                                          "Valid for PCEP Peer as PCC";
+                                  }
+
+                                  if-feature stateful;
+                                  if-feature stateful-sync-opt;
+                                  type uint64;
+                                  description
+                                      "The last received LSP State Database
+                                       Version Number";
+                              }
+
+                              container of-list{
+                                  when "../role = 'pce' or ../role = 'pcc-and-pce'" {
+                                       description
+                                          "Valid for PCEP Peer as  PCE";
+                                  }
+                                  if-feature objective-function;
+
+                                  uses of-list;
+
+                                  description
+                                      "Indicate the list of supported OF on
+                                       this session";
+                              }
+
+                              leaf speaker-entity-id{
+                                  if-feature stateful-sync-opt;
+                                  type string;
+                                  description
+                                      "The Speaker Entity Identifier";
+                              }
+
+                              leaf discontinuity-time {
+                                  type yang:timestamp;
+                                  description
+                                      "The timestamp value of the time when the
+                                       statistics were last reset.";
+                              }
+                } // session
+            } // sessions
     }
     /*
      * Configuration data nodes
@@ -1719,6 +2053,41 @@ module ietf-pcep {
                 description
                     "The administrative status of this PCEP
                      Entity.";
+            }
+
+            leaf index{
+                 type uint32;
+                 config "false";
+                 description
+                     "The index of the operational PECP entity";
+            }
+
+            leaf admin-status {
+                type pcep-admin-status;
+                description
+                      "The administrative status of this PCEP Entity.
+                       This is the desired operational status as
+                       currently set by an operator or by default in
+                       the implementation.  The value of enabled
+                       represents the current status of an attempt
+                       to reach this desired status.";
+            }
+
+            leaf oper-status {
+                type pcep-oper-status;
+                description
+                    "The operational status of the PCEP entity.
+                     Takes one of the following values.
+                     - oper-status-up(1): the PCEP entity is active.
+                     - oper-status-down(2): the PCEP entity is inactive.
+                     - oper-status-going-up(3): the PCEP entity is activating.
+                     - oper-status-going-down(4): the PCEP entity is
+                       deactivating.
+                     - oper-status-failed(5): the PCEP entity has
+                       failed and will recover when possible.
+                     - oper-status-failed-perm(6): the PCEP entity
+                       has failed and will not recover without
+                       operator intervention.";
             }
 
             leaf role {
@@ -1786,14 +2155,11 @@ module ietf-pcep {
                     "Local PCEP entity authentication information";
             }
 
-
             uses pcep-entity-info {
                 description
                     "The configuration related to the PCEP
                      entity.";
             }
-
-
 
             leaf pcep-notification-max-rate {
                 type uint32;
@@ -1828,249 +2194,23 @@ module ietf-pcep {
 
             container of-list{
                 when "../role = 'pce'" +
-                     "or " +
-                     "../role = 'pcc-and-pce'"
-                {
-                    description
-                        "Valid at PCE";
-                }
-                if-feature objective-function;
-
-                uses of-list;
-
-                description
-                    "The authorized OF-List at PCE for all peers";
-            }
-
-
-            container peers{
-                when "../role = 'pcc'" +
-                     "or " +
-                     "../role = 'pcc-and-pce'"
-                {
-                    description
-                        "Valid at PCC";
-                }
-                description
-                    "The list of configured peers for the
-                     entity (remote PCE)";
-                list peer{
-                    key "addr";
-
-                    description
-                        "The peer configured for the entity.
-                         (remote PCE)";
-
-                    leaf addr {
-                        type inet:ip-address;
+                         "or " +
+                         "../role = 'pcc-and-pce'"
+                    {
                         description
-                            "The local Internet address of this
-                             PCEP peer.";
+                            "Valid at PCE";
                     }
+                    if-feature objective-function;
 
-                    leaf description {
-                        type string;
-                        description
-                            "Description of the PCEP peer
-                             configured by the user";
-                    }
-                    uses info {
-                        description
-                            "PCE Peer information";
-                    }
-                    uses pce-info {
-                        description
-                            "PCE Peer information";
-                    }
+                    uses of-list;
 
-                    leaf delegation-pref{
-                        if-feature stateful;
-                        type uint8{
-                            range "0..7";
-                        }
-                        must "(/pcep/entity/capability/stateful" +
-                             "/active = true())"
-                        {
-                            error-message
-                                "The Active Stateful PCE must be
-                                 enabled";
-                            description
-                                "When PCEP entity is active stateful
-                                 enabled";
-                        }
-                        description
-                            "The PCE peer delegation preference.";
-                    }
-                    uses authentication {
-                        description
-                            "PCE Peer authentication";
-                    }
-                }//peer
-            }//peers
-        }//entity
-    }//pcep
-
-    /*
-     * Operational data nodes
-     */
-
-    container pcep-state{
-        config false;
-        description
-            "The list of operational PCEP entities on the
-             device.";
-
-        container entity{
-            description
-                "The operational PCEP entity on the device.";
-
-            leaf addr {
-                type inet:ip-address;
-                description
-                    "The local Internet address of this PCEP
-                    entity.
-                    If operating as a PCE server, the PCEP
-                    entity listens on this address.
-                    If operating as a PCC, the PCEP entity
-                    binds outgoing TCP connections to this
-                    address.
-                    It is possible for the PCEP entity to
-                    operate both as a PCC and a PCE Server, in
-                    which case it uses this address both to
-                    listen for incoming TCP connections and to
-                    bind outgoing TCP connections.";
+                     description
+                        "The authorized OF-List at PCE for all peers";
             }
-
-            leaf index{
-                type uint32;
-                description
-                    "The index of the operational PECP
-                     entity";
-            }
-
-
-            leaf admin-status {
-                type pcep-admin-status;
-                description
-                    "The administrative status of this PCEP Entity.
-                     This is the desired operational status as
-                     currently set by an operator or by default in
-                     the implementation.  The value of enabled
-                     represents the current status of an attempt
-                     to reach this desired status.";
-            }
-
-            leaf oper-status {
-                type pcep-admin-status;
-                description
-                   "The operational status of the PCEP entity.
-                    Takes one of the following values.
-                    - oper-status-up(1): the PCEP entity is
-                      active.
-                    - oper-status-down(2): the PCEP entity is
-                      inactive.
-                    - oper-status-going-up(3): the PCEP entity is
-                      activating.
-                    - oper-status-going-down(4): the PCEP entity is
-                      deactivating.
-                    - oper-status-failed(5): the PCEP entity has
-                      failed and will recover when possible.
-                    - oper-status-failed-perm(6): the PCEP entity
-                      has failed and will not recover without
-                      operator intervention.";
-            }
-
-            leaf role {
-                type pcep-role;
-                description
-                    "The role that this entity can play.
-                     Takes one of the following values.
-                     - unknown(0): this PCEP entity role is
-                       not known.
-                     - pcc(1): this PCEP entity is a PCC.
-                     - pce(2): this PCEP entity is a PCE.
-                     - pcc-and-pce(3): this PCEP entity is
-                       both a PCC and a PCE.";
-            }
-
-            leaf description {
-                type string;
-                description
-                    "Description of the PCEP entity configured
-                     by the user";
-            }
-
-            leaf speaker-entity-id{
-                if-feature stateful-sync-opt;
-                type string;
-                description
-                    "The Speaker Entity Identifier";
-            }
-
-            uses info {
-                description
-                    "Local PCEP entity information";
-            }
-
-            container pce-info {
-                when "../role = 'pce'" +
-                     "or " +
-                     "../role = 'pcc-and-pce'"
-                {
-                    description
-                        "Valid at PCE";
-                }
-                uses pce-info {
-                    description
-                        "Local PCE information";
-                }
-
-                container path-key {
-                    if-feature path-key;
-                    uses path-key {
-                        description
-                            "Path-Key Configuration";
-                    }
-                    description
-                        "Path-Key Configuration";
-                }
-
-                description
-                    "The Local PCE Entity PCE information";
-            }
-
-            uses authentication {
-                description
-                    "Local PCEP Entity authentication information";
-            }
-
-            uses pcep-entity-info{
-                description
-                    "The operational information related to the
-                     PCEP entity.";
-            }
-
-            container stateful-parameter{
-                if-feature stateful;
-                must "(/pcep/entity/capability/stateful/enabled" +
-                     " = true())"
-                {
-                    error-message
-                        "The Stateful PCE must be enabled";
-                    description
-                        "When PCEP entity is stateful
-                         enabled";
-                }
-                uses stateful-pce-parameter;
-
-                description
-                    "The operational stateful parameters";
-            }
-
-
 
             container lsp-db{
                 if-feature stateful;
+                config false;
                 description
                     "The LSP-DB";
                 leaf db-ver{
@@ -2100,7 +2240,7 @@ module ietf-pcep {
                             "List of all LSP in this association";
                         leaf plsp-id {
                             type leafref {
-                                path "/pcep-state/entity/lsp-db/"
+                                path "/pcep/entity/lsp-db/"
                                 + "lsp/plsp-id";
                             }
                             description
@@ -2108,7 +2248,7 @@ module ietf-pcep {
                         }
                         leaf pcc-id {
                             type leafref {
-                                path "/pcep-state/entity/lsp-db/"
+                                path "/pcep/entity/lsp-db/"
                                 + "lsp/pcc-id";
                             }
                             description
@@ -2116,11 +2256,11 @@ module ietf-pcep {
                         }
                     }
                 }
-                list lsp{
+                list lsp {
                     key "plsp-id pcc-id";
                     description
                         "List of all LSPs in LSP-DB";
-                    uses lsp-state{
+                    uses lsp-state {
                         description
                             "The PCEP specific attributes for
                              LSP-DB.";
@@ -2138,70 +2278,59 @@ module ietf-pcep {
 
                 }
             }
+
             container path-keys {
-                when "../role = 'pce'" +
-                     "or " +
-                     "../role = 'pcc-and-pce'"
-                {
-                    description
-                        "Valid at PCE";
-                }
-                if-feature path-key;
-                uses path-key-state;
-                description
+                 when "../role = 'pce' or ../role = 'pcc-and-pce'" {
+                     description
+                         "Valid at PCE";
+                 }
+                 if-feature path-key;
+                 config false;
+                 uses path-key-state;
+                 description
                     "The path-keys generated by the PCE";
             }
-            container of-list{
-                when "../role = 'pce'" +
-                     "or " +
-                     "../role = 'pcc-and-pce'"
-                {
-                    description
-                        "Valid at PCE";
-                }
-                if-feature objective-function;
 
-                uses of-list;
-
-                description
-                    "The authorized OF-List at PCE for all peers";
-            }
             container peers{
                 description
-                        "The list of peers for the entity";
-
+                    "The list of configured peers for the
+                     entity (remote PCE)";
                 list peer{
                     key "addr";
 
                     description
-                        "The peer for the entity.";
+                        "The peer configured for the entity.
+                         (remote PCE)";
 
                     leaf addr {
                         type inet:ip-address;
                         description
-                            "The local Internet address of this PCEP
-                             peer.";
+                            "The local Internet address of this
+                             PCEP peer.";
                     }
 
                     leaf role {
                         type pcep-role;
+                        config false;
                         description
                             "The role of the PCEP Peer.
                              Takes one of the following values.
-                             - unknown(0): this PCEP peer role
-                               is not known.
-                             - pcc(1): this PCEP peer is a PCC.
-                             - pce(2): this PCEP peer is a PCE.
-                             - pcc-and-pce(3): this PCEP peer
-                               is both a PCC and a PCE.";
+                               - unknown(0): this PCEP peer role is not known.
+                               - pcc(1): this PCEP peer is a PCC.
+                               - pce(2): this PCEP peer is a PCE.
+                               - pcc-and-pce(3): this PCEP peer
+                                                   is both a PCC and a PCE.";
                     }
 
-
+                    leaf description {
+                        type string;
+                        description
+                            "Description of the PCEP peer configured by the user";
+                    }
                     uses info {
                         description
-                            "PCEP peer information";
+                            "PCE Peer information";
                     }
-
 
                     container pce-info {
                         when "../role = 'pce'" +
@@ -2216,18 +2345,11 @@ module ietf-pcep {
                             description
                                 "PCE Peer information";
                         }
-                    description
-                        "The PCE Peer information";
+                        description
+                            "The PCE Peer information";
                     }
 
                     leaf delegation-pref{
-                        when "../role = 'pce'" +
-                             "or " +
-                             "../role = 'pcc-and-pce'"
-                        {
-                            description
-                                "When the peer is PCE";
-                        }
                         if-feature stateful;
                         type uint8{
                             range "0..7";
@@ -2245,463 +2367,69 @@ module ietf-pcep {
                         description
                             "The PCE peer delegation preference.";
                     }
-
                     uses authentication {
                         description
                             "PCE Peer authentication";
                     }
-
                     leaf discontinuity-time {
-                        type yang:timestamp;
-                        description
-                            "The timestamp of the time when the
-                             information and statistics were
-                             last reset.";
+                         type yang:timestamp;
+                         config false;
+                         description
+                             "The timestamp of the time when the
+                              information and statistics were last reset.";
                     }
 
                     leaf initiate-session {
-                        type boolean;
-                        description
-                            "Indicates whether the local PCEP
-                             entity initiates sessions to this peer,
-                             or waits for the peer to initiate a
-                             session.";
+                         type boolean;
+                         config false;
+                         description
+                             "Indicates whether the local PCEP
+                              entity initiates sessions to this peer,
+                              or waits for the peer to initiate a session.";
                     }
 
                     leaf session-exists{
-                        type boolean;
-                        description
-                            "Indicates whether a session with
-                             this peer currently exists.";
+                         type boolean;
+                         config false;
+                         description
+                             "Indicates whether a session with
+                              this peer currently exists.";
                     }
 
                     leaf session-up-time{
-                        type yang:timestamp;
-                        description
-                           "The timestamp value of the last time a
-                            session with this peer was successfully
-                            established.";
+                         type yang:timestamp;
+                         config false;
+                         description
+                             "The timestamp value of the last time a
+                             session with this peer was successfully
+                             established.";
                     }
 
                     leaf session-fail-time{
-                        type yang:timestamp;
-                        description
-                          "The timestamp value of the last time a
-                           session with this peer failed to be
-                           established.";
+                          type yang:timestamp;
+                          config false;
+                          description
+                              "The timestamp value of the last time a
+                               session with this peer failed to be
+                               established.";
                     }
 
                     leaf session-fail-up-time{
-                        type yang:timestamp;
-                        description
-                          "The timestamp value of the last time a
-                           session with this peer failed from
-                           active.";
+                         type yang:timestamp;
+                         config false;
+                         description
+                              "The timestamp value of the last time a
+                               session with this peer failed from active.";
                     }
 
-
-
-
-
-                    container sessions {
+                    uses session-grouping {
                         description
-                            "This entry represents a single PCEP
-                             session in which the local PCEP entity
-                             participates.
-                             This entry exists only if the
-                             corresponding PCEP session has been
-                             initialized by some event, such as
-                             manual user configuration, auto-
-                             discovery of a peer, or an incoming
-                             TCP connection.";
-
-                        list session {
-                            key "initiator";
-
-                            description
-                                "The list of sessions, note that
-                                 for a time being two sessions
-                                 may exist for a peer";
-
-                            leaf initiator {
-                                type pcep-initiator;
-                                description
-                                    "The initiator of the session,
-                                     that is, whether the TCP
-                                     connection was initiated by
-                                     the local PCEP entity or the
-                                     peer.
-                                     There is a window during
-                                     session initialization where
-                                     two sessions can exist between
-                                     a pair of PCEP speakers, each
-                                     initiated by one of the
-                                     speakers. One of these
-                                     sessions is always discarded
-                                     before it leaves OpenWait
-                                     state. However, before it is
-                                     discarded, two sessions to the
-                                     given peer appear transiently
-                                     in this MIB module. The
-                                     sessions are distinguished by
-                                     who initiated them, and so this
-                                     field is the key.";
-                            }
-                            leaf role {
-                                type leafref {
-                                    path "../../../role";
-                                }
-                                description
-                                    "The reference to peer role .";
-                            }
-
-                            leaf state-last-change {
-                                type yang:timestamp;
-                                description
-                                    "The timestamp value at the
-                                     time this session entered its
-                                     current state as denoted by
-                                     the state leaf.";
-                            }
-
-                            leaf state {
-                                type pcep-sess-state;
-                                description
-                                    "The current state of the
-                                     session.
-                                     The set of possible states
-                                     excludes the idle state since
-                                     entries do not exist in the
-                                     idle state.";
-                            }
-
-                            leaf session-creation {
-                                type yang:timestamp;
-                                description
-                                    "The timestamp value at the
-                                     time this session was
-                                     created.";
-                            }
-
-                            leaf connect-retry {
-                                type yang:counter32;
-                                description
-                                     "The number of times that the
-                                      local PCEP entity has
-                                      attempted to establish a TCP
-                                      connection for this session
-                                      without success. The PCEP
-                                      entity gives up when this
-                                      reaches connect-max-retry.";
-                            }
-
-                            leaf local-id {
-                                type uint32 {
-                                  range "0..255";
-                                }
-                                description
-                                     "The value of the PCEP session
-                                      ID used by the local PCEP
-                                      entity in the Open message
-                                      for this session.
-                                      If state is tcp-pending then
-                                      this is the session ID that
-                                      will be used in the Open
-                                      message. Otherwise, this is
-                                      the session ID that was sent
-                                      in the Open message.";
-                            }
-
-                            leaf remote-id {
-                                type uint32 {
-                                    range "0..255";
-                                }
-                                must "((../state != 'tcp-pending'" +
-                                     "and " +
-                                     "../state != 'open-wait' )" +
-                                     "or " +
-                                     "((../state = 'tcp-pending'" +
-                                     " or " +
-                                     "../state = 'open-wait' )" +
-                                     "and (. = 0)))" {
-                                        error-message
-                                            "Invalid remote-id";
-                                        description
-                                             "If state is tcp-
-                                              pending or open-wait
-                                              then this leaf is not
-                                              used and MUST be set
-                                              to zero.";
-                                    }
-                                description
-                                     "The value of the PCEP session
-                                      ID used by the peer in its
-                                      Open message for this
-                                      session.";
-                            }
-
-                            leaf keepalive-timer {
-                                type uint32 {
-                                  range "0..255";
-                                }
-                                units "seconds";
-                                must "(../state = 'session-up'" +
-                                     "or " +
-                                     "(../state != 'session-up'" +
-                                     "and (. = 0)))" {
-                                        error-message
-                                            "Invalid keepalive
-                                             timer";
-                                        description
-                                            "This field is used if
-                                             and only if state is
-                                             session-up. Otherwise,
-                                             it is not used and
-                                             MUST be set to
-                                             zero.";
-                                    }
-                                description
-                                     "The agreed maximum interval at
-                                      which the local PCEP entity
-                                      transmits PCEP messages on
-                                      this PCEP session.  Zero means
-                                      that the local PCEP entity
-                                      never sends Keepalives on this
-                                      session.";
-                            }
-
-                            leaf peer-keepalive-timer {
-                                type uint32 {
-                                  range "0..255";
-                                }
-                                units "seconds";
-                                must "(../state = 'session-up'" +
-                                     "or "   +
-                                     "(../state != 'session-up'" +
-                                     "and " +
-                                     "(. = 0)))" {
-                                        error-message
-                                            "Invalid Peer keepalive
-                                             timer";
-                                        description
-                                            "This field is used if
-                                             and only if state is
-                                             session-up. Otherwise,
-                                             it is not used and MUST
-                                             be set to zero.";
-                                    }
-                                description
-                                     "The agreed maximum interval at
-                                      which the peer transmits PCEP
-                                      messages on this PCEP session.
-                                      Zero means that the peer never
-                                      sends Keepalives on this
-                                      session.";
-                            }
-
-                            leaf dead-timer {
-                                type uint32 {
-                                  range "0..255";
-                                }
-                                units "seconds";
-                                description
-                                     "The dead timer interval for
-                                      this PCEP session.";
-                            }
-
-                            leaf peer-dead-timer {
-                                type uint32 {
-                                  range "0..255";
-                                }
-                                units "seconds";
-                                must "((../state != 'tcp-pending'" +
-                                     "and " +
-                                     "../state != 'open-wait' )" +
-                                     "or " +
-                                     "((../state = 'tcp-pending'" +
-                                     " or " +
-                                     "../state = 'open-wait' )" +
-                                     "and " +
-                                     "(. = 0)))" {
-                                        error-message
-                                            "Invalid Peer Dead
-                                             timer";
-                                        description
-                                            "If state is tcp-
-                                             pending or open-wait
-                                             then this leaf is not
-                                             used and MUST be set to
-                                             zero.";
-                                    }
-                                description
-                                     "The peer's dead-timer interval
-                                      for this PCEP session.";
-                            }
-
-                            leaf ka-hold-time-rem {
-                                type uint32 {
-                                  range "0..255";
-                                }
-                                units "seconds";
-                                must "((../state != 'tcp-pending'" +
-                                     "and " +
-                                     "../state != 'open-wait' ) " +
-                                     "or " +
-                                     "((../state = 'tcp-pending'" +
-                                     "or " +
-                                     "../state = 'open-wait' )" +
-                                     "and " +
-                                     "(. = 0)))" {
-                                        error-message
-                                            "Invalid Keepalive hold
-                                             time remaining";
-                                        description
-                                            "If state is tcp-pending
-                                             or open-wait then this
-                                             field is not used and
-                                             MUST be set to zero.";
-                                    }
-                                description
-                                     "The keep alive hold time
-                                      remaining for this session.";
-                            }
-
-                            leaf overloaded {
-                                type boolean;
-                                description
-                                     "If the local PCEP entity has
-                                      informed the peer that it is
-                                      currently overloaded, then
-                                      this is set to true.
-                                      Otherwise, it is set to
-                                      false.";
-                            }
-
-                            leaf overload-time {
-                                type uint32;
-                                units "seconds";
-                                must "((../overloaded = true()) " +
-                                 "or ((../overloaded != true()) " +
-                                 "and (. = 0)))" {
-                                        error-message
-                                            "Invalid overload-time";
-                                        description
-                                            "This field is only used
-                                             if overloaded is set to
-                                             true. Otherwise, it is
-                                             not used and MUST be
-                                             set to zero.";
-                                    }
-                                description
-                                     "The interval of time that is
-                                      remaining until the local PCEP
-                                      entity will cease to be
-                                      overloaded on this session.";
-                            }
-
-                            leaf peer-overloaded {
-                                type boolean;
-                                description
-                                     "If the peer has informed the
-                                      local PCEP entity that it is
-                                      currently overloaded, then
-                                      this is set to true.
-                                      Otherwise, it is set to
-                                      false.";
-                            }
-
-                            leaf peer-overload-time {
-                                type uint32;
-                                units "seconds";
-                                must "((../peer-overloaded = " +
-                                     "true()) or " +
-                                     "((../peer-overloaded !=" +
-                                     "true())" +
-                                     " and " +
-                                     "(. = 0)))" {
-                                        error-message
-                                            "Invalid peer overload
-                                             time";
-                                        description
-                                            "This field is only used
-                                             if peer-overloaded is
-                                             set to true. Otherwise,
-                                             it is not used and MUST
-                                             be set to zero.";
-                                    }
-                                description
-                                     "The interval of time that is
-                                      remaining until the peer will
-                                      cease to be overloaded.  If it
-                                      is not known how long the peer
-                                      will stay in overloaded state,
-                                      this leaf is set to zero.";
-                            }
-                            leaf lspdb-sync {
-                                if-feature stateful;
-                                type sync-state;
-                                description
-                                    "The LSP-DB state
-                                    synchronization status.";
-                            }
-                            leaf recv-db-ver{
-                                when "../role = 'pcc'" +
-                                     "or " +
-                                     "../role = 'pcc-and-pce'"
-                                {
-                                    description
-                                        "Valid for PCEP Peer as
-                                        PCC";
-                                }
-
-                                if-feature stateful;
-                                if-feature stateful-sync-opt;
-
-                                type uint64;
-
-                                description
-                                    "The last received LSP State
-                                    Database Version Number";
-                            }
-
-                            container of-list{
-                                when "../role = 'pce'" +
-                                     "or " +
-                                     "../role = 'pcc-and-pce'"
-                                {
-                                    description
-                                        "Valid for PCEP Peer as
-                                        PCE";
-                                }
-                                if-feature objective-function;
-
-                                uses of-list;
-
-                                description
-                                    "Indicate the list of supported
-                                    OF on this session";
-                            }
-
-                            leaf speaker-entity-id{
-                                if-feature stateful-sync-opt;
-                                type string;
-                                description
-                                    "The Speaker Entity Identifier";
-                            }
-
-                            leaf discontinuity-time {
-                                type yang:timestamp;
-                                description
-                                     "The timestamp value of the
-                                      time when the statistics were
-                                      last reset.";
-                            }
-                        } // session
-                    } // sessions
+                            "session information";
+                    }
                 }//peer
             }//peers
         }//entity
-    }//pcep-state
+    }//pcep
 
     /*
      * Notifications
@@ -2709,7 +2437,7 @@ module ietf-pcep {
     notification pcep-session-up {
         description
             "This notification is sent when the value of
-             '/pcep/pcep-state/peers/peer/sessions/session/state'
+             '/pcep/peers/peer/sessions/session/state'
              enters the 'session-up' state.";
 
         uses notification-instance-hdr;
@@ -2736,7 +2464,7 @@ module ietf-pcep {
     notification pcep-session-down {
         description
             "This notification is sent when the value of
-             '/pcep/pcep-state/peers/peer/sessions/session/state'
+             '/pcep/peers/peer/sessions/session/state'
              leaves the 'session-up' state.";
 
         uses notification-instance-hdr;
@@ -2863,7 +2591,7 @@ module ietf-pcep {
         input {
             leaf pcc {
                 type leafref {
-                    path "/pcep-state/entity/peers/peer/addr";
+                    path "/pcep/entity/peers/peer/addr";
                 }
             description
                 "The IP address to identify the PCC. The state

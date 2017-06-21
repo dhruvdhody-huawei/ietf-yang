@@ -1,3 +1,5 @@
+
+
 module   ietf-wson-topology {
       yang-version 1.1;
 
@@ -14,39 +16,40 @@ module   ietf-wson-topology {
       }
 
       import ietf-inet-types {
-        prefix "inet";
+      prefix "inet";
       }
-
       import ietf-te-topology {
-        prefix "tet";
+      prefix "tet";
       }
 
       organization
             "IETF CCAMP Working Group";
 
       contact
-            "Editor:   Young Lee  <leeyoung@huawei.com>";
+            "Editor: Young Lee <leeyoung@huawei.com>
+             Editor: Dhruv Dhody <dhruv.ietf@gmail.com>
+             Editor: Ricard Vilalta <ricard.vilalta@cttc.es>";
 
       description
-        "This module contains a collection of YANG definitions for
-        RWA WSON.
+            "This module contains a collection of YANG definitions for
+            RWA WSON.
 
-        Copyright (c) 2016 IETF Trust and the persons identified as
-        authors of the code.  All rights reserved.
+            Copyright (c) 2017 IETF Trust and the persons identified as
+            authors of the code.  All rights reserved.
 
-        Redistribution and use in source and binary forms, with or
-        without modification, is permitted pursuant to, and subject
-        to the license terms contained in, the Simplified BSD
-        License set forth in Section 4.c of the IETF Trust's Legal
-        Provisions Relating to IETF Documents
-        (http://trustee.ietf.org/license-info).";
+            Redistribution and use in source and binary forms, with or
+            without modification, is permitted pursuant to, and subject
+            to the license terms contained in, the Simplified BSD
+            License set forth in Section 4.c of the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (http://trustee.ietf.org/license-info).";
 
-      revision 2017-03-27 {
-        description
-          "version 6.";
+      revision 2017-06-20 {
+            description
+                  "corrected connectivity matrix references";
 
-        reference
-          "RFC XXX: A Yang Data Model for WSON Optical Networks ";
+            reference
+                  "RFC XXX: A Yang Data Model for WSON Optical Networks ";
       }
 
       typedef wson-topology-id {
@@ -76,8 +79,7 @@ module   ietf-wson-topology {
                   }
             }
             description
-                  "device type: fixed (ADM) or switched
-                  (ROADM/OXC)";
+                  "device type: fixed (ADM) or switched (ROADM/OXC)";
       }
 
       typedef directionality {
@@ -104,8 +106,7 @@ module   ietf-wson-topology {
 
       typedef wson-interface-ref {
             type leafref {
-                path "/nd:networks/nd:network/nd:node/"
-                  + "tet:te/tet:config"
+                path "/nd:networks/nd:network/nd:node/tet:te/tet:config"
                   + "/tet:te-node-attributes/wson:wson-node/"
                   + "wson:interfaces/wson:name";
             }
@@ -140,11 +141,10 @@ module   ietf-wson-topology {
                               of link set";
                   }
                   list interfaces {
-                    key "name";
-                    unique "port-number"; // TODO Puerto y TP ID
-                    description
-                      "List of interfaces contained in the node";
-                    uses node-interface;
+                 key "name";
+                unique "port-number"; // TODO Puerto y TP ID
+                description "List of interfaces contained in the node";
+                uses node-interface;
                   }
             }
       }
@@ -189,9 +189,8 @@ module   ietf-wson-topology {
             description "Set of WSON link attributes";
                   leaf channel-max {
                         type int32;
-                        description
-                          "Maximum Number of OCh channels available
-                          by the node";
+                        description "Maximum Number of OCh channels available
+by the node";
                   }
                   leaf default-frequency {
                         type decimal64 {
@@ -206,9 +205,8 @@ module   ietf-wson-topology {
                               fraction-digits 5;
                         }
                         units GHz;
-                        description
-                            "This is fixed channel spacing for WSON,
-                            e.g, 12.5, 25, 50, 100, ..";
+                        description "This is fixed channel spacing for WSON,
+e.g, 12.5, 25, 50, 100, ..";
                   }
       }
 
@@ -218,9 +216,9 @@ module   ietf-wson-topology {
                         key "in-port-id";
 
                         description
-                            "matrix-interface describes input-ports
-                            and out-ports around a connectivity
-                            matrix";
+                              "matrix-interface describes input-ports
+                              and out-ports around a connectivity
+                              matrix";
 
                         leaf in-port-id {
                               type wson-interface-ref;
@@ -237,9 +235,7 @@ module   ietf-wson-topology {
       }
 
       grouping resource-pool-attributes {
-            description
-              "resource pool describes regeneration or wave
-              converter";
+            description "resource pool describes regeneration or wave converter";
             list resource-pool {
                   key "resource-pool-id";
                   description
@@ -254,30 +250,27 @@ module   ietf-wson-topology {
                   leaf pool-state {
                         type boolean;
                         description
-                              "TRUE is state UP; FALSE is state
-                              down";
+                              "TRUE is state UP; FALSE is state down";
                   }
 
                   uses wson-connectivity-matrix;
             }
       }
-
       augment "/nd:networks/nd:network/nd:network-types" {
             description "wson-topology augmented";
             uses wson-topology-type;
       }
 
       augment "/nd:networks/nd:network/nd:node/tet:te/tet:config"
-              + "/tet:te-node-attributes/tet:connectivity-matrices"
-              + "/tet:connectivity-matrix" {
+               + "/tet:te-node-attributes/tet:connectivity-matrices"
+               + "/tet:connectivity-matrix" {
             when "/nd:networks/nd:network/nd:network-types"
                   +"/wson-topology" {
                   description
-                        "This augment is only valid for WSON
-                        connectivity matrix.";
+                        "This augment is only valid for
+                        WSON connectivity matrix.";
             }
-          description
-            "WSON connectivity matrix config augmentation";
+          description "WSON connectivity matrix config augmentation";
             uses wson-connectivity-matrix;
       }
 
@@ -287,26 +280,10 @@ module   ietf-wson-topology {
             when "/nd:networks/nd:network/nd:network-types"
                   +"/wson-topology" {
                   description
-                        "This augment is only valid for WSON
-                        connectivity matrix.";
+                        "This augment is only valid for
+                        WSON connectivity matrix.";
           }
-          description
-            "WSON connectivity matrix state augmentation";
-            uses wson-connectivity-matrix;
-      }
-
-      augment "/nd:networks/nd:network/nd:node/tet:te/tet:state"
-                  + "/tet:information-source-entry"
-                  + "/tet:connectivity-matrices"
-                  + "/tet:connectivity-matrix" {
-            when "/nd:networks/nd:network/nd:network-types"
-                  +"/wson-topology" {
-                  description
-                        "This augment is only valid for WSON
-                        connectivity matrix.";
-          }
-          description
-            "WSON connectivity matrix state augmentation";
+          description "WSON connectivity matrix state augmentation";
             uses wson-connectivity-matrix;
       }
 

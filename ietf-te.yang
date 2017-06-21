@@ -11,10 +11,6 @@ module ietf-te {
     prefix te-types;
   }
 
-  import ietf-te-mpls-types {
-    prefix "te-mpls-types";
-  }
-
   import ietf-inet-types {
     prefix inet;
   }
@@ -48,14 +44,8 @@ module ietf-te {
      Editor:   Xufeng Liu
                <mailto:Xufeng_Liu@jabil.com>
 
-     Editor:   Xia Chen
-               <mailto:jescia.chenxia@huawei.com>
-
-     Editor:   Raqib Jones
-               <mailto:raqib@Brocade.com>
-
-     Editor:   Bin Wen
-               <mailto:Bin_Wen@cable.comcast.com>";
+     Editor:   Igor Bryskin
+               <mailto:Igor.Bryskin@huawei.com>";
 
   description
     "YANG data module for TE configuration,
@@ -89,12 +79,26 @@ module ietf-te {
    */
   grouping path-route-objects {
     description
-      "List of EROs to be included or excluded when performing 
+      "List of EROs to be included or excluded when performing
        the path computation.";
     container explicit-route-objects {
       description
-        "Container for the include or exclude route object list";
-      list explicit-route-object {
+        "Container for the exclude route object list";
+      list route-object-exclude-always {
+        key index;
+        description
+          "List of explicit route objects to always exclude
+           from path computation";
+        leaf index {
+          type leafref {
+            path "../config/index";
+          }
+          description
+            "Index of this explicit route object";
+        }
+        uses te-types:explicit-route-hop;
+      }
+      list route-object-include-exclude {
         key index;
         description
           "List of explicit route objects to include or
@@ -110,9 +114,42 @@ module ietf-te {
           type identityref {
             base te-types:route-usage-type;
           }
-          description "An explicit-route hop action.";
+          description "Explicit-route usage.";
         }
         uses te-types:explicit-route-hop;
+      }
+    }
+  }
+
+  grouping path-affinities-contents_config {
+    description
+      "Path affinities constraints grouping";
+    leaf usage {
+      type identityref {
+        base te-types:resource-affinities-type;
+      }
+      description "Affinities usage";
+    }
+    choice style {
+      description
+        "Path affinities representation style";
+      case value {
+        leaf value {
+          type te-types:admin-groups;
+          description
+            "Bitmap indicating what bits are of significance";
+        }
+      }
+      case named {
+        list affinity-names {
+          key "name";
+          leaf name {
+            type string;
+            description "Affinity name";
+          }
+          description
+            "List of named affinities";
+        }
       }
     }
   }
@@ -123,53 +160,43 @@ module ietf-te {
     container path-affinities {
       description
         "Path affinities container";
-      choice style {
+      list constraints {
+        key "usage";
         description
-          "Path affinities representation style";
-        case values {
-          leaf value {
-            type uint32 {
-              range "0..4294967295";
-            }
-            description
-              "Affinity value";
+          "List of named affinity constraints";
+        leaf usage {
+          type leafref {
+            path "../config/usage";
           }
-          leaf mask {
-            type uint32 {
-              range "0..4294967295";
-            }
-            description
-              "Affinity mask";
-          }
+          description "Affinities usage";
         }
-        case named {
-          list constraints {
-            key "usage";
-            leaf usage {
-              type identityref {
-                base te-types:resource-affinities-type;
-              }
-              description "Affinities usage";
-            }
-            container constraint {
-              description
-                "Container for named affinities";
-              list affinity-names {
-                key "name";
-                leaf name {
-                  type string;
-                  description
-                    "Affinity name";
-                }
-                description
-                  "List of named affinities";
-              }
-            }
-            description
-              "List of named affinity constraints";
-          }
+        container config {
+          description
+            "Configuration intended parameters";
+          uses path-affinities-contents_config;
+        }
+        container state {
+          config false;
+          description
+            "Configuration applied parameters and state";
+          uses path-affinities-contents_config;
         }
       }
+    }
+  }
+
+  grouping path-affinities-values_config {
+    description
+      "Path affinities values configuration grouping";
+    leaf usage {
+      type identityref {
+        base te-types:route-exclude-srlg;
+      }
+      description "SRLG usage";
+    }
+    leaf-list values {
+      type te-types:srlg;
+      description "SRLG value";
     }
   }
 
@@ -183,25 +210,47 @@ module ietf-te {
         description
           "Type of SRLG representation";
         case values {
-          leaf usage {
-            type identityref {
-              base te-types:route-exclude-srlg;
-            }
-            description "SRLG usage";
+          container config {
+            description
+              "Configuration intended parameters";
+            uses path-affinities-values_config;
           }
-          leaf-list values {
-            type te-types:srlg;
-            description "SRLG value";
+          container state {
+            config false;
+            description
+              "Configuration applied parameters and state";
+            uses path-affinities-values_config;
           }
         }
         case named {
           list constraints {
             key "usage";
             leaf usage {
-              type identityref {
-                base te-types:route-exclude-srlg;
+              type leafref {
+                path "../config/usage";
               }
-              description "SRLG usage";
+              description "Affinity resource usage";
+            }
+            container config {
+              description
+                "Configuration intended parameters";
+              leaf usage {
+                type identityref {
+                  base te-types:route-exclude-srlg;
+                }
+                description "SRLG usage";
+              }
+            }
+            container state {
+              config false;
+              description
+                "Configuration applied parameters and state";
+              leaf usage {
+                type identityref {
+                  base te-types:route-exclude-srlg;
+                }
+                description "SRLG usage";
+              }
             }
             container constraint {
               description
@@ -209,12 +258,30 @@ module ietf-te {
               list srlg-names {
                 key "name";
                 leaf name {
-                  type string;
-                  description
-                    "The SRLG name";
+                  type leafref  {
+                    path "../config/name";
+                  }
+                  description "The SRLG name";
                 }
-                description
-                  "List named SRLGs";
+                container config {
+                  description
+                    "Configuration intended parameters";
+                  leaf name {
+                    type string;
+                    description "The SRLG name";
+                  }
+                }
+                container state {
+                  config false;
+                  description
+                    "Configuration applied parameters and
+                     state";
+                  leaf name {
+                    type string;
+                    description "The SRLG name";
+                  }
+                }
+                description "List named SRLGs";
               }
             }
             description
@@ -279,41 +346,74 @@ module ietf-te {
       "tunnel path properties.";
     container config {
       description
-        "Configuration parameters relating to
-        tunnel properties";
+        "Configuration intended parameters";
       uses p2p-path-properties_config;
     }
     container state {
       config false;
       description
-        "State information associated with tunnel
-        properties";
+        "Configuration applied parameters and state";
       uses p2p-path-properties_config;
-      uses p2p-secondary-path-properties_state;
+      uses p2p-path-properties_state;
     }
   }
 
   grouping p2p-primary-path-properties {
     description
       "TE tunnel primary path properties grouping";
+    uses hierarchical-link;
     container config {
       description
-        "Configuration parameters relating to
-        tunnel properties";
+        "Configuration intended parameters";
       uses p2p-path-properties_config;
     }
     container state {
       config false;
       description
-        "State information associated with tunnel
-        properties";
+        "Configuration applied parameters and state";
       uses p2p-path-properties_config;
-      uses p2p-primary-path-properties_state;
+      uses p2p-path-properties_state;
     }
   }
 
-  grouping p2p-primary-path-properties_state {
-    description "TE path state parameters";
+  grouping computed-path-properties {
+    description "TE computed path properties grouping";
+    container computed-path-properties {
+      description "The TE path computed properties";
+      list path-metric {
+        key metric-type;
+        description "TE path metric type";
+        leaf metric-type {
+          type identityref {
+            base te-types:path-metric-type;
+          }
+          description "TE path metric type";
+        }
+        leaf accumulative-value {
+          type uint64;
+          description "TE path metric accumulative value";
+        }
+      }
+      uses path-affinities;
+      uses path-srlgs;
+      container path-computed-route-objects {
+        description
+          "Container for the list of computed route objects
+           as returned by the computation engine";
+        list path-computed-route-object {
+          key index;
+          description
+            "List of computed route objects returned by the
+             computation engine";
+          uses te-types:explicit-route-hop_config;
+        }
+      }
+    }
+  }
+
+  grouping p2p-path-properties_state {
+    description "TE per path state parameters";
+    uses computed-path-properties;
     container lsps {
       description "TE LSPs container";
       list lsp {
@@ -386,75 +486,6 @@ module ietf-te {
     }
   }
 
-  grouping p2p-secondary-path-properties_state {
-    description "TE secondary path state parameters";
-    list lsp {
-      key "source";
-      description "List of LSPs associated with the tunnel.";
-
-      leaf source {
-        type leafref {
-          path "../../../../../../../../lsps-state/lsp/source";
-        }
-        description
-          "Tunnel sender address extracted from
-          SENDER_TEMPLATE  object";
-        reference "RFC3209";
-      }
-      leaf destination {
-        type leafref {
-          path "../../../../../../../../lsps-state/lsp/destination";
-        }
-        description
-          "Tunnel endpoint address extracted from
-          SESSION object";
-        reference "RFC3209";
-      }
-      leaf tunnel-id {
-        type leafref {
-          path "../../../../../../../../lsps-state/lsp/tunnel-id";
-        }
-        description
-          "Tunnel identifier used in the SESSION
-          that remains constant over the life
-          of the tunnel.";
-        reference "RFC3209";
-      }
-      leaf lsp-id {
-        type leafref {
-          path "../../../../../../../../lsps-state/lsp/lsp-id";
-        }
-        description
-          "Identifier used in the SENDER_TEMPLATE
-          and the FILTER_SPEC that can be changed
-          to allow a sender to share resources with
-          itself.";
-        reference "RFC3209";
-      }
-      leaf extended-tunnel-id {
-        type leafref {
-          path "../../../../../../../../lsps-state/lsp" +
-               "/extended-tunnel-id";
-        }
-        description
-          "Extended Tunnel ID of the LSP.";
-        reference "RFC3209";
-      }
-      leaf type {
-        type leafref {
-          path "../../../../../../../../lsps-state/lsp/type";
-        }
-        description "LSP type P2P or P2MP";
-      }
-      leaf active {
-        type boolean;
-        description
-          "Indicates the current active path option that has
-          been selected of the candidate secondary paths";
-      }
-    }
-  }
-
   grouping p2p-path-properties_config {
     description
       "TE tunnel path properties configuration grouping";
@@ -505,7 +536,7 @@ module ietf-te {
          the topology is updated. No resources are committed
          or reserved in the network.";
     }
-    leaf use-cspf {
+    leaf use-path-computation {
       when "../path-computation-method = 'path-locally-computed'";
       type boolean;
       description "A CSPF dynamically computed path";
@@ -567,6 +598,12 @@ module ietf-te {
       description
         "Textual description for this TE tunnel";
     }
+    leaf bandwidth-generic {
+      type te-types:te-bandwidth;
+      description
+        "A technology agnostic requested bandwidth to use
+         for path computation";
+    }
     leaf setup-priority {
       type uint8 {
         range "0..7";
@@ -603,267 +640,50 @@ module ietf-te {
     }
   }
 
-  grouping te-tunnel-bandwidth_config {
+  grouping hierarchical-link_config {
     description
-      "Configuration parameters related to bandwidth for a tunnel";
-
-    leaf specification-type {
-      type te-mpls-types:te-bandwidth-type;
-      default SPECIFIED;
+      "Hierarchical link configuration grouping";
+    leaf local-te-node-id {
+      type te-types:te-node-id;
       description
-        "The method used for settign the bandwidth, either explicitly
-        specified or configured";
+        "Local TE node identifier";
     }
-
-    leaf set-bandwidth {
-      when "../specification-type = 'te-mpls-types:SPECIFIED'" {
-       description
-         "The bandwidth value when bandwidth is explicitly
-          specified";
-      }
-      type te-mpls-types:bandwidth-kbps;
+    leaf local-te-link-tp-id {
+      type te-types:te-tp-id;
       description
-       "set bandwidth explicitly, e.g., using
-        offline calculation";
+        "Local TE link termination point identifier";
     }
-    leaf class-type {
-      type te-types:te-ds-class;
+    leaf remote-te-node-id {
+      type te-types:te-node-id;
       description
-        "The Class-Type of traffic transported by the LSP.";
-      reference "RFC4124: section-4.3.1";
+        "Remote TE node identifier";
+    }
+    leaf te-topology-id {
+      type te-types:te-topology-id;
+      description
+        "It is presumed that a datastore will contain many
+         topologies. To distinguish between topologies it is
+         vital to have UNIQUE topology identifiers.";
     }
   }
 
-  grouping te-tunnel-bandwidth_state {
+  grouping hierarchical-link {
     description
-      "Operational state parameters relating to bandwidth for a tunnel";
-
-    leaf signaled-bandwidth {
-      type te-mpls-types:bandwidth-kbps;
+      "Hierarchical link grouping";
+    container hierarchical-link {
       description
-        "The currently signaled bandwidth of the LSP. In the case where
-        the bandwidth is specified explicitly, then this will match the
-        value of the set-bandwidth leaf; in cases where the bandwidth is
-        dynamically computed by the system, the current value of the
-        bandwidth should be reflected.";
-    }
-  }
-
-  grouping te-lsp-auto-bandwidth_config {
-    description
-      "Configuration parameters related to autobandwidth";
-
-    leaf enabled {
-      type boolean;
-      default false;
-      description
-        "enables mpls auto-bandwidth on the
-         lsp";
-    }
-
-    leaf min-bw {
-      type te-mpls-types:bandwidth-kbps;
-      description
-        "set the minimum bandwidth in Kbps for an
-         auto-bandwidth LSP";
-    }
-
-    leaf max-bw {
-      type te-mpls-types:bandwidth-kbps;
-      description
-        "set the maximum bandwidth in Kbps for an
-         auto-bandwidth LSP";
-    }
-
-    leaf adjust-interval {
-      type uint32;
-      description
-        "time in seconds between adjustments to
-         LSP bandwidth";
-    }
-
-    leaf adjust-threshold {
-      type te-types:percentage;
-      description
-        "percentage difference between the LSP's
-         specified bandwidth and its current bandwidth
-         allocation -- if the difference is greater than the
-         specified percentage, auto-bandwidth adjustment is
-         triggered";
-    }
-  }
-
-  grouping te-lsp-overflow_config {
-    description
-     "configuration for mpls lsp bandwidth
-      overflow adjustment";
-
-    leaf enabled {
-      type boolean;
-      default false;
-      description
-       "enables mpls lsp bandwidth overflow
-        adjustment on the lsp";
-    }
-
-    leaf overflow-threshold {
-      type te-types:percentage;
-      description
-       "bandwidth percentage change to trigger
-        an overflow event";
-
-    }
-
-    leaf trigger-event-count {
-      type uint16;
-      description
-       "number of consecutive overflow sample
-        events needed to trigger an overflow adjustment";
-    }
-  }
-
-  grouping te-lsp-underflow_config {
-    description
-      "configuration for mpls lsp bandwidth
-      underflow adjustment";
-
-    leaf enabled {
-      type boolean;
-      default false;
-      description
-       "enables bandwidth underflow
-        adjustment on the lsp";
-    }
-
-    leaf underflow-threshold {
-      type te-types:percentage;
-      description
-       "bandwidth percentage change to trigger
-        and underflow event";
-    }
-
-    leaf trigger-event-count {
-      type uint16;
-      description
-       "number of consecutive underflow sample
-        events needed to trigger an underflow adjustment";
-    }
-  }
-
-  grouping te-path-bandwidth_top {
-    description
-      "Top level grouping for specifying bandwidth for a TE path";
-
-    container bandwidth {
-      description
-        "Bandwidth configuration for TE LSPs";
-
+        "Identifies a hierarchical link (in client layer)
+         that this tunnel is associated with.";
       container config {
         description
-          "Configuration parameters related to bandwidth on TE
-          tunnels:";
-        uses te-tunnel-bandwidth_config;
+          "Configuration intended parameters";
+        uses hierarchical-link_config;
       }
-
       container state {
         config false;
         description
-          "State parameters related to bandwidth
-          configuration of TE tunnels";
-        uses te-tunnel-bandwidth_config;
-        uses te-tunnel-bandwidth_state;
-      }
-    }
-  }
-
-  grouping te-tunnel-bandwidth_top {
-    description
-      "Top level grouping for specifying bandwidth for a tunnel";
-
-    container bandwidth {
-      description
-        "Bandwidth configuration for TE LSPs";
-
-      container config {
-        description
-          "Configuration parameters related to bandwidth on TE
-          tunnels:";
-        uses te-tunnel-bandwidth_config;
-      }
-
-      container state {
-        config false;
-        description
-          "State parameters related to bandwidth
-          configuration of TE tunnels";
-        uses te-tunnel-bandwidth_config;
-        uses te-tunnel-bandwidth_state;
-      }
-
-      container auto-bandwidth {
-        when "../config/specification-type = 'AUTO'" {
-          description
-            "Include this container for auto bandwidth
-            specific configuration";
-        }
-        description
-          "Parameters related to auto-bandwidth";
-
-        container config {
-          description
-            "Configuration parameters relating to MPLS
-            auto-bandwidth on the tunnel.";
-          uses te-lsp-auto-bandwidth_config;
-        }
-        container state {
-          config false;
-          description
-            "State parameters relating to MPLS
-            auto-bandwidth on the tunnel.";
-          uses te-lsp-auto-bandwidth_config;
-        }
-
-        container overflow {
-          description
-            "configuration of MPLS overflow bandwidth
-            adjustement for the LSP";
-
-          container config {
-            description
-              "Config information for MPLS overflow bandwidth
-              adjustment";
-            uses te-lsp-overflow_config;
-          }
-
-          container state {
-            config false;
-            description
-              "Config information for MPLS overflow bandwidth
-              adjustment";
-            uses te-lsp-overflow_config;
-          }
-        }
-
-        container underflow {
-          description
-            "configuration of MPLS underflow bandwidth
-            adjustement for the LSP";
-
-          container config {
-            description
-              "Config information for MPLS underflow bandwidth
-              adjustment";
-            uses te-lsp-underflow_config;
-          }
-
-          container state {
-            config false;
-            description
-              "State information for MPLS underflo
-              adjustment";
-            uses te-lsp-underflow_config;
-          }
-        }
+          "Configuration applied parameters and state";
+        uses hierarchical-link_config;
       }
     }
   }
@@ -896,6 +716,13 @@ module ietf-te {
         base te-types:lsp-encoding-types;
       }
       description "LSP encoding type";
+    }
+    leaf switching-type {
+      type identityref {
+        base te-types:switching-capabilities;
+      }
+      description "LSP switching type";
+      reference "RFC3945";
     }
     leaf protection-type {
       type identityref {
@@ -940,60 +767,14 @@ module ietf-te {
       type binary;
       description
         "TE tunnel source termination point identifier.";
-    } 
+    }
     leaf dst-tp-id {
       /* Add when check */
       type binary;
       description
         "TE tunnel destination termination point identifier.";
     }
-    leaf setup-priority {
-      type uint8 {
-        range "0..7";
-      }
-      description
-        "TE LSP setup priority";
-    }
-    leaf hold-priority {
-      type uint8 {
-        range "0..7";
-      }
-      description
-        "TE LSP hold priority";
-    }
-    leaf signaling-type {
-      type identityref {
-        base te-types:path-signaling-type;
-      }
-      description "TE tunnel path signaling type";
-    }
-    container hierarchical-link-id {
-        description
-          "Identifies a hierarchical link (in server layer)
-           that this tunnel is associated with.";
-        leaf local-te-node-id {
-          type te-types:te-node-id;
-          description
-            "Local TE node identifier";
-        }
-        leaf local-te-link-tp-id {
-          type te-types:te-tp-id;
-          description
-            "Local TE link termination point identifier";
-        }
-        leaf remote-te-node-id {
-          type te-types:te-node-id;
-          description
-            "Remote TE node identifier";
-        }
-        leaf te-topology-id {
-          type te-types:te-topology-id;
-          description
-            "It is presumed that a datastore will contain many
-             topologies. To distinguish between topologies it is
-             vital to have UNIQUE topology identifiers.";
-        }
-    }
+    uses common-constraints_config;
     uses bidir-assoc-properties;
   }
 
@@ -1008,21 +789,80 @@ module ietf-te {
     }
   }
 
+  grouping access-segment-info {
+    description
+      "info related to a segment";
+    container forward {
+      description
+        "for the forward direction of this tunnel";
+			container config {
+				description
+					"Configuration intended parameters";
+				uses te-types:label-set-info;
+			}
+			container state {
+				config false;
+				description
+					"Configuration applied parameters and state";
+				uses te-types:label-set-info;
+			}
+    }
+    container reverse {
+      description
+        "for the reverse direction of this tunnel";
+			container config {
+				description
+					"Configuration intended parameters";
+				uses te-types:label-set-info;
+			}
+			container state {
+				config false;
+				description
+					"Configuration applied parameters and state";
+				uses te-types:label-set-info;
+			}
+    }
+  }
+
+  grouping path-access-segment-info {
+    description
+      "If an end-to-end tunnel crosses multiple domains using
+       the same technology, some additional constraints have to be
+       taken in consideration in each domain";
+    // the name as in ietf-mpls-static
+    container in-segment {
+      presence
+        "The end-to-end tunnel starts in a previous domain;
+         this tunnel is a segment in the current domain.";
+      description
+        "This tunnel is a segment that needs to be coordinated
+         with previous segment stitched on head-end side.";
+      uses access-segment-info;
+    }
+    container out-segment {
+      presence
+        "The end-to-end tunnel is not terminated in this domain;
+         this tunnel is a segment in the current domain.";
+      description
+        "This tunnel is a segment that needs to be coordinated
+         with previous segment stitched on head-end side.";
+      uses access-segment-info;
+    }
+  }
+
   /* TE tunnel configuration/state grouping */
   grouping tunnel-p2mp-properties {
     description
       "Top level grouping for P2MP tunnel properties.";
     container config {
       description
-        "Configuration parameters relating to
-         tunnel P2MP properties";
+        "Configuration intended parameters";
       uses tunnel-p2mp-params_config;
     }
     container state {
       config false;
       description
-        "State information associated with tunnel
-         properties";
+        "Configuration applied parameters and state";
       uses tunnel-p2mp-params_config;
     }
   }
@@ -1076,19 +916,16 @@ module ietf-te {
       "Top level grouping for tunnel properties.";
     container config {
       description
-        "Configuration parameters relating to
-         tunnel properties";
+        "Configuration intended parameters";
       uses tunnel-p2p-params_config;
     }
     container state {
       config false;
       description
-        "State information associated with tunnel
-         properties";
+        "Configuration applied parameters and state";
       uses tunnel-p2p-params_config;
       uses tunnel-p2p-params_state;
     }
-		uses te-tunnel-bandwidth_top;
 
     container p2p-primary-paths {
       description "Set of P2P primary aths container";
@@ -1104,7 +941,7 @@ module ietf-te {
         }
         uses p2p-primary-path-properties;
         container candidate-p2p-secondary-paths {
-          description 
+          description
             "The set of candidate secondary paths which may be used
             for this primary path. When secondary paths are specified
             in the list the path of the secondary LSP in use must be
@@ -1127,18 +964,14 @@ module ietf-te {
             }
             container config {
               description
-                "Configuration parameters relating to the candidate
-                secondary path";
-
+                "Configuration intended parameters";
               uses p2p-path-candidate-secondary-path-config;
             }
 
             container state {
               config false;
               description
-                "Operational state parameters relating to the candidate
-                secondary path";
-
+                "Configuration applied parameters and state";
               uses p2p-path-candidate-secondary-path-config;
               uses p2p-path-candidate-secondary-path-state;
             }
@@ -1241,7 +1074,7 @@ module ietf-te {
         }
       }
       description
-        "Origin type of LSP relative to the location 
+        "Origin type of LSP relative to the location
         of the local switch in the path.";
     }
 
@@ -1334,13 +1167,13 @@ module ietf-te {
         }
         container config {
           description
-            "Configuration parameters related to admin-groups";
+            "Configuration intended parameters";
           uses named-admin-groups_config;
         }
         container state {
           config false;
           description
-            "State parameters related to admin-groups";
+            "Configuration applied parameters and state";
           uses named-admin-groups_config;
         }
       }
@@ -1387,13 +1220,13 @@ module ietf-te {
         }
         container config {
           description
-            "Configuration parameters related to named SRLGs";
+            "Configuration intended parameters";
           uses named-srlgs_config;
         }
         container state {
           config false;
           description
-            "State parameters related to named SRLGs";
+            "Configuration applied parameters and state";
           uses named-srlgs_config;
         }
       }
@@ -1410,28 +1243,6 @@ module ietf-te {
       description
         "A string name that uniquely identifies an
         explicit path";
-    }
-    container explicit-route-objects {
-      description "Explicit route objects container";
-      list explicit-route-object {
-        key "index";
-        description
-          "List of explicit route objects";
-        leaf index {
-          type leafref {
-            path "../config/index";
-          }
-          description
-            "Index of this explicit route object";
-        }
-        leaf explicit-route-usage {
-          type identityref {
-            base te-types:route-usage-type;
-          }
-          description "An explicit-route hop action.";
-        }
-        uses te-types:explicit-route-hop;
-      }
     }
   }
 
@@ -1453,20 +1264,252 @@ module ietf-te {
         }
         container config {
           description
-            "Configuration parameters related to named paths";
+            "Configuration intended parameters";
           uses named-explicit-paths_config;
         }
         container state {
           config false;
           description
-            "State parameters related to named paths";
+            "Configuration applied parameters and state";
           uses named-explicit-paths_config;
+        }
+        container explicit-route-objects {
+          description "Explicit route objects container";
+          list explicit-route-object {
+            key "index";
+            description
+              "List of explicit route objects";
+            leaf index {
+              type leafref {
+                path "../config/index";
+              }
+              description
+                "Index of this explicit route object";
+            }
+            leaf explicit-route-usage {
+              type identityref {
+                base te-types:route-usage-type;
+              }
+              description "An explicit-route hop action.";
+            }
+            uses te-types:explicit-route-hop;
+          }
         }
       }
     }
   }
 
   /* Global named paths constraints configuration data */
+  grouping path-metrics-bounds_config {
+    description "TE path metric bounds grouping";
+    leaf metric-type {
+      type identityref {
+        base te-types:path-metric-type;
+      }
+      description "TE path metric type";
+    }
+    leaf upper-bound {
+      type uint64;
+      description "Upper bound on end-to-end TE path metric";
+    }
+  }
+
+  grouping path-objective-function_config {
+    description "Optimization metrics configuration grouping";
+    leaf objective-function-type {
+      type identityref {
+        base te-types:objective-function-type;
+      }
+      description
+        "Objective function entry";
+    }
+  }
+
+
+  grouping path-objective-function {
+    description "Objective functions grouping";
+
+    /* Optimize by metric */
+    container optimizations {
+      description
+        "The objective function container that includes
+         attributes to impose when computing a TE path";
+      list optimization-metric {
+        key "metric-type";
+        description "TE path metric type";
+        leaf metric-type {
+          type leafref {
+            path "../config/metric-type";
+          }
+          description
+            "Optimization metric type";
+        }
+        container config {
+          description
+            "Configuration intended parameters";
+          uses te-types:optimizations_config;
+        }
+        container state {
+          config false;
+          description
+            "Configuration applied parameters and state";
+          uses te-types:optimizations_config;
+        }
+      }
+    }
+
+    /* Objective functions */
+    container path-objective-function {
+      description
+        "The objective function container that includes
+         attributes to impose when computing a TE path";
+      container config {
+        description
+          "Configuration intended parameters";
+        uses path-objective-function_config;
+      }
+      container state {
+        config false;
+        description
+          "Configuration applied parameters and state";
+        uses path-objective-function_config;
+      }
+    }
+
+    /* Tiebreakers */
+    container tiebreakers {
+      description
+        "The list of tiebreaker criterion to apply
+         on an equally favored set of paths to pick best";
+      list tiebreaker {
+        key "tiebreaker-type";
+        description
+          "The list of tiebreaker criterion to apply
+           on an equally favored set of paths to pick best";
+        leaf tiebreaker-type {
+          type leafref {
+            path "../config/tiebreaker-type";
+          }
+          description "The tiebreaker type";
+        }
+        container config {
+          description
+            "Configuration intended parameters";
+          leaf tiebreaker-type {
+            type identityref {
+              base te-types:path-metric-type;
+            }
+            description "The objective function";
+          }
+        }
+        container state {
+          config false;
+          description
+            "Configuration applied parameters and state";
+          leaf tiebreaker-type {
+            type identityref {
+              base te-types:path-metric-type;
+            }
+            description "The objective function";
+          }
+        }
+      }
+    }
+  }
+
+  grouping path-metric-bounds {
+    description "TE path metric bounds grouping";
+    container path-metric-bounds {
+      description "TE path metric bounds container";
+      list path-metric-bound {
+        key metric-type;
+        description "List of TE path metrics";
+        leaf metric-type {
+          type leafref {
+            path "../config/metric-type";
+          }
+          description
+            "The TE path metric type";
+        }
+        container config {
+          description
+            "Configuration intended parameters";
+          uses path-metrics-bounds_config;
+        }
+        container state {
+          config false;
+          description
+            "Configuration applied parameters and state";
+          uses path-metrics-bounds_config;
+        }
+      }
+    }
+  }
+
+  grouping path-constraints_state {
+    description
+      "TE path constraints state";
+    leaf bandwidth-generic_state {
+      type te-types:te-bandwidth;
+      description
+        "A technology agnostic requested bandwidth to use
+         for path computation";
+    }
+    leaf disjointness_state {
+      type te-types:te-path-disjointness;
+      description
+        "The type of resource disjointness.";
+    }
+  }
+
+  grouping common-constraints_config {
+    description
+      "Common constraints grouping that can be set on
+       a constraint set or directly on the tunnel";
+    leaf topology-id {
+      type te-types:te-topology-id;
+      description
+        "The tunnel path is computed using the specific
+        topology identified by this identifier";
+    }
+    leaf ignore-overload {
+      type boolean;
+      description
+        "The tunnel path can traverse overloaded node.";
+    }
+    leaf bandwidth-generic {
+      type te-types:te-bandwidth;
+      description
+        "A technology agnostic requested bandwidth to use
+         for path computation";
+    }
+    leaf disjointness {
+      type te-types:te-path-disjointness;
+      description
+        "The type of resource disjointness.";
+    }
+    leaf setup-priority {
+      type uint8 {
+        range "0..7";
+      }
+      description
+        "TE LSP requested setup priority";
+    }
+    leaf hold-priority {
+      type uint8 {
+        range "0..7";
+      }
+      description
+        "TE LSP requested hold priority";
+    }
+    leaf signaling-type {
+      type identityref {
+        base te-types:path-signaling-type;
+      }
+      description "TE tunnel path signaling type";
+    }
+  }
+
   grouping named-path-constraints_config {
     description
       "Global named path constraints configuration
@@ -1477,65 +1520,9 @@ module ietf-te {
         "A string name that uniquely identifies a
         path constraint set";
     }
-    leaf topology-id {
-      type te-types:te-topology-id;
-      description
-        "The tunnel path is computed using the specific
-        topology identified by this identifier";
-    }
-    leaf cost-limit {
-      type uint32 {
-        range "1..4294967295";
-      }
-      description
-        "The tunnel path cost limit.";
-    }
-    leaf hop-limit {
-      type uint8 {
-        range "1..255";
-      }
-      description
-        "The tunnel path hop limit.";
-    }
-    leaf metric-type {
-      type identityref {
-        base te-types:path-metric-type;
-      }
-      default te-types:path-metric-te;
-      description
-        "The tunnel path metric type.";
-    }
-    leaf tiebreaker-type {
-      type identityref {
-        base te-types:path-tiebreaker-type;
-      }
-      default te-types:path-tiebreaker-maxfill;
-      description
-        "The tunnel path computation tie breakers.";
-    }
-    leaf ignore-overload {
-      type boolean;
-      description
-        "The tunnel path can traverse overloaded node.";
-    }
-    leaf setup-priority {
-      type uint8 {
-        range "0..7";
-      }
-      description
-        "TE LSP setup priority";
-    }
-    leaf hold-priority {
-      type uint8 {
-        range "0..7";
-      }
-      description
-        "TE LSP hold priority";
-    }
+    uses common-constraints_config;
     uses path-affinities;
     uses path-srlgs;
-    uses path-route-objects;
-    uses te-path-bandwidth_top;
   }
 
   grouping named-path-constraints {
@@ -1555,17 +1542,25 @@ module ietf-te {
           }
           description "Path constraint name";
         }
+        uses path-metric-bounds;
         container config {
           description
-            "Configuration parameters related to admin-groups";
+            "Configuration intended parameters";
           uses named-path-constraints_config;
         }
         container state {
           config false;
           description
-            "State parameters related to admin-groups";
+            "Configuration applied parameters and state";
           uses named-path-constraints_config;
+          uses path-constraints_state;
         }
+        uses path-route-objects;
+        uses path-objective-function;
+				uses path-access-segment-info {
+					description
+						"Tunnel constraints induced by other segments.";
+				}
       }
     }
   }

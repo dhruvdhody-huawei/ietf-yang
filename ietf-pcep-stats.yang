@@ -3,11 +3,11 @@ module ietf-pcep-stats {
     yang-version 1.1;
 
     namespace "urn:ietf:params:xml:ns:yang:ietf-pcep-stats";
-    prefix ps;
+    prefix "ps";
 
 
     import ietf-pcep {
-       prefix p;
+       prefix "p";
     }
 
     import ietf-yang-types {
@@ -36,7 +36,7 @@ module ietf-pcep-stats {
         model with statistics, counters and telemetry data";
 
 
-    revision 2017-03-12 {
+    revision 2017-06-21 {
         description "Initial revision.";
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
@@ -861,7 +861,7 @@ module ietf-pcep-stats {
      * Augment modules to add statistics
      */
 
-    augment "/p:pcep-state/p:entity/p:peers/p:peer" {
+    augment "/p:pcep/p:entity/p:peers/p:peer" {
         description
             "Augmenting the statistics";
         leaf num-sess-setup-ok{
@@ -934,7 +934,7 @@ module ietf-pcep-stats {
         }//pcep-stats
     }//augment
 
-    augment "/p:pcep-state/p:entity/p:peers/p:peer/" +
+    augment "/p:pcep/p:entity/p:peers/p:peer/" +
             "p:sessions/p:session" {
         description
             "Augmenting the statistics";

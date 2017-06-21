@@ -10,6 +10,13 @@ add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-mpls.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te-mpls-types.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-te.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-key-chain.yang
+
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-keystore.yang
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-tls-common.yang
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-tls-client.yang
+add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-tls-server.yang
+
+
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-pcep.yang
 add /home/root1/Documents/IETF/yang/map/ietf-yang/ietf-pcep-stats.yang
 

@@ -62,7 +62,7 @@ module ietf-te-topology {
 
   description "TE topology model";
 
-  revision "2017-03-10" {
+  revision "2017-06-10" {
     description "Initial revision";
     reference "TBD";
   }
@@ -231,7 +231,7 @@ module ietf-te-topology {
            of the used labels.";
       }
     }
-  } // connectivity-label-restrictions
+  } // connectivity-label-restriction-list
 
   grouping connectivity-matrix-entry-attributes {
     description
@@ -242,11 +242,8 @@ module ietf-te-topology {
         "true  - switching is allowed,
          false - switching is disallowed.";
     }
-    uses connectivity-label-restriction-list;
     container underlay {
       if-feature te-topology-hierarchy;
-      presence
-        "Indicates the underlay exists for this link.";
       description "Attributes of the te-link underlay.";
       reference
         "RFC4206: Label Switched Paths (LSP) Hierarchy with
@@ -716,42 +713,6 @@ module ietf-te-topology {
     } // local-link-connectivity
   } // statistics-per-ttp
 
-  grouping te-link-augment {
-    description
-      "Augmentation for TE link.";
-
-    container te {
-      must "count(../nt:supporting-link)<=1" {
-        description
-          "For a link in a TE topology, there cannot be more
-           than 1 supporting link. If one or more link paths are
-           abstracted, the underlay is used.";
-      }
-      presence "TE support.";
-      description
-        "Indicates TE support.";
-
-      container config {
-        description
-          "Configuration data.";
-        uses te-link-config;
-      } // config
-      container state {
-        config false;
-        description
-          "Operational state data.";
-        uses te-link-config;
-        uses te-link-state-derived;
-      } // state
-      container statistics {
-        config false;
-        description
-          "Statistics data.";
-        uses statistics-per-link;
-      } // statistics
-    } // te
-  } // te-link-augment
-
   grouping te-link-config {
     description
       "TE link configuration grouping.";
@@ -900,8 +861,6 @@ module ietf-te-topology {
       }
       container underlay {
         if-feature te-topology-hierarchy;
-        presence
-          "Indicates the underlay exists for this link.";
         description "Attributes of the te-link underlay.";
         reference
           "RFC4206: Label Switched Paths (LSP) Hierarchy with
@@ -1129,23 +1088,18 @@ module ietf-te-topology {
     container underlay {
       if-feature te-topology-hierarchy;
       description "State attributes for te-link underlay.";
-      uses te-link-state-underlay-attributes;
+      leaf dynamic {
+        type boolean;
+        description
+          "true if the underlay is dynamically created.";
+      }
+      leaf committed {
+        type boolean;
+        description
+          "true if the underlay is committed.";
+      }
     }
   } // te-link-state-derived
-
-  grouping te-link-state-underlay-attributes {
-    description "State attributes for te-link underlay.";
-    leaf dynamic {
-      type boolean;
-      description
-        "true if the underlay is dynamically created.";
-    }
-    leaf committed {
-      type boolean;
-      description
-        "true if the underlay is committed.";
-    }
-  } // te-link-state-underlay-attributes
 
   grouping te-link-underlay-attributes {
     description "Attributes for  te-link underlay.";
@@ -1153,6 +1107,12 @@ module ietf-te-topology {
       "RFC4206: Label Switched Paths (LSP) Hierarchy with
        Generalized Multi-Protocol Label Switching (GMPLS)
        Traffic Engineering (TE)";
+    leaf enabled {
+      type boolean;
+      description
+        "'true' if the underlay is enabled.
+         'false' if the underlay is disabled.";
+    }
     container primary-path {
       description
         "The service path on the underlay topology that
@@ -1196,9 +1156,26 @@ module ietf-te-topology {
       }
     } // underlay-backup-path
     leaf protection-type {
-      type uint16;
+      type identityref {
+        base te-types:lsp-prot-type;
+      }
       description
-        "Underlay protection type desired for this link";
+        "Underlay protection type desired for this link.";
+    }
+    container tunnel-termination-points {
+      description
+        "Underlay TTP(Tunnel Termination Points) desired for this
+         link.";
+      leaf source {
+        type binary;
+        description
+          "Source tunnel termination point identifier.";
+      }
+      leaf destination {
+        type binary;
+        description
+          "Destination tunnel termination point identifier.";
+      }
     }
     container tunnels {
       description
@@ -1239,160 +1216,6 @@ module ietf-te-topology {
       } // tunnel
     } // tunnels
   } // te-link-underlay-attributes
-
-  grouping te-node-augment {
-    description
-      "Augmentation for TE node.";
-
-    leaf te-node-id {
-      type te-types:te-node-id;
-      description
-        "The identifier of a node in the TE topology.
-         A node is specific to a topology to which it belongs.";
-    }
-
-    container te {
-      must "../te-node-id" {
-        description
-          "te-node-id is mandatory.";
-      }
-      must "count(../nw:supporting-node)<=1" {
-        description
-          "For a node in a TE topology, there cannot be more
-           than 1 supporting node. If multiple nodes are abstracted,
-           the underlay-topology is used.";
-      }
-      presence "TE support.";
-      description
-        "Indicates TE support.";
-
-      container config {
-        description
-          "Configuration data.";
-        uses te-node-config;
-      } // config
-      container state {
-        config false;
-        description
-          "Operational state data.";
-
-        uses te-node-config;
-        uses te-node-state-derived;
-      } // state
-      container statistics {
-        config false;
-        description
-          "Statistics data.";
-        uses statistics-per-node;
-      } // statistics
-
-      list tunnel-termination-point {
-        key "tunnel-tp-id";
-        description
-          "A termination point can terminate a tunnel.";
-        leaf tunnel-tp-id {
-          type binary;
-          description
-            "Tunnel termination point identifier.";
-        }
-
-        container config {
-          description
-            "Configuration data.";
-          uses te-node-tunnel-termination-attributes;
-        }
-        container state {
-          config false;
-          description
-            "Operational state data.";
-
-          uses te-node-tunnel-termination-attributes;
-          uses geolocation-container;
-        } // state
-        container statistics {
-          config false;
-          description
-            "Statistics data.";
-          uses statistics-per-ttp;
-        } // statistics
-
-        // Relations to other tunnel termination points
-        list supporting-tunnel-termination-point {
-          key "node-ref tunnel-tp-ref";
-          description
-            "Identifies the tunnel termination points, that this
-             tunnel termination point is depending on.";
-          leaf node-ref {
-            type string;
-            /*            
-            type union {
-              type leafref {
-                path "../../../../nw:supporting-node/nw:node-ref";
-                require-instance false;
-              }
-              type leafref {
-                path "/nw:networks/nw:network"+
-                  "[nw:network-id="+
-                  "current()/../../../../te/config/"+
-                  "te-node-attributes/underlay-topology/"+
-                  "network-ref]/nw:node/nw:node-id";
-                require-instance false;
-              }
-              type leafref {
-                path "/nw:networks/nw:network"+
-                  "[nw:network-id="+
-                  "current()/../../../../te/state/"+
-                  "te-node-attributes/underlay-topology/"+
-                  "network-ref]/nw:node/nw:node-id";
-                require-instance false;
-              }
-            }*/
-            description
-              "This leaf identifies in which node the supporting
-               tunnel termination point is present.";
-          }
-          leaf tunnel-tp-ref {
-            type string;
-            /*
-            type union {
-              type leafref {
-                path "/nw:networks/nw:network"+
-                  "[nw:network-id="+
-                  "current()/../../../../nw:supporting-node/"+
-                  "nw:network-ref]/"+
-                  "nw:node[nw:node-id=current()/../node-ref]/te/"+
-                  "tunnel-termination-point/tunnel-tp-id";
-                require-instance false;
-              }
-              type leafref {
-                path "/nw:networks/nw:network"+
-                  "[nw:network-id="+
-                  "current()/../../../../te/config/"+
-                  "te-node-attributes/underlay-topology/"+
-                  "network-ref]/"+
-                  "nw:node[nw:node-id=current()/../node-ref]/te/"+
-                  "tunnel-termination-point/tunnel-tp-id";
-                require-instance false;
-              }
-              type leafref {
-                path "/nw:networks/nw:network"+
-                  "[nw:network-id="+
-                  "current()/../../../../te/state/"+
-                  "te-node-attributes/underlay-topology/"+
-                  "network-ref]/"+
-                  "nw:node[nw:node-id=current()/../node-ref]/te/"+
-                  "tunnel-termination-point/tunnel-tp-id";
-                require-instance false;
-              }
-            }*/
-            description
-              "Reference to the underlay node, must be in a
-               different topology";
-          }
-        } // supporting-tunnel-termination-point
-      } // tunnel-termination-point
-    } // te
-  } // te-node-augment
 
   grouping te-node-config {
     description "TE node configuration grouping.";
@@ -1451,6 +1274,7 @@ module ietf-te-topology {
            if this number is reported in the state data,
            the number is the current number of operational entries.";
       }
+      uses connectivity-label-restriction-list;
       uses connectivity-matrix-entry-attributes;
       list connectivity-matrix {
         key "id";
@@ -1465,6 +1289,8 @@ module ietf-te-topology {
           description "Identifies the connectivity-matrix entry.";
         }
         container from {
+          description
+            "Reference to source link termination point.";
           leaf tp-ref {
             type leafref {
               path "../../../../../../../nt:termination-point/"+
@@ -1473,10 +1299,11 @@ module ietf-te-topology {
             description
               "Relative reference to source termination point.";
           }
-          description
-            "Reference to source NTP.";
+          uses connectivity-label-restriction-list;
         }
         container to {
+          description
+            "Reference to destination link termination point.";
           leaf tp-ref {
             type leafref {
               path "../../../../../../../nt:termination-point/"+
@@ -1485,8 +1312,7 @@ module ietf-te-topology {
             description
               "Relative reference to destination termination point.";
           }
-          description
-            "Reference to destination NTP.";
+          uses connectivity-label-restriction-list;
         }
         uses connectivity-matrix-entry-attributes;
       } // connectivity-matrix
@@ -1599,41 +1425,21 @@ module ietf-te-topology {
     }
   } // te-node-state-derived
 
-  grouping te-node-state-derived-notification {
-    description "Node state attributes in a TE topology.";
-    leaf oper-status {
-      type te-types:te-oper-status;
-      description
-        "The current operational state of the node.";
-    }
-    leaf is-multi-access-dr {
-      type empty;
-      description
-        "The presence of this attribute indicates that this TE node
-         is a pseudonode elected as a designated router.";
-      reference
-        "RFC3630: Traffic Engineering (TE) Extensions to OSPF
-         Version 2.
-         RFC1195: Use of OSI IS-IS for Routing in TCP/IP and Dual
-         Environments.";
-    }
-    uses information-source-per-node-attributes;
-    list information-source-entry {
-      key "information-source";
-      description
-        "A list of information sources learned, including the one
-         used.";
-      uses information-source-per-node-attributes;
-      uses te-node-connectivity-matrix-abs;
-      uses te-node-info-attributes;
-    }
-  } // te-node-state-derived-notification
-
   grouping te-node-tunnel-termination-attributes {
     description
       "Termination capability of a tunnel termination point on a
        TE node.";
 
+    leaf admin-status {
+      type te-types:te-admin-status;
+      description
+        "The administrative state of the tunnel termination point.";
+    }
+    leaf name {
+      type string;
+      description
+        "A descriptive name for the tunnel termination point.";
+    }
     leaf switching-capability {
       type identityref {
         base te-types:switching-capabilities;
@@ -1648,7 +1454,7 @@ module ietf-te-topology {
       description
         "Encoding supported by this interface.";
     }
-    leaf inter-layer-lock-id {
+    leaf-list inter-layer-lock-id {
       type uint32;
       description
         "Inter layer lock ID, used for path computation in a TE
@@ -1717,6 +1523,7 @@ module ietf-te-topology {
            if this number is reported in the state data,
            the number is the current number of operational entries.";
       }
+      uses connectivity-label-restriction-list;
       uses connectivity-matrix-entry-attributes;
       list local-link-connectivity {
         key "link-tp-ref";
@@ -1739,6 +1546,7 @@ module ietf-te-topology {
             "Link termination point.";
         }
 
+        uses connectivity-label-restriction-list;
         uses connectivity-matrix-entry-attributes;
       } // local-link-connectivity
     } // local-link-connectivities
@@ -1751,43 +1559,21 @@ module ietf-te-topology {
     uses te-types:explicit-route-hop_config;
   } // te-path-element
 
-  grouping te-termination-point-augment {
-    description
-      "Augmentation for TE termination point.";
-
-    leaf te-tp-id {
-      type te-types:te-tp-id;
-      description
-        "An identifier to uniquely identify a TE termination
-         point.";
-    }
-
-    container te {
-      must "../te-tp-id";
-      presence "TE support.";
-      description
-        "Indicates TE support.";
-
-      container config {
-        description
-          "Configuration data.";
-        uses te-termination-point-config;
-      } // config
-      container state {
-        config false;
-        description
-          "Operational state data.";
-        uses te-termination-point-config;
-        uses geolocation-container;
-      } // state
-    } // te
-  } // te-termination-point-augment
-
   grouping te-termination-point-config {
     description
       "TE termination point configuration grouping.";
+    leaf admin-status {
+      type te-types:te-admin-status;
+      description
+        "The administrative state of the link termination point.";
+    }
+    leaf name {
+      type string;
+      description
+        "A descriptive name for the link termination point.";
+    }
     uses interface-switching-capability-list;
-    leaf inter-layer-lock-id {
+    leaf-list inter-layer-lock-id {
       type uint32;
       description
         "Inter layer lock ID, used for path computation in a TE
@@ -1799,96 +1585,6 @@ module ietf-te-topology {
          for Multi-Layer and Multi-Region Networks (MLN/MRN).";
     }
   } // te-termination-point-config
-
-  grouping te-topologies-augment {
-    description
-      "Augmentation for TE topologies.";
-
-    container te {
-      presence "TE support.";
-      description
-        "Indicates TE support.";
-
-      container templates {
-        description
-          "Configuration parameters for templates used for TE
-           topology.";
-
-        list node-template {
-          if-feature template;
-          key "name";
-          leaf name {
-            type te-types:te-template-name;
-            description
-              "The name to identify a TE node template.";
-          }
-          description
-            "The list of TE node templates used to define sharable
-             and reusable TE node attributes.";
-          uses template-attributes;
-          uses te-node-config-attributes-template;
-        } // node-template
-
-        list link-template {
-          if-feature template;
-          key "name";
-          leaf name {
-            type te-types:te-template-name;
-            description
-              "The name to identify a TE link template.";
-          }
-          description
-            "The list of TE link templates used to define sharable
-             and reusable TE link attributes.";
-          uses template-attributes;
-          uses te-link-config-attributes;
-        } // link-template
-      } // templates
-    } // te
-  } // te-topologies-augment
-
-  grouping te-topology-augment {
-    description
-      "Augmentation for TE topology.";
-
-    leaf provider-id {
-      type te-types:te-global-id;
-      description
-        "An identifier to uniquely identify a provider.";
-    }
-    leaf client-id {
-      type te-types:te-global-id;
-      description
-        "An identifier to uniquely identify a client.";
-    }
-    leaf te-topology-id {
-      type te-types:te-topology-id;
-      description
-        "It is presumed that a datastore will contain many
-         topologies. To distinguish between topologies it is
-         vital to have UNIQUE topology identifiers.";
-    }
-
-    container te {
-      must "../provider-id and ../client-id and ../te-topology-id";
-      presence "TE support.";
-      description
-        "Indicates TE support.";
-
-      container config {
-        description
-          "Configuration data.";
-        uses te-topology-config;
-      } // config
-      container state {
-        config false;
-        description
-          "Operational state data.";
-        uses te-topology-config;
-        uses geolocation-container;
-      } // state
-    } // te
-  } // te-topology-augment
 
   grouping te-topology-config {
     description
@@ -1946,16 +1642,6 @@ module ietf-te-topology {
     }
   } // te-topology-ref
 
-  grouping te-topology-type {
-    description
-      "Identifies the TE topology type.";
-    container te-topology {
-      presence "Indicates TE topology.";
-      description
-        "Its presence identifies the TE topology type.";
-    }
-  } // te-topology-type
-
   grouping template-attributes {
     description
       "Common attributes for all templates.";
@@ -2001,13 +1687,58 @@ module ietf-te-topology {
   augment "/nw:networks/nw:network/nw:network-types" {
     description
       "Introduce new network type for TE topology.";
-    uses te-topology-type;
+    container te-topology {
+      presence "Indicates TE topology.";
+      description
+        "Its presence identifies the TE topology type.";
+    }
   }
 
   augment "/nw:networks" {
     description
       "Augmentation parameters for TE topologies.";
-    uses te-topologies-augment;
+
+    container te {
+      presence "TE support.";
+      description
+        "Indicates TE support.";
+
+      container templates {
+        description
+          "Configuration parameters for templates used for TE
+           topology.";
+
+        list node-template {
+          if-feature template;
+          key "name";
+          leaf name {
+            type te-types:te-template-name;
+            description
+              "The name to identify a TE node template.";
+          }
+          description
+            "The list of TE node templates used to define sharable
+             and reusable TE node attributes.";
+          uses template-attributes;
+          uses te-node-config-attributes-template;
+        } // node-template
+
+        list link-template {
+          if-feature template;
+          key "name";
+          leaf name {
+            type te-types:te-template-name;
+            description
+              "The name to identify a TE link template.";
+          }
+          description
+            "The list of TE link templates used to define sharable
+             and reusable TE link attributes.";
+          uses template-attributes;
+          uses te-link-config-attributes;
+        } // link-template
+      } // templates
+    } // te
   }
 
   augment "/nw:networks/nw:network" {
@@ -2018,7 +1749,44 @@ module ietf-te-topology {
     }
     description
       "Configuration parameters for TE topology.";
-    uses te-topology-augment;
+
+    leaf provider-id {
+      type te-types:te-global-id;
+      description
+        "An identifier to uniquely identify a provider.";
+    }
+    leaf client-id {
+      type te-types:te-global-id;
+      description
+        "An identifier to uniquely identify a client.";
+    }
+    leaf te-topology-id {
+      type te-types:te-topology-id;
+      description
+        "It is presumed that a datastore will contain many
+         topologies. To distinguish between topologies it is
+         vital to have UNIQUE topology identifiers.";
+    }
+
+    container te {
+      must "../provider-id and ../client-id and ../te-topology-id";
+      presence "TE support.";
+      description
+        "Indicates TE support.";
+
+      container config {
+        description
+          "Configuration data.";
+        uses te-topology-config;
+      } // config
+      container state {
+        config false;
+        description
+          "Operational state data.";
+        uses te-topology-config;
+        uses geolocation-container;
+      } // state
+    } // te
   }
 
   augment "/nw:networks/nw:network/nw:node" {
@@ -2029,7 +1797,109 @@ module ietf-te-topology {
     }
     description
       "Configuration parameters for TE at node level.";
-    uses te-node-augment;
+
+    leaf te-node-id {
+      type te-types:te-node-id;
+      description
+        "The identifier of a node in the TE topology.
+         A node is specific to a topology to which it belongs.";
+    }
+
+    container te {
+      must "../te-node-id" {
+        description
+          "te-node-id is mandatory.";
+      }
+      must "count(../nw:supporting-node)<=1" {
+        description
+          "For a node in a TE topology, there cannot be more
+           than 1 supporting node. If multiple nodes are abstracted,
+           the underlay-topology is used.";
+      }
+      presence "TE support.";
+      description
+        "Indicates TE support.";
+
+      container config {
+        description
+          "Configuration data.";
+        uses te-node-config;
+      } // config
+      container state {
+        config false;
+        description
+          "Operational state data.";
+
+        uses te-node-config;
+        uses te-node-state-derived;
+      } // state
+      container statistics {
+        config false;
+        description
+          "Statistics data.";
+        uses statistics-per-node;
+      } // statistics
+
+      list tunnel-termination-point {
+        key "tunnel-tp-id";
+        description
+          "A termination point can terminate a tunnel.";
+        leaf tunnel-tp-id {
+          type binary;
+          description
+            "Tunnel termination point identifier.";
+        }
+
+        container config {
+          description
+            "Configuration data.";
+          uses te-node-tunnel-termination-attributes;
+        }
+        container state {
+          config false;
+          description
+            "Operational state data.";
+
+          uses te-node-tunnel-termination-attributes;
+          leaf oper-status {
+            type te-types:te-oper-status;
+            description
+              "The current operational state of the tunnel
+               termination point.";
+          }
+          uses geolocation-container;
+        } // state
+        container statistics {
+          config false;
+          description
+            "Statistics data.";
+          uses statistics-per-ttp;
+        } // statistics
+
+        // Relations to other tunnel termination points
+        list supporting-tunnel-termination-point {
+          key "node-ref tunnel-tp-ref";
+          description
+            "Identifies the tunnel termination points, that this
+             tunnel termination point is depending on.";
+          leaf node-ref {
+            type inet:uri;
+            description
+              "This leaf identifies the node in which the supporting
+               tunnel termination point is present.
+               This node is either the supporting node or a node in
+               an underlay topology.";
+          }
+          leaf tunnel-tp-ref {
+            type binary;
+            description
+              "Reference to a tunnel terminiation point, which is
+               either in the supporting node or a node in an
+               underlay topology.";
+          }
+        } // supporting-tunnel-termination-point
+      } // tunnel-termination-point
+    } // te
   }
 
   augment "/nw:networks/nw:network/nt:link" {
@@ -2040,7 +1910,37 @@ module ietf-te-topology {
     }
     description
       "Configuration parameters for TE at link level";
-    uses te-link-augment;
+
+    container te {
+      must "count(../nt:supporting-link)<=1" {
+        description
+          "For a link in a TE topology, there cannot be more
+           than 1 supporting link. If one or more link paths are
+           abstracted, the underlay is used.";
+      }
+      presence "TE support.";
+      description
+        "Indicates TE support.";
+
+      container config {
+        description
+          "Configuration data.";
+        uses te-link-config;
+      } // config
+      container state {
+        config false;
+        description
+          "Operational state data.";
+        uses te-link-config;
+        uses te-link-state-derived;
+      } // state
+      container statistics {
+        config false;
+        description
+          "Statistics data.";
+        uses statistics-per-link;
+      } // statistics
+    } // te
   }
 
   augment "/nw:networks/nw:network/nw:node/"
@@ -2052,6 +1952,38 @@ module ietf-te-topology {
     }
     description
       "Configuration parameters for TE at termination point level";
-    uses te-termination-point-augment;
+
+    leaf te-tp-id {
+      type te-types:te-tp-id;
+      description
+        "An identifier to uniquely identify a TE termination
+         point.";
+    }
+
+    container te {
+      must "../te-tp-id";
+      presence "TE support.";
+      description
+        "Indicates TE support.";
+
+      container config {
+        description
+          "Configuration data.";
+        uses te-termination-point-config;
+      } // config
+      container state {
+        config false;
+        description
+          "Operational state data.";
+        uses te-termination-point-config;
+        leaf oper-status {
+          type te-types:te-oper-status;
+          description
+            "The current operational state of the link termination
+             point.";
+        }
+        uses geolocation-container;
+      } // state
+    } // te
   }
 }
