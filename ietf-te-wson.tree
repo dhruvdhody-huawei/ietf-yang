@@ -1,0 +1,16 @@
+module: ietf-te-wson
+  augment /te:te/te:tunnels/te:tunnel/te:config:
+    +--rw wavelength-assignment?   identityref
+    +--rw selected-frequency?      decimal64
+    +--rw channel-spacing?         decimal64
+  augment /te:te/te:tunnels/te:tunnel/te:state:
+    +--ro wavelength-assignment?   identityref
+    +--ro selected-frequency?      decimal64
+    +--ro channel-spacing?         decimal64
+  augment /te:te/te:lsps-state/te:lsp:
+    +--ro wavelength-assignment?   identityref
+    +--ro selected-frequency?      decimal64
+    +--ro channel-spacing?         decimal64
+  augment /te:te/te-dev:interfaces/te-dev:interface:
+    +--rw selected-frequency?   decimal64
+    +--rw channel-spacing?      decimal64

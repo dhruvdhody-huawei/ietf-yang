@@ -1,6 +1,4 @@
-
-
-module ietf-te-wson {
+module ietf-te-wson{
 
   namespace "urn:ietf:params:xml:ns:yang:ietf-te-wson";
 
@@ -15,30 +13,28 @@ module ietf-te-wson {
   }
 
   organization
-    "IETF Traffic Engineering Architecture and Signaling (TEAS)
-     Working Group";
+    "IETF CCAMP Working Group";
 
   contact
-    "WG Web:   <http://tools.ietf.org/wg/teas/>
-     WG List:  <mailto:teas@ietf.org>
+    "WG Web:   <http://tools.ietf.org/wg/ccamp/>
+     WG List:  <mailto:ccamp@ietf.org>
 
-     WG Chair: Lou Berger
-               <mailto:lberger@labn.net>
+     WG Chair: Daniele Ceccarelli 
+               <mailto:daniele.ceccarelli@ericsson.com>
 
-     WG Chair: Vishnu Pavan Beeram
-               <mailto:vbeeram@juniper.net>
+     WG Chair: Fatai Zhang 
+               <mailto:zhangfatai@huawei.com>
 
      Editor: Young Lee <leeyoung@huawei.com>
      Editor: Dhruv Dhody <dhruv.ietf@gmail.com>
-
      Editor: Ricard Vilalta <ricard.vilalta@cttc.es>";
 
  description
     "Latest update to WSON TE YANG data model.";
 
-  revision "2017-06-20" {
+  revision "2017-06-21" {
     description "Update to WSON TE YANG initial revision.";
-    reference "";
+    reference "xxxx";
   }
 
   identity wavelength-assignment {
@@ -52,19 +48,22 @@ module ietf-te-wson {
 
   identity first-fit-wavelength-asignment {
     base wavelength-assignment;
-    description "All the available wavelengths are numbered, and this WA method
-chooses the available wavelength with the lowest index.";
+    description "All the available wavelengths are numbered, 
+    	and this WA method chooses the available wavelength 
+    	with the lowest index.";
   }
 
   identity random-wavelength-asignment {
     base wavelength-assignment;
-    description "This WA method chooses an available wavelength randomly.";
+    description "This WA method chooses an available 
+    	wavelength randomly.";
   }
 
   identity least-loaded-wavelength-asignment {
     base wavelength-assignment;
-    description "This WA method selects the wavelength that has the largest residual
-capacity on the most loaded link along the route (in muli-fiber networks).";
+    description "This WA method selects the wavelength that 
+    	has the largest residual capacity on the most loaded 
+    	link along the route (in muli-fiber networks).";
   }
 
   /* TE WSON LSPs groupings */
@@ -94,8 +93,8 @@ capacity on the most loaded link along the route (in muli-fiber networks).";
         fraction-digits 5;
       }
       units GHz;
-      description "This is fixed channel spacing for WSON,
-                e.g, 12.5, 25, 50, 100, ..";
+      description "This is fixed channel spacing for 
+      	WSON, e.g, 12.5, 25, 50, 100, ..";
     }
 
   }
