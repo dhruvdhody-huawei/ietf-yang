@@ -1470,7 +1470,8 @@ module ietf-pcep {
             case auth-tls {
                 if-feature tls;
                 container tls-pce {
-                    when "../role = 'pce' or ../role = 'pcc-and-pce'" {
+                    when "../role = 'pce' "
+                         + "or ../role = 'pcc-and-pce'" {
                         description
                             "Valid for PCEP Peer as PCE/PCC-PCE";
                     }
@@ -1484,7 +1485,8 @@ module ietf-pcep {
                 }
 
                 container tls-pcc {
-                    when "../role = 'pcc' or ../role = 'pcc-and-pce'" {
+                    when "../role = 'pcc' "
+                         + "or ../role = 'pcc-and-pce'" {
                     description
                         "Valid for PCEP Peer as PCC/PCC_PCE";
                     }
@@ -1700,7 +1702,8 @@ module ietf-pcep {
                 + "association-list/extended-id";
             }
             description
-                "Additional information to support unique identification.";
+                "Additional information to support 
+                unique identification.";
         }
     }
 
