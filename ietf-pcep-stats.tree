@@ -1,5 +1,5 @@
 module: ietf-pcep-stats
-  augment /p:pcep-state/p:entity/p:peers/p:peer:
+  augment /p:pcep/p:entity/p:peers/p:peer:
     +--ro num-sess-setup-ok?     yang:counter32
     +--ro num-sess-setup-fail?   yang:counter32
     +--ro pcep-stats
@@ -66,7 +66,7 @@ module: ietf-pcep-stats
        |  +--ro num-path-key-no-attempt?   yang:counter32
        +--ro num-req-sent-closed?        yang:counter32
        +--ro num-req-rcvd-closed?        yang:counter32
-  augment /p:pcep-state/p:entity/p:peers/p:peer/p:sessions/p:session:
+  augment /p:pcep/p:entity/p:peers/p:peer/p:sessions/p:session:
     +--ro pcep-stats
        +--ro avg-rsp-time?               uint32
        +--ro lwm-rsp-time?               uint32

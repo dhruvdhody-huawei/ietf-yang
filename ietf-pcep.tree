@@ -3,13 +3,13 @@ module: ietf-pcep
        +--rw entity
           +--rw addr                          inet:ip-address
           +--rw enabled?                      boolean
-          +--ro index?                        uint32
-          +--rw admin-status?                 pcep-admin-status
-          +--rw oper-status?                  pcep-oper-status
           +--rw role                          pcep-role
           +--rw description?                  string
           +--rw speaker-entity-id?            string
           |       {stateful-sync-opt}?
+          +--rw admin-status?                 pcep-admin-status
+          +--ro index?                        uint32
+          +--ro oper-status?                  pcep-oper-status
           +--rw domain
           |  +--rw domain* [domain-type domain]
           |     +--rw domain-type    domain-type
@@ -187,21 +187,20 @@ module: ietf-pcep
           |     |     +--ro explicit-route-usage?   identityref
           |     |     +--ro index                   uint32
           |     |     +--ro (type)?
-          |     |        +--:(numbered)
-          |     |        |  +--ro numbered-hop
-          |     |        |     +--ro address?    te-types:te-tp-id
+          |     |        +--:(ip-address)
+          |     |        |  +--ro ip-address-hop
+          |     |        |     +--ro address?    inet:ip-address
           |     |        |     +--ro hop-type?   te-hop-type
           |     |        +--:(as-number)
           |     |        |  +--ro as-number-hop
           |     |        |     +--ro as-number?   binary
           |     |        |     +--ro hop-type?    te-hop-type
-          |     |        +--:(unnumbered)
+          |     |        +--:(unnumbered-link)
           |     |        |  +--ro unnumbered-hop
-          |     |        |     +--ro node-id?
-          |     |        |     |       te-types:te-node-id
-          |     |        |     +--ro link-tp-id?
-          |     |        |     |       te-types:te-tp-id
-          |     |        |     +--ro hop-type?     te-hop-type
+          |     |        |     +--ro router-id?
+          |     |        |     |       inet:ip-address
+          |     |        |     +--ro interface-id?   uint32
+          |     |        |     +--ro hop-type?       te-hop-type
           |     |        +--:(label)
           |     |        |  +--ro label-hop
           |     |        |     +--ro value?
@@ -338,7 +337,6 @@ module: ietf-pcep
                       +--ro dead-timer?             uint32
                       +--ro peer-dead-timer?        uint32
                       +--ro ka-hold-time-rem?       uint32
-                      +--ro overloaded?             boolean
                       +--ro overload-time?          uint32
                       +--ro peer-overloaded?        boolean
                       +--ro peer-overload-time?     uint32

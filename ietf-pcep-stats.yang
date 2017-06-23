@@ -3,11 +3,11 @@ module ietf-pcep-stats {
     yang-version 1.1;
 
     namespace "urn:ietf:params:xml:ns:yang:ietf-pcep-stats";
-    prefix "ps";
+    prefix ps;
 
 
     import ietf-pcep {
-       prefix "p";
+       prefix p;
     }
 
     import ietf-yang-types {
@@ -866,6 +866,7 @@ module ietf-pcep-stats {
             "Augmenting the statistics";
         leaf num-sess-setup-ok{
             type yang:counter32;
+            config false;
             description
                 "The number of PCEP sessions successfully
                  successfully established with the peer,
@@ -877,6 +878,7 @@ module ietf-pcep-stats {
 
         leaf num-sess-setup-fail{
             type yang:counter32;
+            config false;
             description
                "The number of PCEP sessions with the peer
                 that have been attempted but failed
@@ -885,6 +887,7 @@ module ietf-pcep-stats {
                 session retry to this peer fails.";
         }
         container pcep-stats {
+            config false;
             description
                 "The container for all statistics at peer
                  level.";
