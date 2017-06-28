@@ -75,6 +75,23 @@
        /*
         * Groupings
         */
+       grouping vn-ap {
+           description
+               "VNAP related information";
+           leaf vn-ap-id {
+               type uint32;
+               description
+                   "unique identifier for the referred
+                   VNAP";
+           }
+           leaf vn {
+           	   type leafref {
+           	   	  path "/actn/vn/vn-list/vn-id";
+           	   }
+           	   description
+           	   		"reference to the VN";
+           }
+       }
 
        grouping access-point{
            description
@@ -117,6 +134,14 @@
            CE port, PE port etc.
 
            */
+
+           list vn-ap {
+           		key vn-ap-id;
+           		uses vn-ap;
+           		description
+           			"list of VNAP in this AP";
+           }
+
        }//access-point
 
        grouping vn-member {
@@ -139,10 +164,11 @@
                        "reference to source AP";
                }
                leaf src-vn-ap-id{
-                   type uint32;
+                   type leafref {
+                       path "/actn/ap/access-point-list/vn-ap/vn-ap-id";
+                   }
                    description
-
-                       "vn-ap-id";
+                       "reference to source VNAP";
                }
                leaf multi-src {
                	   if-feature multi-src-dest;
@@ -164,9 +190,11 @@
                        "reference to destination AP";
                }
                leaf dest-vn-ap-id{
-                   type uint32;
+                   type leafref {
+                       path "/actn/ap/access-point-list/vn-ap/vn-ap-id";
+                   }
                    description
-                       "vn-ap-id";
+                       "reference to dest VNAP";
                }
                leaf multi-dest {
                	   if-feature multi-src-dest;
@@ -175,6 +203,21 @@
                        "Is destination part of multi-destination, where
                        only one of the destination is enabled";
                }
+           }
+           container path
+           {
+               description
+                   "the path if set by the customer";
+				list path-element {
+			        key "path-element-id";
+			        description
+			          "A list of path elements describing the service path.";
+			        leaf path-element-id {
+			          type uint32;
+			          description "To identify the element in a path.";
+			        }
+			        uses tet:te-path-element;
+                }                   
            }
        }//vn-member
 
@@ -367,7 +410,7 @@
                            and/or mult-destination is enabled.";
                        leaf selected-vn-member{
                            type leafref {
-                               path "/actn/vn/vn-list/vn-id";
+                               path "/actn/vn/vn-list/vn-member-list/vn-member-id";
                            }
                            description
                                "The selected VN Member along the set
