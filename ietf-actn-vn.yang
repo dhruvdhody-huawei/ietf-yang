@@ -27,7 +27,8 @@
            Working Group";
 
        contact
-           "Editor: Young Lee <leeyoung@huawei.com>";
+           "Editor: Young Lee <leeyoung@huawei.com>
+                  : Dhruv Dhody <dhruv.ietf@gmail.com>";
 
        description
            "This module contains a YANG module for the ACTN VN. It
@@ -36,12 +37,22 @@
            architecture where the CNC is the actor of a VN Instantiation
            /modification /deletion.";
 
-       revision 2017-03-07 {
+       revision 2017-06-28 {
            description
                "initial version.";
            reference
                "TBD";
        }
+
+	   /*
+	    * Features
+	    */
+
+	   feature multi-src-dest {
+	       description
+	         "Support for selection of one src or destination 
+	         among multiple.";
+	   }
 
        identity path-metric-delay {
           base te-types:path-metric-type;
@@ -134,6 +145,7 @@
                        "vn-ap-id";
                }
                leaf multi-src {
+               	   if-feature multi-src-dest;
                    type boolean;
                    description
                        "Is source part of multi-source, where
@@ -157,6 +169,7 @@
                        "vn-ap-id";
                }
                leaf multi-dest {
+               	   if-feature multi-src-dest;
                    type boolean;
                    description
                        "Is destination part of multi-destination, where
@@ -187,6 +200,30 @@
                    changes to be reported";
            }
        }//policy
+
+       grouping metrics-op {
+           description
+               "metric related information";
+           list metric{
+           	   key "metric-type";
+           	   config false;
+               description
+                   "The list of metrics for VN";
+               leaf metric-type {
+                   type identityref {
+                       base te-types:path-metric-type;
+                   }
+                   description
+                       "The VN metric type.";
+               }
+               leaf value{
+                   type uint32;
+                   description
+                       "The limit value";
+               }
+           }
+
+       }
 
        grouping metrics {
            description
@@ -304,6 +341,47 @@
                        description
                            "List of VN-members in a VN";
                        uses vn-member;
+                       uses metrics-op;
+                       leaf oper-status {
+                           type identityref {
+                               base te-types:state-type;
+                           }
+                           config false;
+                           description
+
+                               "VN-member operational state.";
+                       }
+                       leaf tunnel-ref {
+                           type te:tunnel-ref;
+                      	   config false;
+                           description
+                               "A reference to the TE tunnel
+                               in the TE model";
+                       }
+                   }
+                   container multi-src-dest{
+                   	   if-feature multi-src-dest;
+                   	   config false;
+                       description
+                           "The selected VN Member when multi-src
+                           and/or mult-destination is enabled.";
+                       leaf selected-vn-member{
+                           type leafref {
+                               path "/actn/vn/vn-list/vn-id";
+                           }
+                           description
+                               "The selected VN Member along the set
+                               of source and destination configured
+                               with multi-source and/or multi-destination";
+                       }
+                   }
+                   container vn-topology-ref{
+                   	   config false;
+                       description
+                           "An optional reference to the TE Topology
+                            Model where the abstract nodes and links
+                            of the Topology can be found";
+                        uses tet:te-topology-ref;
                    }
                    uses service-metric;
 
@@ -314,111 +392,19 @@
                        default te-types:state-up;
                        description "VN administrative state.";
                    }
-
-               }//vn-list
-           }//vn
-       }//actn
-
-       /*
-        * Operational data nodes
-        */
-
-       container actn-state{
-           config false;
-
-           description
-               "actn is described by this container";
-
-           container ap {
-               description
-                   "AP state";
-               list access-point-list {
-                   key "access-point-id";
-                   description
-                       "access-point identifier";
-                   uses access-point{
-                       description
-                           "access-point information";
-                   }
-            }
-           }
-           container vn {
-               description
-                   "VN state";
-               list vn-list {
-                   key "vn-id";
-                   description
-                       "a virtual network is identified by a vn-id";
-                   leaf vn-id {
-                       type uint32;
-                       description
-                           "a unique vn identifier";
-                   }
-                   leaf vn-name {
-                       type string;
-                       description "vn name";
-                   }
-                   list vn-member-list{
-                       key "vn-member-id";
-                       description
-                           "List of VN-members in a VN";
-                       uses vn-member;
-                       uses metrics;
-                       leaf oper-status {
-                           type identityref {
-                               base te-types:state-type;
-                           }
-                           description
-
-                               "VN-member operational state.";
-                       }
-                       leaf tunnel-ref {
-                           type te:tunnel-ref;
-                           description
-                               "A reference to the TE tunnel
-                               in the TE model";
-                       }
-                   }
-                   container multi-src-dest{
-                       description
-                           "The selected VN Member when multi-src
-                           and/or mult-destination is enabled.";
-                       leaf selected-vn-member{
-                           type leafref {
-                               path "/actn-state/vn/vn-list/vn-id";
-                           }
-                           description
-                               "The selected VN Member along the set
-                               of source and destination configured
-                               with multi-source and/or multi-destination";
-                       }
-                   }
-                   container vn-topology-ref{
-                       description
-                           "An optional reference to the TE Topology
-                            Model where the abstract nodes and links
-                            of the Topology can be found";
-                        uses tet:te-topology-ref;
-                   }
-
-                   uses service-metric;
-
-                   leaf admin-status {
-                       type identityref {
-                           base te-types:state-type;
-                       }
-                       description "VN administrative state.";
-                   }
                    leaf oper-status {
                        type identityref {
                            base te-types:state-type;
                        }
+                       config false;
                        description "VN operational state.";
                    }
 
                }//vn-list
            }//vn
-       }//actn-state
+       }//actn
+
+
        /*
        * Notifications - TBD
        */
@@ -444,7 +430,7 @@
                    description
                        "List of VN-members in a VN";
                    uses vn-member;
-                   uses metrics;
+                   uses metrics-op;
                    leaf oper-status {
                        type identityref {
                            base te-types:state-type;
@@ -454,6 +440,7 @@
                    }
                }
                container multi-src-dest{
+               	   if-feature multi-src-dest;
                    description
                        "The selected VN Member when multi-src
                        and/or mult-destination is enabled.";

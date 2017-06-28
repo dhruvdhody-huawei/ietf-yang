@@ -1,94 +1,55 @@
 module: ietf-actn-vn
     +--rw actn
-    |  +--rw ap
-    |  |  +--rw access-point-list* [access-point-id]
-    |  |     +--rw access-point-id      uint32
-    |  |     +--rw access-point-name?   string
-    |  |     +--rw src-tp-id?           binary
-    |  |     +--rw dst-tp-id?           binary
-    |  |     +--rw max-bandwidth?       tet:te-bandwidth
-    |  |     +--rw avl-bandwidth?       tet:te-bandwidth
-    |  +--rw vn
-    |     +--rw vn-list* [vn-id]
-    |        +--rw vn-id                 uint32
-    |        +--rw vn-name?              string
-    |        +--rw vn-member-list* [vn-member-id]
-    |        |  +--rw vn-member-id    uint32
-    |        |  +--rw src
-    |        |  |  +--rw src?            -> /actn/ap/access-point-list/access-point-id
-    |        |  |  +--rw src-vn-ap-id?   uint32
-    |        |  |  +--rw multi-src?      boolean
-    |        |  +--rw dest
-    |        |     +--rw dest?            -> /actn/ap/access-point-list/access-point-id
-    |        |     +--rw dest-vn-ap-id?   uint32
-    |        |     +--rw multi-dest?      boolean
-    |        +--rw objective-function?   pcep:objective-function
-    |        +--rw metric* [metric-type]
-    |        |  +--rw metric-type    identityref
-    |        |  +--rw limit
-    |        |  |  +--rw enabled?   boolean
-    |        |  |  +--rw value?     uint32
-    |        |  +--rw optimize
-    |        |     +--rw enabled?   boolean
-    |        |     +--rw value?     uint32
-    |        +--rw bandwidth?            tet:te-bandwidth
-    |        +--rw protection?           identityref
-    |        +--rw local-reroute?        boolean
-    |        +--rw push-allowed?         boolean
-    |        +--rw incremental-update?   boolean
-    |        +--rw admin-status?         identityref
-    +--ro actn-state
-       +--ro ap
-       |  +--ro access-point-list* [access-point-id]
-       |     +--ro access-point-id      uint32
-       |     +--ro access-point-name?   string
-       |     +--ro src-tp-id?           binary
-       |     +--ro dst-tp-id?           binary
-       |     +--ro max-bandwidth?       tet:te-bandwidth
-       |     +--ro avl-bandwidth?       tet:te-bandwidth
-       +--ro vn
-          +--ro vn-list* [vn-id]
-             +--ro vn-id                 uint32
-             +--ro vn-name?              string
-             +--ro vn-member-list* [vn-member-id]
-             |  +--ro vn-member-id    uint32
-             |  +--ro src
-             |  |  +--ro src?            -> /actn/ap/access-point-list/access-point-id
-             |  |  +--ro src-vn-ap-id?   uint32
-             |  |  +--ro multi-src?      boolean
-             |  +--ro dest
-             |  |  +--ro dest?            -> /actn/ap/access-point-list/access-point-id
-             |  |  +--ro dest-vn-ap-id?   uint32
-             |  |  +--ro multi-dest?      boolean
+       +--rw ap
+       |  +--rw access-point-list* [access-point-id]
+       |     +--rw access-point-id      uint32
+       |     +--rw access-point-name?   string
+       |     +--rw src-tp-id?           binary
+       |     +--rw dst-tp-id?           binary
+       |     +--rw max-bandwidth?       tet:te-bandwidth
+       |     +--rw avl-bandwidth?       tet:te-bandwidth
+       +--rw vn
+          +--rw vn-list* [vn-id]
+             +--rw vn-id                 uint32
+             +--rw vn-name?              string
+             +--rw vn-member-list* [vn-member-id]
+             |  +--rw vn-member-id    uint32
+             |  +--rw src
+             |  |  +--rw src?            leafref
+             |  |  +--rw src-vn-ap-id?   uint32
+             |  |  +--rw multi-src?      boolean
+             |  |          {multi-src-dest}?
+             |  +--rw dest
+             |  |  +--rw dest?            leafref
+             |  |  +--rw dest-vn-ap-id?   uint32
+             |  |  +--rw multi-dest?      boolean
+             |  |          {multi-src-dest}?
              |  +--ro metric* [metric-type]
              |  |  +--ro metric-type    identityref
-             |  |  +--ro limit
-             |  |  |  +--ro enabled?   boolean
-             |  |  |  +--ro value?     uint32
-             |  |  +--ro optimize
-             |  |     +--ro enabled?   boolean
-             |  |     +--ro value?     uint32
+             |  |  +--ro value?         uint32
              |  +--ro oper-status?    identityref
              |  +--ro tunnel-ref?     te:tunnel-ref
-             +--ro multi-src-dest
-             |  +--ro selected-vn-member?   -> /actn-state/vn/vn-list/vn-id
+             +--ro multi-src-dest {multi-src-dest}?
+             |  +--ro selected-vn-member?
+             |          -> /actn/vn/vn-list/vn-id
              +--ro vn-topology-ref
-             |  +--ro network-ref?   -> /nw:networks/network/network-id
-             +--ro objective-function?   pcep:objective-function
-             +--ro metric* [metric-type]
-             |  +--ro metric-type    identityref
-             |  +--ro limit
-             |  |  +--ro enabled?   boolean
-             |  |  +--ro value?     uint32
-             |  +--ro optimize
-             |     +--ro enabled?   boolean
-             |     +--ro value?     uint32
-             +--ro bandwidth?            tet:te-bandwidth
-             +--ro protection?           identityref
-             +--ro local-reroute?        boolean
-             +--ro push-allowed?         boolean
-             +--ro incremental-update?   boolean
-             +--ro admin-status?         identityref
+             |  +--ro network-ref?
+             |          -> /nw:networks/network/network-id
+             +--rw objective-function?   pcep:objective-function
+             +--rw metric* [metric-type]
+             |  +--rw metric-type    identityref
+             |  +--rw limit
+             |  |  +--rw enabled?   boolean
+             |  |  +--rw value?     uint32
+             |  +--rw optimize
+             |     +--rw enabled?   boolean
+             |     +--rw value?     uint32
+             +--rw bandwidth?            tet:te-bandwidth
+             +--rw protection?           identityref
+             +--rw local-reroute?        boolean
+             +--rw push-allowed?         boolean
+             +--rw incremental-update?   boolean
+             +--rw admin-status?         identityref
              +--ro oper-status?          identityref
 
   rpcs:
@@ -97,13 +58,15 @@ module: ietf-actn-vn
        |  +---w vn-member-list* [vn-member-id]
        |  |  +---w vn-member-id    uint32
        |  |  +---w src
-       |  |  |  +---w src?            -> /actn/ap/access-point-list/access-point-id
+       |  |  |  +---w src?            leafref
        |  |  |  +---w src-vn-ap-id?   uint32
        |  |  |  +---w multi-src?      boolean
+       |  |  |          {multi-src-dest}?
        |  |  +---w dest
-       |  |     +---w dest?            -> /actn/ap/access-point-list/access-point-id
+       |  |     +---w dest?            leafref
        |  |     +---w dest-vn-ap-id?   uint32
        |  |     +---w multi-dest?      boolean
+       |  |             {multi-src-dest}?
        |  +---w objective-function?   pcep:objective-function
        |  +---w metric* [metric-type]
        |  |  +---w metric-type    identityref
@@ -122,21 +85,18 @@ module: ietf-actn-vn
           +--ro vn-member-list* [vn-member-id]
           |  +--ro vn-member-id    uint32
           |  +--ro src
-          |  |  +--ro src?            -> /actn/ap/access-point-list/access-point-id
+          |  |  +--ro src?            leafref
           |  |  +--ro src-vn-ap-id?   uint32
           |  |  +--ro multi-src?      boolean
+          |  |          {multi-src-dest}?
           |  +--ro dest
-          |  |  +--ro dest?            -> /actn/ap/access-point-list/access-point-id
+          |  |  +--ro dest?            leafref
           |  |  +--ro dest-vn-ap-id?   uint32
           |  |  +--ro multi-dest?      boolean
+          |  |          {multi-src-dest}?
           |  +--ro metric* [metric-type]
           |  |  +--ro metric-type    identityref
-          |  |  +--ro limit
-          |  |  |  +--ro enabled?   boolean
-          |  |  |  +--ro value?     uint32
-          |  |  +--ro optimize
-          |  |     +--ro enabled?   boolean
-          |  |     +--ro value?     uint32
+          |  |  +--ro value?         uint32
           |  +--ro oper-status?    identityref
-          +--ro multi-src-dest
+          +--ro multi-src-dest {multi-src-dest}?
              +--ro selected-vn-member-id?   uint32
