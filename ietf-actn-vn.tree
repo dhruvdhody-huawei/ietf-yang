@@ -15,6 +15,9 @@ module: ietf-actn-vn
           +--rw vn-list* [vn-id]
              +--rw vn-id                 uint32
              +--rw vn-name?              string
+             +--rw vn-topology-ref {type-2}?
+             |  +--rw network-ref?
+             |          -> /nw:networks/network/network-id
              +--rw vn-member-list* [vn-member-id]
              |  +--rw vn-member-id    uint32
              |  +--rw src
@@ -27,35 +30,12 @@ module: ietf-actn-vn
              |  |  +--rw dest-vn-ap-id?   leafref
              |  |  +--rw multi-dest?      boolean
              |  |          {multi-src-dest}?
-             |  +--rw path
+             |  +--rw path {type-2}?
              |  |  +--rw path-element* [path-element-id]
              |  |     +--rw path-element-id    uint32
              |  |     +--rw index?             uint32
-             |  |     +--rw (type)?
-             |  |        +--:(numbered)
-             |  |        |  +--rw numbered-hop
-             |  |        |     +--rw address?
-             |  |        |     |       te-types:te-tp-id
-             |  |        |     +--rw hop-type?   te-hop-type
-             |  |        +--:(as-number)
-             |  |        |  +--rw as-number-hop
-             |  |        |     +--rw as-number?   binary
-             |  |        |     +--rw hop-type?    te-hop-type
-             |  |        +--:(unnumbered)
-             |  |        |  +--rw unnumbered-hop
-             |  |        |     +--rw node-id?
-             |  |        |     |       te-types:te-node-id
-             |  |        |     +--rw link-tp-id?
-             |  |        |     |       te-types:te-tp-id
-             |  |        |     +--rw hop-type?     te-hop-type
-             |  |        +--:(label)
-             |  |        |  +--rw label-hop
-             |  |        |     +--rw value?
-             |  |        |             rt-types:generalized-label
-             |  |        +--:(sid)
-             |  |           +--rw sid-hop
-             |  |              +--rw sid?
-             |  |                      rt-types:generalized-label
+             |  |     +--rw address?           te-types:te-tp-id
+             |  |     +--rw hop-type?          te-types:te-hop-type
              |  +--ro metric* [metric-type]
              |  |  +--ro metric-type    identityref
              |  |  +--ro value?         uint32
@@ -63,9 +43,6 @@ module: ietf-actn-vn
              |  +--ro tunnel-ref?     te:tunnel-ref
              +--ro multi-src-dest {multi-src-dest}?
              |  +--ro selected-vn-member?   leafref
-             +--ro vn-topology-ref
-             |  +--ro network-ref?
-             |          -> /nw:networks/network/network-id
              +--rw objective-function?   pcep:objective-function
              +--rw metric* [metric-type]
              |  +--rw metric-type    identityref
@@ -91,41 +68,18 @@ module: ietf-actn-vn
        |  |  +---w src
        |  |  |  +---w src?            leafref
        |  |  |  +---w src-vn-ap-id?   leafref
-       |  |  |  +---w multi-src?      boolean
-       |  |  |          {multi-src-dest}?
+       |  |  |  +---w multi-src?      boolean {multi-src-dest}?
        |  |  +---w dest
        |  |  |  +---w dest?            leafref
        |  |  |  +---w dest-vn-ap-id?   leafref
        |  |  |  +---w multi-dest?      boolean
        |  |  |          {multi-src-dest}?
-       |  |  +---w path
+       |  |  +---w path {type-2}?
        |  |     +---w path-element* [path-element-id]
        |  |        +---w path-element-id    uint32
        |  |        +---w index?             uint32
-       |  |        +---w (type)?
-       |  |           +--:(numbered)
-       |  |           |  +---w numbered-hop
-       |  |           |     +---w address?    te-types:te-tp-id
-       |  |           |     +---w hop-type?   te-hop-type
-       |  |           +--:(as-number)
-       |  |           |  +---w as-number-hop
-       |  |           |     +---w as-number?   binary
-       |  |           |     +---w hop-type?    te-hop-type
-       |  |           +--:(unnumbered)
-       |  |           |  +---w unnumbered-hop
-       |  |           |     +---w node-id?
-       |  |           |     |       te-types:te-node-id
-       |  |           |     +---w link-tp-id?
-       |  |           |     |       te-types:te-tp-id
-       |  |           |     +---w hop-type?     te-hop-type
-       |  |           +--:(label)
-       |  |           |  +---w label-hop
-       |  |           |     +---w value?
-       |  |           |             rt-types:generalized-label
-       |  |           +--:(sid)
-       |  |              +---w sid-hop
-       |  |                 +---w sid?
-       |  |                         rt-types:generalized-label
+       |  |        +---w address?           te-types:te-tp-id
+       |  |        +---w hop-type?          te-types:te-hop-type
        |  +---w objective-function?   pcep:objective-function
        |  +---w metric* [metric-type]
        |  |  +---w metric-type    identityref
@@ -142,48 +96,25 @@ module: ietf-actn-vn
        |  +---w incremental-update?   boolean
        +--ro output
           +--ro vn-member-list* [vn-member-id]
-          |  +--ro vn-member-id    uint32
+          |  +--ro vn-member-id      uint32
           |  +--ro src
           |  |  +--ro src?            leafref
           |  |  +--ro src-vn-ap-id?   leafref
-          |  |  +--ro multi-src?      boolean
-          |  |          {multi-src-dest}?
+          |  |  +--ro multi-src?      boolean {multi-src-dest}?
           |  +--ro dest
           |  |  +--ro dest?            leafref
           |  |  +--ro dest-vn-ap-id?   leafref
           |  |  +--ro multi-dest?      boolean
           |  |          {multi-src-dest}?
-          |  +--ro path
+          |  +--ro path {type-2}?
           |  |  +--ro path-element* [path-element-id]
           |  |     +--ro path-element-id    uint32
           |  |     +--ro index?             uint32
-          |  |     +--ro (type)?
-          |  |        +--:(numbered)
-          |  |        |  +--ro numbered-hop
-          |  |        |     +--ro address?    te-types:te-tp-id
-          |  |        |     +--ro hop-type?   te-hop-type
-          |  |        +--:(as-number)
-          |  |        |  +--ro as-number-hop
-          |  |        |     +--ro as-number?   binary
-          |  |        |     +--ro hop-type?    te-hop-type
-          |  |        +--:(unnumbered)
-          |  |        |  +--ro unnumbered-hop
-          |  |        |     +--ro node-id?
-          |  |        |     |       te-types:te-node-id
-          |  |        |     +--ro link-tp-id?
-          |  |        |     |       te-types:te-tp-id
-          |  |        |     +--ro hop-type?     te-hop-type
-          |  |        +--:(label)
-          |  |        |  +--ro label-hop
-          |  |        |     +--ro value?
-          |  |        |             rt-types:generalized-label
-          |  |        +--:(sid)
-          |  |           +--ro sid-hop
-          |  |              +--ro sid?
-          |  |                      rt-types:generalized-label
+          |  |     +--ro address?           te-types:te-tp-id
+          |  |     +--ro hop-type?          te-types:te-hop-type
           |  +--ro metric* [metric-type]
           |  |  +--ro metric-type    identityref
           |  |  +--ro value?         uint32
-          |  +--ro oper-status?    identityref
+          |  +--ro compute-status?   identityref
           +--ro multi-src-dest {multi-src-dest}?
              +--ro selected-vn-member-id?   uint32

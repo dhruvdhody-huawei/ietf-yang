@@ -37,22 +37,28 @@
            architecture where the CNC is the actor of a VN Instantiation
            /modification /deletion.";
 
-       revision 2017-06-28 {
+       revision 2017-06-30 {
            description
                "initial version.";
            reference
                "TBD";
        }
 
-	   /*
-	    * Features
-	    */
+       /*
+        * Features
+        */
 
-	   feature multi-src-dest {
-	       description
-	         "Support for selection of one src or destination 
-	         among multiple.";
-	   }
+       feature multi-src-dest {
+           description
+             "Support for selection of one src or destination 
+             among multiple.";
+       }
+
+       feature type-2 {
+           description
+             "Support for Type 2 VNS based on the abstract VN
+             Topology.";
+       }
 
        identity path-metric-delay {
           base te-types:path-metric-type;
@@ -72,6 +78,59 @@
             "loss path metric";
         }
 
+        identity vn-state-type {
+          description
+            "Base identity for VN state";
+        }
+
+        identity vn-state-up {
+            base vn-state-type;
+            description "VN state up";
+        }
+
+        identity vn-state-down {
+            base vn-state-type;
+            description "VN state down";
+        }
+
+        identity vn-admin-state-type {
+            description
+              "Base identity for VN admin states";
+        }
+
+        identity vn-admin-state-up {
+            base vn-admin-state-type;
+            description "VN administratively state up";
+        }
+
+        identity vn-admin-state-down {
+            base vn-admin-state-type;
+            description "VN administratively state down";
+        }  
+
+        identity vn-compute-state-type {
+            description
+              "Base identity for compute states";
+        }
+
+        identity vn-compute-state-computing {
+            base vn-compute-state-type;
+            description
+              "State path compute in progress";
+        }
+
+        identity vn-compute-state-computation-ok {
+            base vn-compute-state-type;
+            description
+              "State path compute successful";
+        }
+
+        identity vn-compute-state-computatione-failed {
+            base vn-compute-state-type;
+            description
+              "State path compute failed";
+        }              
+
        /*
         * Groupings
         */
@@ -85,11 +144,11 @@
                    VNAP";
            }
            leaf vn {
-           	   type leafref {
-           	   	  path "/actn/vn/vn-list/vn-id";
-           	   }
-           	   description
-           	   		"reference to the VN";
+               type leafref {
+                  path "/actn/vn/vn-list/vn-id";
+               }
+               description
+                    "reference to the VN";
            }
        }
 
@@ -110,17 +169,17 @@
            /*using direct tp-id for now as per ietf-te
              should check if reference is better*/
            leaf src-tp-id {
-		      type binary;
-		      description
-		        "TE tunnel source termination point identifier.";
-		   } 
-		   leaf dst-tp-id {
-		      type binary;
-		      description
-		        "TE tunnel destination termination point identifier.";
-		   }
+              type binary;
+              description
+                "TE tunnel source termination point identifier.";
+           } 
+           leaf dst-tp-id {
+              type binary;
+              description
+                "TE tunnel destination termination point identifier.";
+           }
            leaf max-bandwidth {
-               type tet:te-bandwidth;		
+               type tet:te-bandwidth;       
                description
                    "max bandwidth of the AP";
            }
@@ -136,10 +195,10 @@
            */
 
            list vn-ap {
-           		key vn-ap-id;
-           		uses vn-ap;
-           		description
-           			"list of VNAP in this AP";
+                key vn-ap-id;
+                uses vn-ap;
+                description
+                    "list of VNAP in this AP";
            }
 
        }//access-point
@@ -171,7 +230,7 @@
                        "reference to source VNAP";
                }
                leaf multi-src {
-               	   if-feature multi-src-dest;
+                   if-feature multi-src-dest;
                    type boolean;
                    description
                        "Is source part of multi-source, where
@@ -197,7 +256,7 @@
                        "reference to dest VNAP";
                }
                leaf multi-dest {
-               	   if-feature multi-src-dest;
+                   if-feature multi-src-dest;
                    type boolean;
                    description
                        "Is destination part of multi-destination, where
@@ -206,17 +265,33 @@
            }
            container path
            {
+               if-feature type-2;   
                description
                    "the path if set by the customer";
-				list path-element {
-			        key "path-element-id";
-			        description
-			          "A list of path elements describing the service path.";
-			        leaf path-element-id {
-			          type uint32;
-			          description "To identify the element in a path.";
-			        }
-			        uses tet:te-path-element;
+                list path-element {
+                    key "path-element-id";
+                    description
+                      "A list of path elements describing the service path.";
+                    leaf path-element-id {
+                      type uint32;
+                      description "To identify the element in a path.";
+                    }
+                    leaf index {
+                      type uint32;
+                      description "ERO subobject index";
+                    }
+                    leaf address {
+                      type te-types:te-tp-id;
+                      description
+                         "Numbered link TE termination point address.
+                         Should refer to the abstract TE topology
+                         of this VN";
+                    }
+                    leaf hop-type {
+                      type te-types:te-hop-type;
+                      description
+                         "strict or loose hop";
+                    }
                 }                   
            }
        }//vn-member
@@ -248,8 +323,8 @@
            description
                "metric related information";
            list metric{
-           	   key "metric-type";
-           	   config false;
+               key "metric-type";
+               config false;
                description
                    "The list of metrics for VN";
                leaf metric-type {
@@ -379,6 +454,15 @@
                        type string;
                        description "vn name";
                    }
+                   container vn-topology-ref{
+                       if-feature type-2;
+                       description
+                           "An optional reference to the TE Topology
+                            Model where the abstract nodes and links
+                            of the Topology can be found for Type 2
+                            VNS";
+                        uses tet:te-topology-ref;
+                   }
                    list vn-member-list{
                        key "vn-member-id";
                        description
@@ -387,7 +471,7 @@
                        uses metrics-op;
                        leaf oper-status {
                            type identityref {
-                               base te-types:state-type;
+                               base vn-state-type;
                            }
                            config false;
                            description
@@ -396,15 +480,15 @@
                        }
                        leaf tunnel-ref {
                            type te:tunnel-ref;
-                      	   config false;
+                           config false;
                            description
                                "A reference to the TE tunnel
                                in the TE model";
                        }
                    }
                    container multi-src-dest{
-                   	   if-feature multi-src-dest;
-                   	   config false;
+                       if-feature multi-src-dest;
+                       config false;
                        description
                            "The selected VN Member when multi-src
                            and/or mult-destination is enabled.";
@@ -418,26 +502,19 @@
                                with multi-source and/or multi-destination";
                        }
                    }
-                   container vn-topology-ref{
-                   	   config false;
-                       description
-                           "An optional reference to the TE Topology
-                            Model where the abstract nodes and links
-                            of the Topology can be found";
-                        uses tet:te-topology-ref;
-                   }
+
                    uses service-metric;
 
                    leaf admin-status {
                        type identityref {
-                           base te-types:state-type;
+                           base vn-admin-state-type;
                        }
-                       default te-types:state-up;
+                       default vn-admin-state-up;
                        description "VN administrative state.";
                    }
                    leaf oper-status {
                        type identityref {
-                           base te-types:state-type;
+                           base vn-state-type;
                        }
                        config false;
                        description "VN operational state.";
@@ -474,16 +551,16 @@
                        "List of VN-members in a VN";
                    uses vn-member;
                    uses metrics-op;
-                   leaf oper-status {
+                   leaf compute-status {
                        type identityref {
-                           base te-types:state-type;
+                           base vn-compute-state-type;
                        }
                        description
-                           "VN-member operational state.";
+                           "VN-member compute state.";
                    }
                }
                container multi-src-dest{
-               	   if-feature multi-src-dest;
+                   if-feature multi-src-dest;
                    description
                        "The selected VN Member when multi-src
                        and/or mult-destination is enabled.";
