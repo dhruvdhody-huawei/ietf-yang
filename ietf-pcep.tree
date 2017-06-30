@@ -63,48 +63,6 @@ module: ietf-pcep
           |     +--rw discard-timer?   uint32
           |     +--rw reuse-time?      uint32
           |     +--rw pce-id?          inet:ip-address
-          +--rw (auth-type-selection)?
-          |  +--:(auth-key-chain)
-          |  |  +--rw key-chain?
-          |  |          key-chain:key-chain-ref
-          |  +--:(auth-key)
-          |  |  +--rw crypto-algorithm              identityref
-          |  |  +--rw key-string
-          |  |     +--rw (key-string-style)?
-          |  |        +--:(keystring)
-          |  |        |  +--rw keystring?            string
-          |  |        +--:(hexadecimal)
-          |  |                 {key-chain:hex-key-string}?
-          |  |           +--rw hexadecimal-string?
-          |  |                   yang:hex-string
-          |  +--:(auth-tls) {tls}?
-          |     +--rw tls-pce
-          |     |  +--rw certificates
-          |     |  |  +--rw certificate* [name]
-          |     |  |     +--rw name    leafref
-          |     |  +--rw client-auth
-          |     |  |  +--rw trusted-ca-certs?       leafref
-          |     |  |  +--rw trusted-client-certs?   leafref
-          |     |  +--rw hello-params
-          |     |          {tls-server-hello-params-config}?
-          |     |     +--rw tls-versions
-          |     |     |  +--rw tls-version*   identityref
-          |     |     +--rw cipher-suites
-          |     |        +--rw cipher-suite*   identityref
-          |     +--rw tls-pcc
-          |        +--rw server-auth
-          |        |  +--rw trusted-ca-certs?       leafref
-          |        |  +--rw trusted-server-certs?   leafref
-          |        +--rw client-auth
-          |        |  +--rw (auth-type)?
-          |        |     +--:(certificate)
-          |        |        +--rw certificate?   leafref
-          |        +--rw hello-params
-          |                {tls-client-hello-params-config}?
-          |           +--rw tls-versions
-          |           |  +--rw tls-version*   identityref
-          |           +--rw cipher-suites
-          |              +--rw cipher-suite*   identityref
           +--rw connect-timer?                uint32
           +--rw connect-max-retry?            uint32
           +--rw init-backoff-timer?           uint32
@@ -144,8 +102,7 @@ module: ietf-pcep
           |  |  +--ro lsp* [plsp-id pcc-id]
           |  |     +--ro plsp-id
           |  |     |       -> /pcep/entity/lsp-db/lsp/plsp-id
-          |  |     +--ro pcc-id
-          |  |             -> /pcep/entity/lsp-db/lsp/pcc-id
+          |  |     +--ro pcc-id     -> /pcep/entity/lsp-db/lsp/pcc-id
           |  +--ro lsp* [plsp-id pcc-id]
           |     +--ro plsp-id               uint32
           |     +--ro pcc-id                inet:ip-address
@@ -187,20 +144,20 @@ module: ietf-pcep
           |     |     +--ro explicit-route-usage?   identityref
           |     |     +--ro index                   uint32
           |     |     +--ro (type)?
-          |     |        +--:(ip-address)
-          |     |        |  +--ro ip-address-hop
-          |     |        |     +--ro address?    inet:ip-address
+          |     |        +--:(numbered)
+          |     |        |  +--ro numbered-hop
+          |     |        |     +--ro address?    te-types:te-tp-id
           |     |        |     +--ro hop-type?   te-hop-type
           |     |        +--:(as-number)
           |     |        |  +--ro as-number-hop
           |     |        |     +--ro as-number?   binary
           |     |        |     +--ro hop-type?    te-hop-type
-          |     |        +--:(unnumbered-link)
+          |     |        +--:(unnumbered)
           |     |        |  +--ro unnumbered-hop
-          |     |        |     +--ro router-id?
-          |     |        |     |       inet:ip-address
-          |     |        |     +--ro interface-id?   uint32
-          |     |        |     +--ro hop-type?       te-hop-type
+          |     |        |     +--ro node-id?
+          |     |        |     |       te-types:te-node-id
+          |     |        |     +--ro link-tp-id?   te-types:te-tp-id
+          |     |        |     +--ro hop-type?     te-hop-type
           |     |        +--:(label)
           |     |        |  +--ro label-hop
           |     |        |     +--ro value?
@@ -221,15 +178,14 @@ module: ietf-pcep
           +--rw peers
              +--rw peer* [addr]
                 +--rw addr                    inet:ip-address
-                +--ro role?                   pcep-role
+                +--rw role?                   pcep-role
                 +--rw description?            string
                 +--rw domain
                 |  +--rw domain* [domain-type domain]
                 |     +--rw domain-type    domain-type
                 |     +--rw domain         domain
                 +--rw capability
-                |  +--rw gmpls?                 boolean
-                |  |       {gmpls}?
+                |  +--rw gmpls?                 boolean {gmpls}?
                 |  +--rw bi-dir?                boolean
                 |  +--rw diverse?               boolean
                 |  +--rw load-balance?          boolean
@@ -273,48 +229,56 @@ module: ietf-pcep
                 |        +--rw domain-type    domain-type
                 |        +--rw domain         domain
                 +--rw delegation-pref?        uint8 {stateful}?
-                +--rw (auth-type-selection)?
-                |  +--:(auth-key-chain)
-                |  |  +--rw key-chain?
-                |  |          key-chain:key-chain-ref
-                |  +--:(auth-key)
-                |  |  +--rw crypto-algorithm        identityref
-                |  |  +--rw key-string
-                |  |     +--rw (key-string-style)?
-                |  |        +--:(keystring)
-                |  |        |  +--rw keystring?            string
-                |  |        +--:(hexadecimal)
-                |  |                 {key-chain:hex-key-string}?
-                |  |           +--rw hexadecimal-string?
-                |  |                   yang:hex-string
-                |  +--:(auth-tls) {tls}?
-                |     +--rw tls-pce
-                |     |  +--rw certificates
-                |     |  |  +--rw certificate* [name]
-                |     |  |     +--rw name    leafref
-                |     |  +--rw client-auth
-                |     |  |  +--rw trusted-ca-certs?       leafref
-                |     |  |  +--rw trusted-client-certs?   leafref
-                |     |  +--rw hello-params
-                |     |          {tls-server-hello-params-config}?
-                |     |     +--rw tls-versions
-                |     |     |  +--rw tls-version*   identityref
-                |     |     +--rw cipher-suites
-                |     |        +--rw cipher-suite*   identityref
-                |     +--rw tls-pcc
-                |        +--rw server-auth
-                |        |  +--rw trusted-ca-certs?       leafref
-                |        |  +--rw trusted-server-certs?   leafref
-                |        +--rw client-auth
-                |        |  +--rw (auth-type)?
-                |        |     +--:(certificate)
-                |        |        +--rw certificate?   leafref
-                |        +--rw hello-params
-                |                {tls-client-hello-params-config}?
-                |           +--rw tls-versions
-                |           |  +--rw tls-version*   identityref
-                |           +--rw cipher-suites
-                |              +--rw cipher-suite*   identityref
+                +--rw auth
+                |  +--rw (auth-type-selection)?
+                |     +--:(auth-key-chain)
+                |     |  +--rw key-chain?
+                |     |          key-chain:key-chain-ref
+                |     +--:(auth-key)
+                |     |  +--rw crypto-algorithm    identityref
+                |     |  +--rw key-string
+                |     |     +--rw (key-string-style)?
+                |     |        +--:(keystring)
+                |     |        |  +--rw keystring?            string
+                |     |        +--:(hexadecimal)
+                |     |                 {key-chain:hex-key-string}?
+                |     |           +--rw hexadecimal-string?
+                |     |                   yang:hex-string
+                |     +--:(auth-tls) {tls}?
+                |        +--rw (role)?
+                |           +--:(server)
+                |           |  +--rw tls-server
+                |           |     +--rw certificates
+                |           |     |  +--rw certificate* [name]
+                |           |     |     +--rw name    leafref
+                |           |     +--rw client-auth
+                |           |     |  +--rw trusted-ca-certs?       leafref
+                |           |     |  +--rw trusted-client-certs?   leafref
+                |           |     +--rw hello-params
+                |           |             {tls-server-hello-params-config}?
+                |           |        +--rw tls-versions
+                |           |        |  +--rw tls-version*
+                |           |        |          identityref
+                |           |        +--rw cipher-suites
+                |           |           +--rw cipher-suite*
+                |           |                   identityref
+                |           +--:(client)
+                |              +--rw tls-client
+                |                 +--rw server-auth
+                |                 |  +--rw trusted-ca-certs?       leafref
+                |                 |  +--rw trusted-server-certs?   leafref
+                |                 +--rw client-auth
+                |                 |  +--rw (auth-type)?
+                |                 |     +--:(certificate)
+                |                 |        +--rw certificate?   leafref
+                |                 +--rw hello-params
+                |                         {tls-client-hello-params-config}?
+                |                    +--rw tls-versions
+                |                    |  +--rw tls-version*
+                |                    |          identityref
+                |                    +--rw cipher-suites
+                |                       +--rw cipher-suite*
+                |                               identityref
                 +--ro discontinuity-time?     yang:timestamp
                 +--ro initiate-session?       boolean
                 +--ro session-exists?         boolean
@@ -337,6 +301,7 @@ module: ietf-pcep
                       +--ro dead-timer?             uint32
                       +--ro peer-dead-timer?        uint32
                       +--ro ka-hold-time-rem?       uint32
+                      +--ro overloaded?             boolean
                       +--ro overload-time?          uint32
                       +--ro peer-overloaded?        boolean
                       +--ro peer-overload-time?     uint32

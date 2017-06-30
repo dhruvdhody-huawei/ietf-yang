@@ -58,7 +58,7 @@ module ietf-pcep {
          vendor implementations.";
 
 
-    revision 2017-06-29 {
+    revision 2017-06-30 {
         description "Initial revision.";
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
@@ -1417,87 +1417,85 @@ module ietf-pcep {
 
     grouping authentication {
         description "Authentication Information";
-        choice auth-type-selection {
+        container auth {
             description
-                "Options for expressing authentication setting.";
-            case auth-key-chain {
-                leaf key-chain {
-                    type key-chain:key-chain-ref;
-                    description
-                        "key-chain name.";
+                "The Authentication options";
+            choice auth-type-selection {
+                description
+                    "Options for expressing authentication setting.";
+                case auth-key-chain {
+                    leaf key-chain {
+                        type key-chain:key-chain-ref;
+                        description
+                            "key-chain name.";
+                    }
                 }
-            }
-            case auth-key {
-               leaf crypto-algorithm {
-                 type identityref {
-                   base key-chain:crypto-algorithm;
-                 }
-                 mandatory true;
-                 description
-                   "Cryptographic algorithm associated with key.";
-               }
-               container key-string {
-                 description
-                   "The key string.";
-                 nacm:default-deny-all;
-                 choice key-string-style {
-                   description
-                     "Key string styles";
-                   case keystring {
-                     leaf keystring {
-                       type string;
+                case auth-key {
+                   leaf crypto-algorithm {
+                     type identityref {
+                       base key-chain:crypto-algorithm;
+                     }
+                     mandatory true;
+                     description
+                       "Cryptographic algorithm associated with key.";
+                   }
+                   container key-string {
+                     description
+                       "The key string.";
+                     nacm:default-deny-all;
+                     choice key-string-style {
                        description
-                         "Key string in ASCII format.";
+                         "Key string styles";
+                       case keystring {
+                         leaf keystring {
+                           type string;
+                           description
+                             "Key string in ASCII format.";
+                         }
+                       }
+                       case hexadecimal {
+                         if-feature "key-chain:hex-key-string";
+                         leaf hexadecimal-string {
+                           type yang:hex-string;
+                           description
+                             "Key in hexadecimal string format. When
+                              compared to ASCII, specification in
+                              hexadecimal affords greater key
+                              entropy with the same number of
+                              octets. Additionally, it discourages
+                              usage of well-known words or
+                              numbers.";
+                         }
+                       }
                      }
                    }
-                   case hexadecimal {
-                     if-feature "key-chain:hex-key-string";
-                     leaf hexadecimal-string {
-                       type yang:hex-string;
-                       description
-                         "Key in hexadecimal string format. When
-                          compared to ASCII, specification in
-                          hexadecimal affords greater key
-                          entropy with the same number of
-                          octets. Additionally, it discourages
-                          usage of well-known words or
-                          numbers.";
-                     }
-                   }
-                 }
-               }
-            }
-            case auth-tls {
-                if-feature tls;
-                container tls-pce {
-                    when "../role = 'pce' "
-                         + "or ../role = 'pcc-and-pce'" {
-                        description
-                            "Valid for PCEP Peer as PCE/PCC-PCE";
-                    }
-
-                    uses tls-server:tls-server-grouping {
-                        description
-                            "Server TLS information.";
-                    }
-                    description
-                        "TLS related information";
                 }
-
-                container tls-pcc {
-                    when "../role = 'pcc' "
-                         + "or ../role = 'pcc-and-pce'" {
-                    description
-                        "Valid for PCEP Peer as PCC/PCC_PCE";
-                    }
-
-                    uses tls-client:tls-client-grouping {
+                case auth-tls {
+                    if-feature tls;
+                    choice role{
                         description
-                            "Client TLS information.";
+                            "The role of the local entity";
+                        case server {
+                            container tls-server {
+                                uses tls-server:tls-server-grouping {
+                                description
+                                    "Server TLS information.";
+                                }
+                                description
+                                    "TLS related information";
+                            }
+                        }
+                        case client{
+                            container tls-client {
+                                uses tls-client:tls-client-grouping {
+                                description
+                                    "Client TLS information.";
+                                }
+                                description
+                                    "TLS related information";
+                            }
+                        }
                     }
-
-                    description
-                        "TLS related information";
                 }
             }
         }
@@ -1954,7 +1952,16 @@ module ietf-pcep {
                         "The keep alive hold time
                          remaining for this session.";
                 }
-
+                leaf overloaded {
+                   type boolean;
+                   description
+                        "If the local PCEP entity has
+                         informed the peer that it is
+                         currently overloaded, then
+                         this is set to true.
+                         Otherwise, it is set to
+                         false.";
+                }
                 leaf overload-time {
                     type uint32;
                     units "seconds";
@@ -2220,11 +2227,6 @@ module ietf-pcep {
                     "The Local PCE Entity PCE information";
             }
 
-            uses authentication {
-                description
-                    "Local PCEP entity authentication information";
-            }
-
             uses pcep-entity-info {
                 description
                     "The configuration related to the PCEP
@@ -2381,7 +2383,6 @@ module ietf-pcep {
 
                     leaf role {
                         type pcep-role;
-                        config false;
                         description
                             "The role of the PCEP Peer.
                              Takes one of the following values.
@@ -2410,7 +2411,7 @@ module ietf-pcep {
                              "../role = 'pcc-and-pce'"
                         {
                             description
-                                "When the peer is PCE";
+                                "Valid at PCE";
                         }
 
                         uses pce-info {

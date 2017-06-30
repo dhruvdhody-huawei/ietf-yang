@@ -36,7 +36,7 @@ module ietf-pcep-stats {
         model with statistics, counters and telemetry data";
 
 
-    revision 2017-06-29 {
+    revision 2017-06-30 {
         description "Initial revision.";
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
