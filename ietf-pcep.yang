@@ -1237,12 +1237,6 @@ module ietf-pcep {
                     "Extended Tunnel ID of the LSP.";
                 reference "RFC3209";
             }
-            leaf type {
-                type leafref {
-                    path "/te:te/te:lsps-state/te:lsp/te:type";
-                }
-                description "LSP type P2P or P2MP";
-            }
         }
 
         leaf admin-state{
