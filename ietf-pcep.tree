@@ -102,7 +102,8 @@ module: ietf-pcep
           |  |  +--ro lsp* [plsp-id pcc-id]
           |  |     +--ro plsp-id
           |  |     |       -> /pcep/entity/lsp-db/lsp/plsp-id
-          |  |     +--ro pcc-id     -> /pcep/entity/lsp-db/lsp/pcc-id
+          |  |     +--ro pcc-id
+          |  |             -> /pcep/entity/lsp-db/lsp/pcc-id
           |  +--ro lsp* [plsp-id pcc-id]
           |     +--ro plsp-id               uint32
           |     +--ro pcc-id                inet:ip-address
@@ -116,8 +117,6 @@ module: ietf-pcep
           |     |  +--ro lsp-id?
           |     |  |       -> /te:te/lsps-state/lsp/lsp-id
           |     |  +--ro extended-tunnel-id?   leafref
-          |     |  +--ro type?
-          |     |          -> /te:te/lsps-state/lsp/type
           |     +--ro admin-state?          boolean
           |     +--ro operational-state?    operational-state
           |     +--ro delegated
@@ -156,7 +155,8 @@ module: ietf-pcep
           |     |        |  +--ro unnumbered-hop
           |     |        |     +--ro node-id?
           |     |        |     |       te-types:te-node-id
-          |     |        |     +--ro link-tp-id?   te-types:te-tp-id
+          |     |        |     +--ro link-tp-id?
+          |     |        |     |       te-types:te-tp-id
           |     |        |     +--ro hop-type?     te-hop-type
           |     |        +--:(label)
           |     |        |  +--ro label-hop
@@ -178,14 +178,15 @@ module: ietf-pcep
           +--rw peers
              +--rw peer* [addr]
                 +--rw addr                    inet:ip-address
-                +--rw role?                   pcep-role
+                +--rw role                    pcep-role
                 +--rw description?            string
                 +--rw domain
                 |  +--rw domain* [domain-type domain]
                 |     +--rw domain-type    domain-type
                 |     +--rw domain         domain
                 +--rw capability
-                |  +--rw gmpls?                 boolean {gmpls}?
+                |  +--rw gmpls?                 boolean
+                |  |       {gmpls}?
                 |  +--rw bi-dir?                boolean
                 |  +--rw diverse?               boolean
                 |  +--rw load-balance?          boolean
@@ -239,7 +240,8 @@ module: ietf-pcep
                 |     |  +--rw key-string
                 |     |     +--rw (key-string-style)?
                 |     |        +--:(keystring)
-                |     |        |  +--rw keystring?            string
+                |     |        |  +--rw keystring?
+                |     |        |          string
                 |     |        +--:(hexadecimal)
                 |     |                 {key-chain:hex-key-string}?
                 |     |           +--rw hexadecimal-string?

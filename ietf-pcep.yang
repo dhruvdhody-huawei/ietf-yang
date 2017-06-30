@@ -2377,6 +2377,7 @@ module ietf-pcep {
 
                     leaf role {
                         type pcep-role;
+                        mandatory true;
                         description
                             "The role of the PCEP Peer.
                              Takes one of the following values.
@@ -2400,14 +2401,6 @@ module ietf-pcep {
                     }
 
                     container pce-info {
-                        when "../role = 'pce'" +
-                             "or " +
-                             "../role = 'pcc-and-pce'"
-                        {
-                            description
-                                "Valid at PCE";
-                        }
-
                         uses pce-info {
                             description
                                 "PCE Peer information";
