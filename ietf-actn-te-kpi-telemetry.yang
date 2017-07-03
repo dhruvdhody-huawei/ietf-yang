@@ -1,5 +1,3 @@
-
-
 module ietf-actn-te-kpi-telemetry {
 
     namespace
@@ -28,19 +26,12 @@ module ietf-actn-te-kpi-telemetry {
     description
         "This module describes telemetry for actn vn model";
 
-    revision 2017-06-20 {
-        description
-            "Removed references to technology specific kpi.";
-        reference
-            "draft-lee-teas-actn-pm-telemetry-autonomics-01";
-    }
-
-    revision 2017-03-13 {
+    revision 2017-07-03 {
         description
             "Initial revision. This YANG file defines
-            the ACTN VN telemetry.";
+            the reusable base types for ACTN VN telemetry.";
         reference
-            "Derived from earlier versions of base YANG files";
+            "xxx";
     }
 
     /*
@@ -106,6 +97,7 @@ module ietf-actn-te-kpi-telemetry {
                     "The operation that should be applied on the
                      VN-member telemetry to get the VN telemetry";
             }
+
             leaf delay-variation-op {
                 type identityref {
                   base grouping-operation;
@@ -141,22 +133,6 @@ module ietf-actn-te-kpi-telemetry {
           description
             "VN telemetry configurations";
             uses telemetry-grouping-op;
-        }
-        container vn-scaling-intent {
-            description
-                "scaling intent";
-            uses te-kpi:scaling-intent;
-        }
-    }
-    augment "/actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list" {
-
-        description
-            "Augmentation parameters for state TE VN topologies.";
-
-        container vn-telemetry {
-            description
-                "VN telemetry params";
-            uses telemetry-grouping-op;
             uses vn-telemetry-param;
         }
         container vn-scaling-intent {
@@ -178,18 +154,7 @@ module ietf-actn-te-kpi-telemetry {
             description
                 "VN Member config";
             uses telemetry-grouping-op;
-        }
-    }
-    augment "/actn-vn:actn-state/actn-vn:vn/actn-vn:vn-list/" +
-            "actn-vn:vn-member-list" {
-        description
-            "Augmentation parameters for state TE vn member
-            topologies.";
-        container vn-telemetry {
-          description
-            "VN telemetry params";
-            uses telemetry-grouping-op;
-          uses vn-telemetry-param;
+            uses vn-telemetry-param;
         }
     }
 }

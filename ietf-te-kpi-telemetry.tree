@@ -26,6 +26,4 @@ module: ietf-te-kpi-telemetry
           +--ro two-way-delay-max?         uint32
           +--ro one-way-delay-variation?   uint32
           +--ro two-way-delay-variation?   uint32
-          +--ro one-way-packet-loss?       decimal64
-          +--ro two-way-packet-loss?       decimal64
-          +--ro utilized-bandwidth?        rt:bandwidth-ieee-float32
+          +--ro utilized-bandwidth?        tet:te-bandwidth

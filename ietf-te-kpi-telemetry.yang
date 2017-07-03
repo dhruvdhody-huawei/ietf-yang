@@ -1,5 +1,3 @@
-
-
 module ietf-te-kpi-telemetry {
   namespace "urn:ietf:params:xml:ns:yang:ietf-te-kpi-telemetry";
 
@@ -25,19 +23,12 @@ module ietf-te-kpi-telemetry {
     description
         "This module describes telemetry for teas tunnel model";
 
-    revision 2017-06-20 {
+    revision 2017-07-03 {
         description
             "Initial revision. This YANG file defines
             the reusable base types for TE telemetry.";
         reference
-            "Derived from earlier versions of base YANG files";
-    }
-
-    revision 2017-03-13 {
-        description
-            "Removed references to technology specific kpi.";
-        reference
-            "draft-lee-teas-actn-pm-telemetry-autonomics-00";
+            "xxx";
     }
 
     /*
@@ -278,6 +269,7 @@ module ietf-te-kpi-telemetry {
         description
       "Base telemetry parameters";
     container data {
+    	config false;
       description
         "The telemetry data";
 
@@ -324,4 +316,3 @@ module ietf-te-kpi-telemetry {
     }
 
 }//module
-

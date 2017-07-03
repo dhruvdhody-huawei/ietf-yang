@@ -456,89 +456,88 @@ module: ietf-te
        |  |  |     |  +--rw named-explicit-path?       -> ../../../../../../globals/named-explicit-paths/named-explicit-path/config/name
        |  |  |     |  +--rw named-path-constraint?     -> ../../../../../../globals/named-path-constraints/named-path-constraint/config/name {te-types:named-path-constraints}?
        |  |  |     +--ro state
-       |  |  |     |  +--ro name?                       string
-       |  |  |     |  +--ro preference?                 uint8
-       |  |  |     |  +--ro path-setup-protocol?        identityref
-       |  |  |     |  +--ro path-computation-method?    identityref
-       |  |  |     |  +--ro path-computation-server?    inet:ip-address
-       |  |  |     |  +--ro compute-only?               empty
-       |  |  |     |  +--ro use-path-computation?       boolean
-       |  |  |     |  +--ro verbatim?                   empty
-       |  |  |     |  +--ro lockdown?                   empty
-       |  |  |     |  +--ro named-explicit-path?        -> ../../../../../../globals/named-explicit-paths/named-explicit-path/config/name
-       |  |  |     |  +--ro named-path-constraint?      -> ../../../../../../globals/named-path-constraints/named-path-constraint/config/name {te-types:named-path-constraints}?
-       |  |  |     |  +--ro operational-state?          identityref
-       |  |  |     |  +--ro computed-path-properties
-       |  |  |     |  |  +--ro path-metric* [metric-type]
-       |  |  |     |  |  |  +--ro metric-type           identityref
-       |  |  |     |  |  |  +--ro accumulative-value?   uint64
-       |  |  |     |  |  +--ro path-affinities
-       |  |  |     |  |  |  +--ro constraints* [usage]
-       |  |  |     |  |  |     +--ro usage     -> ../config/usage
-       |  |  |     |  |  |     +--ro config
-       |  |  |     |  |  |     |  +--ro usage?            identityref
-       |  |  |     |  |  |     |  +--ro (style)?
-       |  |  |     |  |  |     |     +--:(value)
-       |  |  |     |  |  |     |     |  +--ro value?            te-types:admin-groups
-       |  |  |     |  |  |     |     +--:(named)
-       |  |  |     |  |  |     |        +--ro affinity-names* [name]
-       |  |  |     |  |  |     |           +--ro name    string
-       |  |  |     |  |  |     +--ro state
-       |  |  |     |  |  |        +--ro usage?            identityref
-       |  |  |     |  |  |        +--ro (style)?
-       |  |  |     |  |  |           +--:(value)
-       |  |  |     |  |  |           |  +--ro value?            te-types:admin-groups
-       |  |  |     |  |  |           +--:(named)
-       |  |  |     |  |  |              +--ro affinity-names* [name]
-       |  |  |     |  |  |                 +--ro name    string
-       |  |  |     |  |  +--ro path-srlgs
-       |  |  |     |  |  |  +--ro (style)?
-       |  |  |     |  |  |     +--:(values)
-       |  |  |     |  |  |     |  +--ro config
-       |  |  |     |  |  |     |  |  +--ro usage?    identityref
-       |  |  |     |  |  |     |  |  +--ro values*   te-types:srlg
-       |  |  |     |  |  |     |  +--ro state
-       |  |  |     |  |  |     |     +--ro usage?    identityref
-       |  |  |     |  |  |     |     +--ro values*   te-types:srlg
-       |  |  |     |  |  |     +--:(named)
-       |  |  |     |  |  |        +--ro constraints* [usage]
-       |  |  |     |  |  |           +--ro usage         -> ../config/usage
-       |  |  |     |  |  |           +--ro config
-       |  |  |     |  |  |           |  +--ro usage?   identityref
-       |  |  |     |  |  |           +--ro state
-       |  |  |     |  |  |           |  +--ro usage?   identityref
-       |  |  |     |  |  |           +--ro constraint
-       |  |  |     |  |  |              +--ro srlg-names* [name]
-       |  |  |     |  |  |                 +--ro name      -> ../config/name
-       |  |  |     |  |  |                 +--ro config
-       |  |  |     |  |  |                 |  +--ro name?   string
-       |  |  |     |  |  |                 +--ro state
-       |  |  |     |  |  |                    +--ro name?   string
-       |  |  |     |  |  +--ro path-computed-route-objects
-       |  |  |     |  |     +--ro path-computed-route-object* [index]
-       |  |  |     |  |        +--ro index             uint32
-       |  |  |     |  |        +--ro (type)?
-       |  |  |     |  |           +--:(numbered)
-       |  |  |     |  |           |  +--ro numbered-hop
-       |  |  |     |  |           |     +--ro address?    te-types:te-tp-id
-       |  |  |     |  |           |     +--ro hop-type?   te-hop-type
-       |  |  |     |  |           +--:(as-number)
-       |  |  |     |  |           |  +--ro as-number-hop
-       |  |  |     |  |           |     +--ro as-number?   binary
-       |  |  |     |  |           |     +--ro hop-type?    te-hop-type
-       |  |  |     |  |           +--:(unnumbered)
-       |  |  |     |  |           |  +--ro unnumbered-hop
-       |  |  |     |  |           |     +--ro node-id?      te-types:te-node-id
-       |  |  |     |  |           |     +--ro link-tp-id?   te-types:te-tp-id
-       |  |  |     |  |           |     +--ro hop-type?     te-hop-type
-       |  |  |     |  |           +--:(label)
-       |  |  |     |  |           |  +--ro label-hop
-       |  |  |     |  |           |     +--ro value?   rt-types:generalized-label
-       |  |  |     |  |           +--:(sid)
-       |  |  |     |  |              +--ro sid-hop
-       |  |  |     |  |                 +--ro sid?   rt-types:generalized-label
+       |  |  |     |  +--ro name?                      string
+       |  |  |     |  +--ro preference?                uint8
+       |  |  |     |  +--ro path-setup-protocol?       identityref
+       |  |  |     |  +--ro path-computation-method?   identityref
+       |  |  |     |  +--ro path-computation-server?   inet:ip-address
+       |  |  |     |  +--ro compute-only?              empty
+       |  |  |     |  +--ro use-path-computation?      boolean
+       |  |  |     |  +--ro verbatim?                  empty
+       |  |  |     |  +--ro lockdown?                  empty
+       |  |  |     |  +--ro named-explicit-path?       -> ../../../../../../globals/named-explicit-paths/named-explicit-path/config/name
+       |  |  |     |  +--ro named-path-constraint?     -> ../../../../../../globals/named-path-constraints/named-path-constraint/config/name {te-types:named-path-constraints}?
        |  |  |     |  +--ro lsps
        |  |  |     |     +--ro lsp* [source destination tunnel-id lsp-id extended-tunnel-id]
+       |  |  |     |        +--ro computed-path-properties
+       |  |  |     |        |  +--ro path-metric* [metric-type]
+       |  |  |     |        |  |  +--ro metric-type           identityref
+       |  |  |     |        |  |  +--ro accumulative-value?   uint64
+       |  |  |     |        |  +--ro path-affinities
+       |  |  |     |        |  |  +--ro constraints* [usage]
+       |  |  |     |        |  |     +--ro usage     -> ../config/usage
+       |  |  |     |        |  |     +--ro config
+       |  |  |     |        |  |     |  +--ro usage?            identityref
+       |  |  |     |        |  |     |  +--ro (style)?
+       |  |  |     |        |  |     |     +--:(value)
+       |  |  |     |        |  |     |     |  +--ro value?            te-types:admin-groups
+       |  |  |     |        |  |     |     +--:(named)
+       |  |  |     |        |  |     |        +--ro affinity-names* [name]
+       |  |  |     |        |  |     |           +--ro name    string
+       |  |  |     |        |  |     +--ro state
+       |  |  |     |        |  |        +--ro usage?            identityref
+       |  |  |     |        |  |        +--ro (style)?
+       |  |  |     |        |  |           +--:(value)
+       |  |  |     |        |  |           |  +--ro value?            te-types:admin-groups
+       |  |  |     |        |  |           +--:(named)
+       |  |  |     |        |  |              +--ro affinity-names* [name]
+       |  |  |     |        |  |                 +--ro name    string
+       |  |  |     |        |  +--ro path-srlgs
+       |  |  |     |        |  |  +--ro (style)?
+       |  |  |     |        |  |     +--:(values)
+       |  |  |     |        |  |     |  +--ro config
+       |  |  |     |        |  |     |  |  +--ro usage?    identityref
+       |  |  |     |        |  |     |  |  +--ro values*   te-types:srlg
+       |  |  |     |        |  |     |  +--ro state
+       |  |  |     |        |  |     |     +--ro usage?    identityref
+       |  |  |     |        |  |     |     +--ro values*   te-types:srlg
+       |  |  |     |        |  |     +--:(named)
+       |  |  |     |        |  |        +--ro constraints* [usage]
+       |  |  |     |        |  |           +--ro usage         -> ../config/usage
+       |  |  |     |        |  |           +--ro config
+       |  |  |     |        |  |           |  +--ro usage?   identityref
+       |  |  |     |        |  |           +--ro state
+       |  |  |     |        |  |           |  +--ro usage?   identityref
+       |  |  |     |        |  |           +--ro constraint
+       |  |  |     |        |  |              +--ro srlg-names* [name]
+       |  |  |     |        |  |                 +--ro name      -> ../config/name
+       |  |  |     |        |  |                 +--ro config
+       |  |  |     |        |  |                 |  +--ro name?   string
+       |  |  |     |        |  |                 +--ro state
+       |  |  |     |        |  |                    +--ro name?   string
+       |  |  |     |        |  +--ro path-computed-route-objects
+       |  |  |     |        |     +--ro path-computed-route-object* [index]
+       |  |  |     |        |        +--ro index             uint32
+       |  |  |     |        |        +--ro (type)?
+       |  |  |     |        |           +--:(numbered)
+       |  |  |     |        |           |  +--ro numbered-hop
+       |  |  |     |        |           |     +--ro address?    te-types:te-tp-id
+       |  |  |     |        |           |     +--ro hop-type?   te-hop-type
+       |  |  |     |        |           +--:(as-number)
+       |  |  |     |        |           |  +--ro as-number-hop
+       |  |  |     |        |           |     +--ro as-number?   binary
+       |  |  |     |        |           |     +--ro hop-type?    te-hop-type
+       |  |  |     |        |           +--:(unnumbered)
+       |  |  |     |        |           |  +--ro unnumbered-hop
+       |  |  |     |        |           |     +--ro node-id?      te-types:te-node-id
+       |  |  |     |        |           |     +--ro link-tp-id?   te-types:te-tp-id
+       |  |  |     |        |           |     +--ro hop-type?     te-hop-type
+       |  |  |     |        |           +--:(label)
+       |  |  |     |        |           |  +--ro label-hop
+       |  |  |     |        |           |     +--ro value?   rt-types:generalized-label
+       |  |  |     |        |           +--:(sid)
+       |  |  |     |        |              +--ro sid-hop
+       |  |  |     |        |                 +--ro sid?   rt-types:generalized-label
        |  |  |     |        +--ro source                         inet:ip-address
        |  |  |     |        +--ro destination                    inet:ip-address
        |  |  |     |        +--ro tunnel-id                      uint16
@@ -602,89 +601,88 @@ module: ietf-te
        |  |  |     |  +--rw named-explicit-path?       -> ../../../../../../globals/named-explicit-paths/named-explicit-path/config/name
        |  |  |     |  +--rw named-path-constraint?     -> ../../../../../../globals/named-path-constraints/named-path-constraint/config/name {te-types:named-path-constraints}?
        |  |  |     +--ro state
-       |  |  |        +--ro name?                       string
-       |  |  |        +--ro preference?                 uint8
-       |  |  |        +--ro path-setup-protocol?        identityref
-       |  |  |        +--ro path-computation-method?    identityref
-       |  |  |        +--ro path-computation-server?    inet:ip-address
-       |  |  |        +--ro compute-only?               empty
-       |  |  |        +--ro use-path-computation?       boolean
-       |  |  |        +--ro verbatim?                   empty
-       |  |  |        +--ro lockdown?                   empty
-       |  |  |        +--ro named-explicit-path?        -> ../../../../../../globals/named-explicit-paths/named-explicit-path/config/name
-       |  |  |        +--ro named-path-constraint?      -> ../../../../../../globals/named-path-constraints/named-path-constraint/config/name {te-types:named-path-constraints}?
-       |  |  |        +--ro operational-state?          identityref
-       |  |  |        +--ro computed-path-properties
-       |  |  |        |  +--ro path-metric* [metric-type]
-       |  |  |        |  |  +--ro metric-type           identityref
-       |  |  |        |  |  +--ro accumulative-value?   uint64
-       |  |  |        |  +--ro path-affinities
-       |  |  |        |  |  +--ro constraints* [usage]
-       |  |  |        |  |     +--ro usage     -> ../config/usage
-       |  |  |        |  |     +--ro config
-       |  |  |        |  |     |  +--ro usage?            identityref
-       |  |  |        |  |     |  +--ro (style)?
-       |  |  |        |  |     |     +--:(value)
-       |  |  |        |  |     |     |  +--ro value?            te-types:admin-groups
-       |  |  |        |  |     |     +--:(named)
-       |  |  |        |  |     |        +--ro affinity-names* [name]
-       |  |  |        |  |     |           +--ro name    string
-       |  |  |        |  |     +--ro state
-       |  |  |        |  |        +--ro usage?            identityref
-       |  |  |        |  |        +--ro (style)?
-       |  |  |        |  |           +--:(value)
-       |  |  |        |  |           |  +--ro value?            te-types:admin-groups
-       |  |  |        |  |           +--:(named)
-       |  |  |        |  |              +--ro affinity-names* [name]
-       |  |  |        |  |                 +--ro name    string
-       |  |  |        |  +--ro path-srlgs
-       |  |  |        |  |  +--ro (style)?
-       |  |  |        |  |     +--:(values)
-       |  |  |        |  |     |  +--ro config
-       |  |  |        |  |     |  |  +--ro usage?    identityref
-       |  |  |        |  |     |  |  +--ro values*   te-types:srlg
-       |  |  |        |  |     |  +--ro state
-       |  |  |        |  |     |     +--ro usage?    identityref
-       |  |  |        |  |     |     +--ro values*   te-types:srlg
-       |  |  |        |  |     +--:(named)
-       |  |  |        |  |        +--ro constraints* [usage]
-       |  |  |        |  |           +--ro usage         -> ../config/usage
-       |  |  |        |  |           +--ro config
-       |  |  |        |  |           |  +--ro usage?   identityref
-       |  |  |        |  |           +--ro state
-       |  |  |        |  |           |  +--ro usage?   identityref
-       |  |  |        |  |           +--ro constraint
-       |  |  |        |  |              +--ro srlg-names* [name]
-       |  |  |        |  |                 +--ro name      -> ../config/name
-       |  |  |        |  |                 +--ro config
-       |  |  |        |  |                 |  +--ro name?   string
-       |  |  |        |  |                 +--ro state
-       |  |  |        |  |                    +--ro name?   string
-       |  |  |        |  +--ro path-computed-route-objects
-       |  |  |        |     +--ro path-computed-route-object* [index]
-       |  |  |        |        +--ro index             uint32
-       |  |  |        |        +--ro (type)?
-       |  |  |        |           +--:(numbered)
-       |  |  |        |           |  +--ro numbered-hop
-       |  |  |        |           |     +--ro address?    te-types:te-tp-id
-       |  |  |        |           |     +--ro hop-type?   te-hop-type
-       |  |  |        |           +--:(as-number)
-       |  |  |        |           |  +--ro as-number-hop
-       |  |  |        |           |     +--ro as-number?   binary
-       |  |  |        |           |     +--ro hop-type?    te-hop-type
-       |  |  |        |           +--:(unnumbered)
-       |  |  |        |           |  +--ro unnumbered-hop
-       |  |  |        |           |     +--ro node-id?      te-types:te-node-id
-       |  |  |        |           |     +--ro link-tp-id?   te-types:te-tp-id
-       |  |  |        |           |     +--ro hop-type?     te-hop-type
-       |  |  |        |           +--:(label)
-       |  |  |        |           |  +--ro label-hop
-       |  |  |        |           |     +--ro value?   rt-types:generalized-label
-       |  |  |        |           +--:(sid)
-       |  |  |        |              +--ro sid-hop
-       |  |  |        |                 +--ro sid?   rt-types:generalized-label
+       |  |  |        +--ro name?                      string
+       |  |  |        +--ro preference?                uint8
+       |  |  |        +--ro path-setup-protocol?       identityref
+       |  |  |        +--ro path-computation-method?   identityref
+       |  |  |        +--ro path-computation-server?   inet:ip-address
+       |  |  |        +--ro compute-only?              empty
+       |  |  |        +--ro use-path-computation?      boolean
+       |  |  |        +--ro verbatim?                  empty
+       |  |  |        +--ro lockdown?                  empty
+       |  |  |        +--ro named-explicit-path?       -> ../../../../../../globals/named-explicit-paths/named-explicit-path/config/name
+       |  |  |        +--ro named-path-constraint?     -> ../../../../../../globals/named-path-constraints/named-path-constraint/config/name {te-types:named-path-constraints}?
        |  |  |        +--ro lsps
        |  |  |           +--ro lsp* [source destination tunnel-id lsp-id extended-tunnel-id]
+       |  |  |              +--ro computed-path-properties
+       |  |  |              |  +--ro path-metric* [metric-type]
+       |  |  |              |  |  +--ro metric-type           identityref
+       |  |  |              |  |  +--ro accumulative-value?   uint64
+       |  |  |              |  +--ro path-affinities
+       |  |  |              |  |  +--ro constraints* [usage]
+       |  |  |              |  |     +--ro usage     -> ../config/usage
+       |  |  |              |  |     +--ro config
+       |  |  |              |  |     |  +--ro usage?            identityref
+       |  |  |              |  |     |  +--ro (style)?
+       |  |  |              |  |     |     +--:(value)
+       |  |  |              |  |     |     |  +--ro value?            te-types:admin-groups
+       |  |  |              |  |     |     +--:(named)
+       |  |  |              |  |     |        +--ro affinity-names* [name]
+       |  |  |              |  |     |           +--ro name    string
+       |  |  |              |  |     +--ro state
+       |  |  |              |  |        +--ro usage?            identityref
+       |  |  |              |  |        +--ro (style)?
+       |  |  |              |  |           +--:(value)
+       |  |  |              |  |           |  +--ro value?            te-types:admin-groups
+       |  |  |              |  |           +--:(named)
+       |  |  |              |  |              +--ro affinity-names* [name]
+       |  |  |              |  |                 +--ro name    string
+       |  |  |              |  +--ro path-srlgs
+       |  |  |              |  |  +--ro (style)?
+       |  |  |              |  |     +--:(values)
+       |  |  |              |  |     |  +--ro config
+       |  |  |              |  |     |  |  +--ro usage?    identityref
+       |  |  |              |  |     |  |  +--ro values*   te-types:srlg
+       |  |  |              |  |     |  +--ro state
+       |  |  |              |  |     |     +--ro usage?    identityref
+       |  |  |              |  |     |     +--ro values*   te-types:srlg
+       |  |  |              |  |     +--:(named)
+       |  |  |              |  |        +--ro constraints* [usage]
+       |  |  |              |  |           +--ro usage         -> ../config/usage
+       |  |  |              |  |           +--ro config
+       |  |  |              |  |           |  +--ro usage?   identityref
+       |  |  |              |  |           +--ro state
+       |  |  |              |  |           |  +--ro usage?   identityref
+       |  |  |              |  |           +--ro constraint
+       |  |  |              |  |              +--ro srlg-names* [name]
+       |  |  |              |  |                 +--ro name      -> ../config/name
+       |  |  |              |  |                 +--ro config
+       |  |  |              |  |                 |  +--ro name?   string
+       |  |  |              |  |                 +--ro state
+       |  |  |              |  |                    +--ro name?   string
+       |  |  |              |  +--ro path-computed-route-objects
+       |  |  |              |     +--ro path-computed-route-object* [index]
+       |  |  |              |        +--ro index             uint32
+       |  |  |              |        +--ro (type)?
+       |  |  |              |           +--:(numbered)
+       |  |  |              |           |  +--ro numbered-hop
+       |  |  |              |           |     +--ro address?    te-types:te-tp-id
+       |  |  |              |           |     +--ro hop-type?   te-hop-type
+       |  |  |              |           +--:(as-number)
+       |  |  |              |           |  +--ro as-number-hop
+       |  |  |              |           |     +--ro as-number?   binary
+       |  |  |              |           |     +--ro hop-type?    te-hop-type
+       |  |  |              |           +--:(unnumbered)
+       |  |  |              |           |  +--ro unnumbered-hop
+       |  |  |              |           |     +--ro node-id?      te-types:te-node-id
+       |  |  |              |           |     +--ro link-tp-id?   te-types:te-tp-id
+       |  |  |              |           |     +--ro hop-type?     te-hop-type
+       |  |  |              |           +--:(label)
+       |  |  |              |           |  +--ro label-hop
+       |  |  |              |           |     +--ro value?   rt-types:generalized-label
+       |  |  |              |           +--:(sid)
+       |  |  |              |              +--ro sid-hop
+       |  |  |              |                 +--ro sid?   rt-types:generalized-label
        |  |  |              +--ro source                         inet:ip-address
        |  |  |              +--ro destination                    inet:ip-address
        |  |  |              +--ro tunnel-id                      uint16
