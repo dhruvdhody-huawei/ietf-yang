@@ -7,8 +7,8 @@ module ietf-te-kpi-telemetry {
         prefix "te";
     }
 
-    import ietf-te-topology {
-       prefix "tet";
+    import ietf-te-types {
+       prefix "te-types";
     }
 
     organization
@@ -173,7 +173,7 @@ module ietf-te-kpi-telemetry {
       description
           "Base telemetry bandwidth parameters";
         leaf utilized-bandwidth {
-            type tet:te-bandwidth;
+            type te-types:te-bandwidth;
         description
           "To specify utilized bandwidth over the specified source
             and destination in bytes per seconds.";

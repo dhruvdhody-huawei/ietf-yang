@@ -6,8 +6,8 @@ module: ietf-actn-vn
        |     +--rw access-point-name?   string
        |     +--rw src-tp-id?           binary
        |     +--rw dst-tp-id?           binary
-       |     +--rw max-bandwidth?       tet:te-bandwidth
-       |     +--rw avl-bandwidth?       tet:te-bandwidth
+       |     +--rw max-bandwidth?       te-types:te-bandwidth
+       |     +--rw avl-bandwidth?       te-types:te-bandwidth
        |     +--rw vn-ap* [vn-ap-id]
        |        +--rw vn-ap-id    uint32
        |        +--rw vn?         -> /actn/vn/vn-list/vn-id
@@ -15,9 +15,8 @@ module: ietf-actn-vn
           +--rw vn-list* [vn-id]
              +--rw vn-id                 uint32
              +--rw vn-name?              string
-             +--rw vn-topology-ref {type-2}?
-             |  +--rw network-ref?
-             |          -> /nw:networks/network/network-id
+             +--rw vn-topology-id?       te-types:te-topology-id
+             |       {type-2}?
              +--rw vn-member-list* [vn-member-id]
              |  +--rw vn-member-id    uint32
              |  +--rw src
@@ -52,7 +51,7 @@ module: ietf-actn-vn
              |  +--rw optimize
              |     +--rw enabled?   boolean
              |     +--rw value?     uint32
-             +--rw bandwidth?            tet:te-bandwidth
+             +--rw bandwidth?            te-types:te-bandwidth
              +--rw protection?           identityref
              +--rw local-reroute?        boolean
              +--rw push-allowed?         boolean
@@ -89,7 +88,7 @@ module: ietf-actn-vn
        |  |  +---w optimize
        |  |     +---w enabled?   boolean
        |  |     +---w value?     uint32
-       |  +---w bandwidth?            tet:te-bandwidth
+       |  +---w bandwidth?            te-types:te-bandwidth
        |  +---w protection?           identityref
        |  +---w local-reroute?        boolean
        |  +---w push-allowed?         boolean

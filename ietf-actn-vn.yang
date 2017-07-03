@@ -10,10 +10,6 @@
            prefix "te-types";
        }
 
-       import ietf-te-topology {
-           prefix "tet";
-       }
-
        import ietf-te {
            prefix "te";
        }
@@ -37,7 +33,7 @@
            architecture where the CNC is the actor of a VN Instantiation
            /modification /deletion.";
 
-       revision 2017-06-30 {
+       revision 2017-07-03 {
            description
                "initial version.";
            reference
@@ -179,12 +175,12 @@
                 "TE tunnel destination termination point identifier.";
            }
            leaf max-bandwidth {
-               type tet:te-bandwidth;       
+               type te-types:te-bandwidth;
                description
                    "max bandwidth of the AP";
            }
            leaf avl-bandwidth {
-               type tet:te-bandwidth;
+               type te-types:te-bandwidth;
                description
                    "available bandwidth of the AP";
            }
@@ -401,7 +397,7 @@
            uses metrics;
 
            leaf bandwidth {
-               type tet:te-bandwidth;
+               type te-types:te-bandwidth;
                description
                    "bandwidth requested/required for
                    vn-member-id";
@@ -454,14 +450,15 @@
                        type string;
                        description "vn name";
                    }
-                   container vn-topology-ref{
+                   leaf vn-topology-id{
                        if-feature type-2;
+                       type te-types:te-topology-id;
                        description
-                           "An optional reference to the TE Topology
+                           "An optional identifier to the TE Topology
                             Model where the abstract nodes and links
                             of the Topology can be found for Type 2
                             VNS";
-                        uses tet:te-topology-ref;
+                        
                    }
                    list vn-member-list{
                        key "vn-member-id";

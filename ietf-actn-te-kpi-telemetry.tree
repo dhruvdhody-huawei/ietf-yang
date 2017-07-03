@@ -14,7 +14,7 @@ module: ietf-actn-te-kpi-telemetry
     |     +--ro two-way-delay-max?         uint32
     |     +--ro one-way-delay-variation?   uint32
     |     +--ro two-way-delay-variation?   uint32
-    |     +--ro utilized-bandwidth?        tet:te-bandwidth
+    |     +--ro utilized-bandwidth?        te-types:te-bandwidth
     +--rw vn-scaling-intent
        +--rw scale-in
        |  +--rw scale-in-operation-type?
@@ -45,4 +45,4 @@ module: ietf-actn-te-kpi-telemetry
           +--ro two-way-delay-max?         uint32
           +--ro one-way-delay-variation?   uint32
           +--ro two-way-delay-variation?   uint32
-          +--ro utilized-bandwidth?        tet:te-bandwidth
+          +--ro utilized-bandwidth?        te-types:te-bandwidth
