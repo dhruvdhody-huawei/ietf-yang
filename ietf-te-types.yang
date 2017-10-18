@@ -53,7 +53,7 @@ module ietf-te-types {
     "This module contains a collection of generally
     useful TE specific YANG data type defintions.";
 
-  revision "2017-07-02" {
+  revision "2017-07-03" {
     description "Latest revision of TE types";
     reference "RFC3209";
   }
@@ -386,49 +386,90 @@ module ietf-te-types {
       "TE path invalidation action tear";
   }
 
-  identity lsp-prot-type {
+  identity lsp-restoration-type {
+    description
+      "Base identity from which LSP restoration types are
+       derived.";
+  }
+
+  identity lsp-restoration-restore-any {
+    base lsp-restoration-type;
+    description
+      "Restores when any of the LSPs is affected by a failure";
+  }
+
+  identity lsp-restoration-restore-all {
+    base lsp-restoration-type;
+    description
+      "Restores when all the tunnel LSPs are affected by failure";
+  }
+
+  identity restoration-scheme-type {
+    description
+      "Base identity for LSP restoration schemes";
+  }
+
+  identity restoration-scheme-preconfigured {
+    base restoration-scheme-type;
+    description
+      "Restoration LSP is preconfigured prior to the failure";
+  }
+
+  identity restoration-scheme-precomputed {
+    base restoration-scheme-type;
+    description
+      "Restoration LSP is precomputed prior to the failure";
+  }
+
+  identity restoration-scheme-presignaled {
+    base restoration-scheme-type;
+    description
+      "Restoration LSP is presignaledd prior to the failure";
+  }
+
+  identity lsp-protection-type {
     description
       "Base identity from which LSP protection types are
       derived.";
   }
 
-  identity lsp-prot-unprotected {
-    base lsp-prot-type;
+  identity lsp-protection-unprotected {
+    base lsp-protection-type;
     description
       "LSP protection 'Unprotected'";
     reference "RFC4872";
   }
 
-  identity lsp-prot-reroute-extra {
-    base lsp-prot-type;
+  identity lsp-protection-reroute-extra {
+    base lsp-protection-type;
     description
       "LSP protection '(Full) Rerouting'";
     reference "RFC4872";
   }
 
-  identity lsp-prot-reroute {
-    base lsp-prot-type;
+  identity lsp-protection-reroute {
+    base lsp-protection-type;
     description
       "LSP protection 'Rerouting without Extra-Traffic'";
     reference "RFC4872";
   }
 
-  identity lsp-prot-1-for-n {
-    base lsp-prot-type;
+  identity lsp-protection-1-for-n {
+    base lsp-protection-type;
     description
       "LSP protection '1:N Protection with Extra-Traffic'";
     reference "RFC4872";
   }
 
-  identity lsp-prot-unidir-1-to-1 {
-    base lsp-prot-type;
+  identity lsp-protection-unidir-1-to-1 {
+    base lsp-protection-type;
     description
       "LSP protection '1+1 Unidirectional Protection'";
     reference "RFC4872";
   }
 
-  identity lsp-prot-bidir-1-to-1 {
-    base lsp-prot-type;
+  identity lsp-protection-bidir-1-to-1 {
+    base lsp-protection-type;
     description
       "LSP protection '1+1 Bidirectional Protection'";
     reference "RFC4872";
@@ -560,44 +601,44 @@ module ietf-te-types {
 
   identity path-signaling-type {
     description
-      "Base identity from which specific path signaling
-       types are derived.";
+      "base identity from which specific LSPs path 
+       setup types are derived";
   }
 
-  identity path-signaling-rsvpte {
-    base tunnel-type;
+  identity path-setup-static {
+    base path-signaling-type;
     description
-      "RSVP-TE path signaling type";
+      "Static LSP provisioning path setup";
   }
 
-  identity path-signaling-sr {
-    base tunnel-type;
+  identity path-setup-rsvp {
+    base path-signaling-type;
     description
-      "Segment-routing path signaling type";
+      "RSVP-TE signaling path setup";
   }
 
-  identity te-path-setup-protocol {
+  identity path-setup-sr {
+    base path-signaling-type;
     description
-      "base identity for supported TE LSPs signaling
-       protocols";
+      "Segment-routing path setup";
   }
 
-  identity te-path-setup-static {
-    base te-path-setup-protocol;
+  identity path-scope-type {
     description
-      "Static LSP provisioning";
+      "base identity from which specific path
+       scope types are derived";
   }
 
-  identity te-path-setup-rsvp {
-    base te-path-setup-protocol;
+  identity path-scope-segment {
+    base path-scope-type;
     description
-      "RSVP-TE signaling protocol";
+      "Path scope segment";
   }
 
-  identity te-path-setup-sr {
-    base te-path-setup-protocol;
+  identity path-scope-end-to-end {
+    base path-scope-type;
     description
-      "Segment routing";
+      "Path scope end to end";
   }
 
   /* TE basic features */
@@ -1666,22 +1707,16 @@ module ietf-te-types {
 
   grouping explicit-route-hop {
     description "Explicit route hop grouping";
-    container config {
-      description
-        "Configuration parameters for the explicit route hop";
-      uses explicit-route-hop_config;
-    }
-    container state {
-      config false;
-      description
-        "State parameters for the explicit route hop";
-      uses explicit-route-hop_config;
-    }
+    uses explicit-route-hop_config;
   }
 
-  grouping record-route-subobject {
+  grouping record-route-subobject_state {
     description
       "The record route subobject grouping";
+    leaf index {
+      type uint32;
+      description "RRO subobject index";
+    }
     choice type {
       description
         "The record route subobject type";
@@ -1739,7 +1774,7 @@ module ietf-te-types {
   }
 
   grouping label-set-item-info {
-		description "Label set item info";
+    description "Label set item info";
     leaf inclusive-exclusive {
       type enumeration {
         enum inclusive {
@@ -1776,7 +1811,7 @@ module ietf-te-types {
   }
 
   grouping label-set-info {
-		description "Label set info grouping";
+    description "Label set info grouping";
     list label-set {
       key "inclusive-exclusive label-start";
       description

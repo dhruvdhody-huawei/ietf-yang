@@ -33,7 +33,7 @@
            architecture where the CNC is the actor of a VN Instantiation
            /modification /deletion.";
 
-       revision 2017-07-03 {
+       revision 2017-10-18 {
            description
                "initial version.";
            reference
@@ -405,7 +405,7 @@
 
            leaf protection {
                type identityref {
-                   base te-types:lsp-prot-type;
+                   base te-types:lsp-protection-type;
                }
                description "protection type.";
            }
