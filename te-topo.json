@@ -1,0 +1,532 @@
+{
+     "networks": {
+       "network": [
+         {
+           "network-types": {
+             "te-topology": {}
+           },
+           "network-id": "abstract1",
+           "provider-id": 201,
+           "client-id": 600,
+           "te-topology-id": "te-topology:abstract1",
+           "node": [
+             {
+               "node-id": "D1",
+               "te-node-id": "2.0.1.1",
+               "te": {
+                 "te-node-attributes": {
+                   "domain-id" : 1,
+                   "is-abstract": [null],
+                   "connectivity-matrices": {
+                     "is-allowed": true,
+                     "path-constraints": {
+                       "bandwidth-generic": {
+                         "te-bandwidth": {
+                           "generic": [
+                             {
+                               "generic": "0x1p10",
+                             }
+                           ]
+                         }
+                       }
+                     },
+                     "connectivity-matrix": [
+                       {
+                         "id": 104,
+                         "from": "1-0-1",
+                         "to": "4-4-0"
+                       },
+                       {
+                         "id": 107,
+                         "from": "1-0-1",
+                         "to": "7-7-0"
+                       },
+                       {
+                         "id": 204,
+                         "from": "2-0-2",
+                         "to": "4-4-0"
+                       },
+                       {
+                         "id": 308,
+                         "from": "3-0-3",
+                         "to": "8-8-0"
+                       },
+                       {
+                         "id": 108,
+                         "from": "1-0-1",
+                         "to": "8-8-0"
+                       },
+                     ]
+                   }
+                 }
+               },
+               "termination-point": [
+                 {
+                   "tp-id": "1-0-1",
+                   "te-tp-id": 10001,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                         }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "1-1-0",
+                   "te-tp-id": 10100,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                           "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "2-0-2",
+                   "te-tp-id": 20002,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "2-2-0",
+                   "te-tp-id": 20200,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "3-0-3",
+                   "te-tp-id": 30003,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "3-3-0",
+                   "te-tp-id": 30300,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "4-0-4",
+                   "te-tp-id": 40004,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "4-4-0",
+                   "te-tp-id": 40400,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "5-0-5",
+                   "te-tp-id": 50005,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "5-5-0",
+                   "te-tp-id": 50500,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },   
+                 {
+                   "tp-id": "6-0-6",
+                   "te-tp-id": 60006,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "6-6-0",
+                   "te-tp-id": 60600,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },  
+                 {
+                   "tp-id": "7-0-7",
+                   "te-tp-id": 70007,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "7-7-0",
+                   "te-tp-id": 70700,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 }, 
+                 {
+                   "tp-id": "8-0-8",
+                   "te-tp-id": 80008,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "8-8-0",
+                   "te-tp-id": 80800,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 }                                                                
+               ]
+             }
+           ]
+         },
+         {
+           "network-types": {
+             "te-topology": {}
+           },
+           "network-id": "abstract2",
+           "provider-id": 201,
+           "client-id": 600,
+           "te-topology-id": "te-topology:abstract2",
+           "node": [
+            {
+               "node-id": "D2",
+               "te-node-id": "2.0.1.2",
+               "te": {
+                 "te-node-attributes": {
+                   "domain-id" : 1,
+                   "is-abstract": [null],
+                   "connectivity-matrices": {
+                     "is-allowed": true,
+                     "underlay": {
+                        "enabled": true
+                     },
+                     "path-constraints": {
+                       "bandwidth-generic": {
+                         "te-bandwidth": {
+                           "generic": [
+                             {
+                               "generic": "0x1p10"
+                             }
+                           ]
+                         }
+                       }
+                     },
+                     "optimizations": {
+                        "objective-function": {
+                            "objective-function-type": "of-maximize-residual-bandwidth" 
+                        }
+                     },
+                     "connectivity-matrix": [
+                       {
+                         "id": 105,
+                         "from": "1-0-1",
+                         "to": "5-5-0",
+                         "underlay": {
+                            "enabled": true,
+                            "primary-path": {
+                                "network-ref": "absolute",
+                                "path-element": [
+                                  {
+                                    "path-element-id": 1,  
+                                    "index": 1,
+                                    "numbered-hop": {
+                                      "address": "4.4.4.4",
+                                      "hop-type": "STRICT"
+                                     }
+                                   },
+                                   {
+                                    "path-element-id": 2,  
+                                    "index": 2,
+                                    "numbered-hop": {
+                                      "address": "7.7.7.7",
+                                      "hop-type": "STRICT"
+                                    }
+                                   }
+                                ]  
+                            }      
+                         }
+                       }
+                     ]
+                   }
+                 }
+               },
+               "termination-point": [
+                 {
+                   "tp-id": "1-0-1",
+                   "te-tp-id": 10001,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                         }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "1-1-0",
+                   "te-tp-id": 10100,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                           "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "2-0-2",
+                   "te-tp-id": 20002,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "2-2-0",
+                   "te-tp-id": 20200,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "3-0-3",
+                   "te-tp-id": 30003,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "3-3-0",
+                   "te-tp-id": 30300,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "4-0-4",
+                   "te-tp-id": 40004,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "4-4-0",
+                   "te-tp-id": 40400,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "5-0-5",
+                   "te-tp-id": 50005,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "5-5-0",
+                   "te-tp-id": 50500,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },   
+                 {
+                   "tp-id": "6-0-6",
+                   "te-tp-id": 60006,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "6-6-0",
+                   "te-tp-id": 60600,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },  
+                 {
+                   "tp-id": "7-0-7",
+                   "te-tp-id": 70007,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "7-7-0",
+                   "te-tp-id": 70700,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 }, 
+                 {
+                   "tp-id": "8-0-8",
+                   "te-tp-id": 80008,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 },
+                 {
+                   "tp-id": "8-8-0",
+                   "te-tp-id": 80800,
+                   "te": {
+                     "interface-switching-capability": [
+                       {
+                         "switching-capability": "switching-otn",
+                         "encoding": "lsp-encoding-oduk"
+                       }
+                     ]
+                   }
+                 }                                                                
+               ]
+             }
+           ]
+         },
+       ]
+     }
+   }
+
+

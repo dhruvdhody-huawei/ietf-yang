@@ -1,0 +1,183 @@
+{
+	"actn":{
+		"ap":{
+			"access-point-list": [
+             	{
+					"access-point-id": 101,
+					"access-point-name": "101",
+					"vn-ap": [
+						{
+							"vn-ap-id": 10101,
+							"vn": 1,
+							"ltp": "1-0-1"
+						},
+						{
+							"vn-ap-id": 10102,
+							"vn": 2,
+							"ltp": "1-0-1"
+						}
+					]
+				},
+				{
+					"access-point-id": 202,
+					"access-point-name": "202",
+					"vn-ap": [
+						{
+							"vn-ap-id": 20201,
+							"vn": 1,
+							"ltp": "2-0-2"
+						}
+					]
+				},
+				{
+					"access-point-id": 303,
+					"access-point-name": "303",
+					"vn-ap": [
+						{
+							"vn-ap-id": 30301,
+							"vn": 1,
+							"ltp": "3-0-3"
+						}
+					]
+				},
+				{
+					"access-point-id": 440,
+					"access-point-name": "440",
+					"vn-ap": [
+						{
+							"vn-ap-id": 44001,
+							"vn": 1,
+							"ltp": "4-4-0"
+						}
+					]
+				},
+				{
+					"access-point-id": 550,
+					"access-point-name": "550",
+					"vn-ap": [
+						{
+							"vn-ap-id": 55002,
+							"vn": 2,
+							"ltp": "5-5-0"
+						}
+					]
+				},					
+				{
+					"access-point-id": 770,
+					"access-point-name": "770",
+					"vn-ap": [
+						{
+							"vn-ap-id": 77001,
+							"vn": 1,
+							"ltp": "7-7-0"
+						}
+					]
+				},
+				{
+					"access-point-id": 880,
+					"access-point-name": "880",
+					"vn-ap": [
+						{
+							"vn-ap-id": 88001,
+							"vn": 1,
+							"ltp": "8-8-0"
+						}
+					]
+				}													
+			]
+		},
+		"vn":{
+			"vn-list": [
+				{
+					"vn-id": 1,
+					"vn-name": "vn1",
+					"vn-topology-id": "te-topology:abstract1",
+					"abstract-node": "D1",
+					"vn-member-list": [
+						{
+							"vn-member-id": 104,
+							"src": {
+								"src": 101,
+								"src-vn-ap-id": 10101,
+							},
+							"dest": {
+								"dest": 440,
+								"dest-vn-ap-id": 44001,
+							},
+							"connectivity-matrix-id": 104
+						},
+						{
+							"vn-member-id": 107,
+							"src": {
+								"src": 101,
+								"src-vn-ap-id": 10101,
+							},
+							"dest": {
+								"dest": 770,
+								"dest-vn-ap-id": 77001,
+							},
+							"connectivity-matrix-id": 107
+						},
+						{
+							"vn-member-id": 204,
+							"src": {
+								"src": 202,
+								"dest-vn-ap-id": 20401,
+							},
+							"dest": {
+								"dest": 440,
+								"dest-vn-ap-id": 44001,
+							},
+							"connectivity-matrix-id": 204
+						},						
+						{
+							"vn-member-id": 308,
+							"src": {
+								"src": 303,
+								"src-vn-ap-id": 30301,
+							},
+							"dest": {
+								"dest": 880,
+								"src-vn-ap-id": 88001,
+							},
+							"connectivity-matrix-id": 308
+						},
+						{
+							"vn-member-id": 108,
+							"src": {
+								"src": 101,
+								"src-vn-ap-id": 10101,
+							},
+							"dest": {
+								"dest": 880,
+								"dest-vn-ap-id": 88001,
+							},
+							"connectivity-matrix-id": 108
+						}
+					]
+				},
+				{
+					"vn-id": 2,
+					"vn-name": "vn2",
+					"vn-topology-id": "te-topology:abstract2",
+					"abstract-node": "D2",
+					"vn-member-list": [
+						{
+							"vn-member-id": 105,
+							"src": {
+								"src": 101,
+								"src-vn-ap-id": 10102,
+							},
+							"dest": {
+								"dest": 550,
+								"dest-vn-ap-id": 55002,
+							},
+							"connectivity-matrix-id": 105
+						}	
+					]	
+				}
+			]
+		}
+
+	}
+}
