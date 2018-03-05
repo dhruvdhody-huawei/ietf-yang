@@ -43,12 +43,6 @@ module ietf-pcep {
     contact
         "WG Web:   <http://tools.ietf.org/wg/pce/>
          WG List:  <mailto:pce@ietf.org>
-         WG Chair: JP Vasseur
-                   <mailto:jpv@cisco.com>
-         WG Chair: Julien Meuric
-                   <mailto:julien.meuric@orange.com>
-         WG Chair: Jonathan Hardwick
-                   <mailto:Jonathan.Hardwick@metaswitch.com>
          Editor:   Dhruv Dhody
                    <mailto:dhruv.ietf@gmail.com>";
 
@@ -57,8 +51,7 @@ module ietf-pcep {
          operational model for PCEP common across all of the
          vendor implementations.";
 
-
-    revision 2017-07-01 {
+    revision 2018-03-05 {
         description "Initial revision.";
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
@@ -809,7 +802,6 @@ module ietf-pcep {
                            Communication Protocol (PCEP)";
         }
 
-
         leaf request-timer{
             type uint32 {
                 range "1..65535";
@@ -1127,7 +1119,6 @@ module ietf-pcep {
                     capabilities.";
             }
         }
-
 
     }//info
 
@@ -1555,7 +1546,7 @@ module ietf-pcep {
                             "An explicit-route hop action.";
                     }
 
-                    uses te-types:explicit-route-hop_config;
+                    uses te-types:explicit-route-hop;
                 }
             }
             leaf pcc-original {
@@ -1732,7 +1723,7 @@ module ietf-pcep {
                          these sessions is always discarded before it
                          leaves OpenWait state. However, before it is
                          discarded, two sessions to the given peer
-                         appear transiently in this MIB module. The
+                         appear transiently in this yang module. The
                          sessions are distinguished by who initiated
                          them, and so this field is the key.";
                 }
@@ -1977,7 +1968,7 @@ module ietf-pcep {
                           entity will cease to be
                           overloaded on this session.";
                 }
-                       
+
                 leaf peer-overloaded {
                     type boolean;
                     description
@@ -2016,7 +2007,6 @@ module ietf-pcep {
                          will stay in overloaded state,
                          this leaf is set to zero.";
                 }
-                        
                 leaf lspdb-sync {
                     if-feature stateful;
                     type sync-state;
@@ -2024,7 +2014,7 @@ module ietf-pcep {
                         "The LSP-DB state
                          synchronization status.";
                 }
-                        
+
                 leaf recv-db-ver{
                     when "../role = 'pcc'" +
                          "or " +
@@ -2044,7 +2034,7 @@ module ietf-pcep {
                         "The last received LSP State
                          Database Version Number";
                 }
-                        
+
                 container of-list{
                     when "../role = 'pce'" +
                          "or " +
@@ -2062,7 +2052,6 @@ module ietf-pcep {
                         "Indicate the list of supported
                          OF on this session";
                 }
-
 
                 leaf speaker-entity-id{
                     if-feature stateful-sync-opt;
@@ -2194,7 +2183,6 @@ module ietf-pcep {
                     "Local PCEP entity information";
             }
 
-
             container pce-info {
                 when "../role = 'pce'" +
                      "or " +
@@ -2257,7 +2245,6 @@ module ietf-pcep {
                 description
                     "The configured stateful parameters";
             }
-
             container of-list{
                 when "../role = 'pce'" +
                          "or " +
@@ -2436,7 +2423,7 @@ module ietf-pcep {
                          config false;
                          description
                              "The timestamp of the time when the
-                             information and statistics were last 
+                             information and statistics were last
                              reset.";
                     }
 
@@ -2446,7 +2433,7 @@ module ietf-pcep {
                          description
                              "Indicates whether the local PCEP
                              entity initiates sessions to this peer,
-                             or waits for the peer to initiate a 
+                             or waits for the peer to initiate a
                              session.";
                     }
 
@@ -2481,7 +2468,7 @@ module ietf-pcep {
                          config false;
                          description
                               "The timestamp value of the last time a
-                              session with this peer failed from 
+                              session with this peer failed from
                               active.";
                     }
 

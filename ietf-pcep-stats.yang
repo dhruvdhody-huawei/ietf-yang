@@ -3,8 +3,8 @@ module ietf-pcep-stats {
     yang-version 1.1;
 
     namespace "urn:ietf:params:xml:ns:yang:ietf-pcep-stats";
-    prefix ps;
 
+    prefix ps;
 
     import ietf-pcep {
        prefix p;
@@ -14,20 +14,12 @@ module ietf-pcep-stats {
         prefix "yang";
     }
 
-
-
     organization
         "IETF PCE (Path Computation Element) Working Group";
 
     contact
         "WG Web:   <http://tools.ietf.org/wg/pce/>
          WG List:  <mailto:pce@ietf.org>
-         WG Chair: JP Vasseur
-                   <mailto:jpv@cisco.com>
-         WG Chair: Julien Meuric
-                   <mailto:julien.meuric@orange.com>
-         WG Chair: Jonathan Hardwick
-                   <mailto:Jonathan.Hardwick@metaswitch.com>
          Editor:   Dhruv Dhody
                    <mailto:dhruv.ietf@gmail.com>";
 
@@ -35,17 +27,13 @@ module ietf-pcep-stats {
         "The YANG module augments the PCEP yang operational
         model with statistics, counters and telemetry data";
 
-
-    revision 2017-07-01 {
+    revision 2018-03-05 {
         description "Initial revision.";
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
                         Element Communications Protocol
                         (PCEP)";
     }
-
-
-
 
     /*
      * Groupings
@@ -452,7 +440,6 @@ module ietf-pcep-stats {
               peer and explicitly cancelled by the peer sending
               a PCNtf.";
         }
-
         leaf num-rep-rcvd-unknown{
             when "../../p:role = 'pce'" +
                  "or " +
