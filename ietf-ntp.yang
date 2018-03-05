@@ -17,7 +17,7 @@
    }
    
    import iana-crypt-hash {
-     prefix ianach;
+     prefix "ianach";
    }
    
    import ietf-key-chain {
@@ -38,8 +38,6 @@
    contact
      "WG Web:  <http://tools.ietf.org/wg/ntp/>
       WG List:  <mailto: ntpwg@lists.ntp.org
-      WG Chair: Karen O'Donoghue
-                <mailto: odonoghue@isoc.org>
       Editor:   Eric Wu
                 <mailto:eric.wu@huawei.com>
       Editor:   Anil Kumar S N
@@ -54,7 +52,7 @@
      "This YANG module defines essential components for the
       management of a routing subsystem.
 
-      Copyright (c) 2017 IETF Trust and the persons identified
+      Copyright (c) 2018 IETF Trust and the persons identified
       as authors of the code. All rights reserved.
 
       Redistribution and use in source and binary forms,
@@ -67,7 +65,7 @@
       This version of this YANG module is part of RFC XXXX;
       see the RFC itself for full legal notices.";
    
-   revision 2017-10-28 {
+   revision 2018-03-05 {
      description
        "Updated revision.";
      reference
@@ -278,6 +276,16 @@
        "This defines NTP clock sync states.";
    }
 
+  /* feature */
+  feature ntp-port {
+    description
+      "Indicates that the device supports the configuration of
+       the port for NTP.
+
+       This is a 'feature', since many implementations do not 
+       support any port other than the default port.";
+  }  
+
    /* Groupings */
    grouping authentication-key {
      description
@@ -363,6 +371,7 @@
          "The maximul poll interval used in this association.";
      }
      leaf port {
+       if-feature ntp-port;
        type uint16 {
          range "123 | 1025..max";
        }
@@ -398,11 +407,12 @@
      }
      leaf associations-isConfigured {
          type leafref {
-             path "/ntp:ntp/ntp:associations/ntp:isConfigured";
+             path "/ntp:ntp/ntp:associations/"
+                  + "ntp:isConfigured";
          }
          description
-           "Indicates the association was configured or dynamic
-           which result in clock synchronization.";
+           "Indicates the association was configured or 
+           dynamic which result in clock synchronization.";
      }
    }
 
@@ -413,6 +423,7 @@
      description
        "Configuration parameters for NTP.";
      leaf port {
+       if-feature ntp-port;
        type uint16 {
          range "123 | 1025..max";
        }
@@ -420,180 +431,179 @@
        description
          "Specify the port used to send NTP packets.";
      }
-
-  container refclock-master {
-    presence
-       "NTP master clock is enable";
-    description
-      "Configures the device as NTP server.";
+     container refclock-master {
+       presence
+          "NTP master clock is enable";
+       description
+          "Configures the device as NTP server.";
        leaf master-stratum {
          type ntp-stratum;
          default "16";
          description
            "Stratum level from which NTP
            clients get their time synchronized.";
-    }
-  }
-  container authentication {
-    description
-       "Configuration of authentication.";
-       leaf auth-enabled {
-         type boolean;
-         default false;
-         description
-           "Controls whether NTP authentication is enabled
-           or disabled on this device.";
        }
-       list trusted-keys {
-         key "key-id";
-         description
-           "List of keys trusted by NTP.";
-         leaf key-id {
-           type leafref {
-             path "/ntp:ntp/ntp:authentication/"
-                 + "ntp:authentication-keys/ntp:key-id";
-           }
-           description
-           "The key trusted by NTP.";
-         }
-       }
-       list authentication-keys {
-         key "key-id";
-         uses authentication-key;
-         description
-           "List of authentication key.";
-       }
-  }
-
-  container access-rules {
-    description
-      "Configuration of access rules.";
-       list access-rule {
-         key "access-mode";
-         description
-           "List of access rules.";
-         leaf access-mode {
-           type access-modes;
-           description
-             "NTP access mode.";
-          }
-         leaf acl {
-           type leafref {
-            path "/acl:access-lists/acl:acl/acl:acl-name";
-           }
-           description
-             "NTP ACL.";
-          }
-        }
-  }
-
-  container clock-state {
-    config "false";
-    description
-      "Operational state of the NTP.";
-
-    container system-status {
+     }
+     container authentication {
       description
-         "System status of NTP.";
-      leaf clock-state {
-        type ntp-clock-status;
-        mandatory true;
-        description "Indicates the state of system clock.";
-      }
-      leaf clock-stratum {
-          type ntp-stratum;
-          mandatory true;
-          description
-            "Indicates the stratum of the reference clock.";
-      }
-      leaf clock-refid {
-          type union {
-              type inet:ipv4-address;
-              type binary {
-                  length "4";
-              }
-              type string {
-                  length "4";
-              }
+         "Configuration of authentication.";
+         leaf auth-enabled {
+           type boolean;
+           default false;
+           description
+             "Controls whether NTP authentication is enabled
+             or disabled on this device.";
+         }
+         list trusted-keys {
+           key "key-id";
+           description
+             "List of keys trusted by NTP.";
+           leaf key-id {
+             type leafref {
+               path "/ntp:ntp/ntp:authentication/"
+                   + "ntp:authentication-keys/ntp:key-id";
+             }
+             description
+             "The key trusted by NTP.";
+           }
+         }
+         list authentication-keys {
+           key "key-id";
+           uses authentication-key;
+           description
+             "List of authentication key.";
+         }
+    }
+
+    container access-rules {
+      description
+        "Configuration of access rules.";
+         list access-rule {
+           key "access-mode";
+           description
+             "List of access rules.";
+           leaf access-mode {
+             type access-modes;
+             description
+               "NTP access mode.";
+            }
+           leaf acl {
+             type leafref {
+              path "/acl:access-lists/acl:acl/acl:name";
+             }
+             description
+               "NTP ACL.";
+            }
           }
-          mandatory true;
-          description
-            "IPv4 address or first 32 bits of the MD5 hash of
-            the IPv6 address or reference clock of the peer to
-            which clock is synchronized.";
-      }
-      uses association-ref {
+    }
+
+    container clock-state {
+      config "false";
+      description
+        "Operational state of the NTP.";
+
+      container system-status {
         description
-          "Reference to Association node";
-      }
-      leaf nominal-freq {
-          type decimal64 {
-              fraction-digits 4;
-          }
+           "System status of NTP.";
+        leaf clock-state {
+          type ntp-clock-status;
+          mandatory true;
+          description "Indicates the state of system clock.";
+        }
+        leaf clock-stratum {
+            type ntp-stratum;
+            mandatory true;
+            description
+              "Indicates the stratum of the reference clock.";
+        }
+        leaf clock-refid {
+            type union {
+                type inet:ipv4-address;
+                type binary {
+                    length "4";
+                }
+                type string {
+                    length "4";
+                }
+            }
+            mandatory true;
+            description
+              "IPv4 address or first 32 bits of the MD5 hash of
+              the IPv6 address or reference clock of the peer to
+              which clock is synchronized.";
+        }
+
+        uses association-ref {
+          description
+            "Reference to Association node";
+        } 
+        leaf nominal-freq {
+            type decimal64 {
+                fraction-digits 4;
+            }
+            mandatory true;
+            description
+              "Indicates the nominal frequency of the
+              local clock, in Hz.";
+        }
+        leaf actual-freq {
+            type decimal64 {
+                fraction-digits 4;
+            }
+            mandatory true;
+            description
+              "Indicates the actual frequency of the
+              local clock, in Hz.";
+        }
+        leaf clock-precision {
+            type uint8;
+            mandatory true;
+            description
+              "Precision of the clock of this system
+              in Hz.(prec=2^(-n))";
+        }
+        leaf clock-offset {
+            type decimal64 {
+                fraction-digits 4;
+            }
+            description
+              "Offset of clock to synchronized peer,
+              in milliseconds.";
+        }
+        leaf root-delay {
+            type decimal64 {
+                fraction-digits 2;
+            }
+            description
+              "Total delay along path to root clock,
+              in milliseconds.";
+        }
+        leaf root-dispersion {
+            type decimal64 {
+                fraction-digits 2;
+            }
+            description
+              "Indicates the dispersion between the local clock
+              and the master reference clock, in milliseconds.";
+        }
+        leaf reference-time {
+            type yang:date-and-time;
+            description
+              "Indicates reference timestamp.";
+        }
+        leaf sync-state {
+          type ntp-sync-state;
           mandatory true;
           description
-            "Indicates the nominal frequency of the
-            local clock, in Hz.";
-      }
-      leaf actual-freq {
-          type decimal64 {
-              fraction-digits 4;
-          }
-          mandatory true;
-          description
-            "Indicates the actual frequency of the
-            local clock, in Hz.";
-      }
-      leaf clock-precision {
-          type uint8;
-          mandatory true;
-          description
-            "Precision of the clock of this system
-            in Hz.(prec=2^(-n))";
-      }
-      leaf clock-offset {
-          type decimal64 {
-              fraction-digits 4;
-          }
-          description
-            "Offset of clock to synchronized peer,
-            in milliseconds.";
-      }
-      leaf root-delay {
-          type decimal64 {
-              fraction-digits 2;
-          }
-          description
-            "Total delay along path to root clock,
-            in milliseconds.";
-      }
-      leaf root-dispersion {
-          type decimal64 {
-              fraction-digits 2;
-          }
-          description
-            "Indicates the dispersion between the local clock
-            and the master reference clock, in milliseconds.";
-      }
-      leaf reference-time {
-          type yang:date-and-time;
-          description
-            "Indicates reference timestamp.";
-      }
-      leaf sync-state {
-        type ntp-sync-state;
-        mandatory true;
-        description
-          "Indicates the synchronization status of
-          the local clock.";
+            "Indicates the synchronization status of
+            the local clock.";
+        }
       }
     }
-  }
-
-  list unicast {
+  list unicast-configuration {
     key "address type";
     description
-      "list of unicast configuration.";
+      "list of unicast-configuration.";
     leaf address {
       type inet:host;
       description
@@ -639,7 +649,8 @@
     }
     uses comman-attributes {
       description
-        "Common attribute like port, version, min and max poll.";
+        "Common attribute like port, version, min and max 
+        poll.";
     }
   }
 
@@ -661,7 +672,8 @@
     leaf isConfigured {
       type boolean;
       description
-        "Whether this association is configured or dynamically learnt.";
+        "Whether this association is configured or 
+         dynamically learnt.";
     }
     leaf stratum {
       type ntp-stratum;
@@ -702,7 +714,8 @@
     }
     uses comman-attributes {
       description
-        "Common attribute like port, version, min and max poll.";
+        "Common attribute like port, version, min and 
+         max poll.";
     }
     leaf reach {
       type uint8;
@@ -782,6 +795,7 @@
     }
   }
 
+
   container interfaces {
     description
       "Configuration parameters for NTP interfaces.";
@@ -813,7 +827,8 @@
         }
         uses comman-attributes {
           description
-            "Common attribute like port, version, min and max poll.";
+            "Common attribute like port, version, min and 
+             max poll.";
         }
       }
 
@@ -846,7 +861,8 @@
         }
         uses comman-attributes {
           description
-            "Common attribute like port, version, min and max poll.";
+            "Common attribute like port, version, min and 
+             max poll.";
         }
       }
       list multicast-client {
@@ -856,7 +872,8 @@
         leaf address {
           type rt-types:ip-multicast-group-address;
           description
-            "The IP address of the multicast group to join.";
+            "The IP address of the multicast group to 
+             join.";
         }
       }
       list manycast-server {
@@ -911,21 +928,20 @@
         }
         uses comman-attributes {
           description
-            "Common attribute like port, version, min and max poll.";
+            "Common attribute like port, version, min and 
+             max poll.";
         }
       }
      }
     }
-    /* Operational state data */
-    
-    container ntp-statistics {
-      config "false";
-      description
-        "Total NTP packet statistic.";
-      uses statistics {
-          description
-            "NTP send and receive packet statistic.";
-      }
+  container ntp-statistics {
+    config "false";
+    description
+      "Total NTP packet statistic.";
+    uses statistics {
+        description
+          "NTP send and receive packet statistic.";
     }
   }
  }
+}
