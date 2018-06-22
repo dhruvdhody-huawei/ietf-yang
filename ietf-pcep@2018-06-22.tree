@@ -1,0 +1,694 @@
+module: ietf-pcep
+  +--rw pcep!
+     +--rw entity
+        +--rw addr                          inet:ip-address
+        +--rw enabled?                      boolean
+        +--rw role                          pcep-role
+        +--rw description?                  string
+        +--rw speaker-entity-id?            string
+        |       {stateful-sync-opt}?
+        +--rw admin-status?                 pcep-admin-status
+        +--ro index?                        uint32
+        +--ro oper-status?                  pcep-oper-status
+        +--rw domain
+        |  +--rw domain* [domain-type domain]
+        |     +--rw domain-type    domain-type
+        |     +--rw domain         domain
+        +--rw capability
+        |  +--rw gmpls?                 boolean {gmpls}?
+        |  +--rw bi-dir?                boolean
+        |  +--rw diverse?               boolean
+        |  +--rw load-balance?          boolean
+        |  +--rw synchronize?           boolean {svec}?
+        |  +--rw objective-function?    boolean
+        |  |       {objective-function}?
+        |  +--rw add-path-constraint?   boolean
+        |  +--rw prioritization?        boolean
+        |  +--rw multi-request?         boolean
+        |  +--rw gco?                   boolean {gco}?
+        |  +--rw p2mp?                  boolean {p2mp}?
+        |  +--rw stateful {stateful}?
+        |  |  +--rw enabled?                boolean
+        |  |  +--rw active?                 boolean
+        |  |  +--rw pce-initiated?          boolean {pce-initiated}?
+        |  |  +--rw include-db-ver?         boolean
+        |  |  |       {stateful-sync-opt}?
+        |  |  +--rw trigger-resync?         boolean
+        |  |  |       {stateful-sync-opt}?
+        |  |  +--rw trigger-initial-sync?   boolean
+        |  |  |       {stateful-sync-opt}?
+        |  |  +--rw incremental-sync?       boolean
+        |  |          {stateful-sync-opt}?
+        |  +--rw sr {sr}?
+        |     +--rw enabled?   boolean
+        +--rw pce-info
+        |  +--rw scope
+        |  |  +--rw intra-area-scope?           boolean
+        |  |  +--rw intra-area-pref?            uint8
+        |  |  +--rw inter-area-scope?           boolean
+        |  |  +--rw inter-area-scope-default?   boolean
+        |  |  +--rw inter-area-pref?            uint8
+        |  |  +--rw inter-as-scope?             boolean
+        |  |  +--rw inter-as-scope-default?     boolean
+        |  |  +--rw inter-as-pref?              uint8
+        |  |  +--rw inter-layer-scope?          boolean
+        |  |  +--rw inter-layer-pref?           uint8
+        |  +--rw neigh-domains
+        |  |  +--rw domain* [domain-type domain]
+        |  |     +--rw domain-type    domain-type
+        |  |     +--rw domain         domain
+        |  +--rw path-key {path-key}?
+        |     +--rw enabled?         boolean
+        |     +--rw discard-timer?   uint32
+        |     +--rw reuse-time?      uint32
+        |     +--rw pce-id?          inet:ip-address
+        +--rw connect-timer?                uint32
+        +--rw connect-max-retry?            uint32
+        +--rw init-backoff-timer?           uint32
+        +--rw max-backoff-timer?            uint32
+        +--rw open-wait-timer?              uint32
+        +--rw keep-wait-timer?              uint32
+        +--rw keep-alive-timer?             uint32
+        +--rw dead-timer?                   uint32
+        +--rw allow-negotiation?            boolean
+        +--rw max-keep-alive-timer?         uint32
+        +--rw max-dead-timer?               uint32
+        +--rw min-keep-alive-timer?         uint32
+        +--rw min-dead-timer?               uint32
+        +--rw sync-timer?                   uint32 {svec}?
+        +--rw request-timer?                uint32
+        +--rw max-sessions?                 uint32
+        +--rw max-unknown-reqs?             uint32
+        +--rw max-unknown-msgs?             uint32
+        +--rw pcep-notification-max-rate    uint32
+        +--rw stateful-parameter {stateful}?
+        |  +--rw state-timeout?          uint32
+        |  +--rw redelegation-timeout?   uint32
+        |  +--rw rpt-non-pcep-lsp?       boolean
+        +--rw of-list {objective-function}?
+        |  +--rw objective-function* [of]
+        |     +--rw of    objective-function
+        +--ro lsp-db {stateful}?
+        |  +--ro db-ver?             uint64 {stateful-sync-opt}?
+        |  +--ro association-list*
+        |  |       [type id source global-source extended-id]
+        |  |       {association}?
+        |  |  +--ro type             assoc-type
+        |  |  +--ro id               uint16
+        |  |  +--ro source           inet:ip-address
+        |  |  +--ro global-source    uint32
+        |  |  +--ro extended-id      string
+        |  |  +--ro lsp* [plsp-id pcc-id]
+        |  |     +--ro plsp-id    -> /pcep/entity/lsp-db/lsp/plsp-id
+        |  |     +--ro pcc-id     -> /pcep/entity/lsp-db/lsp/pcc-id
+        |  +--ro lsp* [plsp-id pcc-id]
+        |     +--ro plsp-id               uint32
+        |     +--ro pcc-id                inet:ip-address
+        |     +--ro lsp-ref
+        |     |  +--ro source?
+        |     |  |       -> /te:te/lsps-state/lsp/source
+        |     |  +--ro destination?
+        |     |  |       -> /te:te/lsps-state/lsp/destination
+        |     |  +--ro tunnel-id?
+        |     |  |       -> /te:te/lsps-state/lsp/tunnel-id
+        |     |  +--ro lsp-id?
+        |     |  |       -> /te:te/lsps-state/lsp/lsp-id
+        |     |  +--ro extended-tunnel-id?
+        |     |          -> /te:te/lsps-state/lsp/extended-tunnel-id
+        |     +--ro admin-state?          boolean
+        |     +--ro operational-state?    operational-state
+        |     +--ro delegated
+        |     |  +--ro enabled?   boolean
+        |     |  +--ro peer?      -> /pcep/entity/peers/peer/addr
+        |     |  +--ro srp-id?    uint32
+        |     +--ro initiation {pce-initiated}?
+        |     |  +--ro enabled?   boolean
+        |     |  +--ro peer?      -> /pcep/entity/peers/peer/addr
+        |     +--ro symbolic-path-name?   string
+        |     +--ro last-error?           lsp-error
+        |     +--ro pst?                  pst
+        |     +--ro association-list*
+        |             [type id source global-source extended-id]
+        |             {association}?
+        |        +--ro type
+        |        |       -> /pcep/entity/lsp-db/association-list/type
+        |        +--ro id
+        |        |       -> /pcep/entity/lsp-db/association-list/id
+        |        +--ro source           leafref
+        |        +--ro global-source    leafref
+        |        +--ro extended-id      leafref
+        +--ro path-keys {path-key}?
+        |  +--ro path-keys* [path-key]
+        |     +--ro path-key         uint16
+        |     +--ro cps
+        |     |  +--ro explicit-route-objects* [index]
+        |     |     +--ro index                  uint32
+        |     |     +--ro (type)?
+        |     |        +--:(num-unnum-hop)
+        |     |        |  +--ro num-unnum-hop
+        |     |        |     +--ro node-id?      te-types:te-node-id
+        |     |        |     +--ro link-tp-id?   te-types:te-tp-id
+        |     |        |     +--ro hop-type?     te-hop-type
+        |     |        |     +--ro direction?    te-link-direction
+        |     |        +--:(as-number)
+        |     |        |  +--ro as-number-hop
+        |     |        |     +--ro as-number?   binary
+        |     |        |     +--ro hop-type?    te-hop-type
+        |     |        +--:(label)
+        |     |           +--ro label-hop
+        |     |              +--ro te-label
+        |     |                 +--ro (technology)?
+        |     |                 |  +--:(generic)
+        |     |                 |     +--ro generic?
+        |     |                 |             rt-types:generalized-label
+        |     |                 +--ro direction?
+        |     |                         te-label-direction
+        |     +--ro pcc-original?    -> /pcep/entity/peers/peer/addr
+        |     +--ro req-id?          uint32
+        |     +--ro retrieved?       boolean
+        |     +--ro pcc-retrieved?   -> /pcep/entity/peers/peer/addr
+        |     +--ro creation-time?   yang:timestamp
+        |     +--ro discard-time?    uint32
+        |     +--ro reuse-time?      uint32
+        +--rw peers
+           +--rw peer* [addr]
+              +--rw addr                    inet:ip-address
+              +--rw role                    pcep-role
+              +--rw description?            string
+              +--rw domain
+              |  +--rw domain* [domain-type domain]
+              |     +--rw domain-type    domain-type
+              |     +--rw domain         domain
+              +--rw capability
+              |  +--rw gmpls?                 boolean {gmpls}?
+              |  +--rw bi-dir?                boolean
+              |  +--rw diverse?               boolean
+              |  +--rw load-balance?          boolean
+              |  +--rw synchronize?           boolean {svec}?
+              |  +--rw objective-function?    boolean
+              |  |       {objective-function}?
+              |  +--rw add-path-constraint?   boolean
+              |  +--rw prioritization?        boolean
+              |  +--rw multi-request?         boolean
+              |  +--rw gco?                   boolean {gco}?
+              |  +--rw p2mp?                  boolean {p2mp}?
+              |  +--rw stateful {stateful}?
+              |  |  +--rw enabled?                boolean
+              |  |  +--rw active?                 boolean
+              |  |  +--rw pce-initiated?          boolean
+              |  |  |       {pce-initiated}?
+              |  |  +--rw include-db-ver?         boolean
+              |  |  |       {stateful-sync-opt}?
+              |  |  +--rw trigger-resync?         boolean
+              |  |  |       {stateful-sync-opt}?
+              |  |  +--rw trigger-initial-sync?   boolean
+              |  |  |       {stateful-sync-opt}?
+              |  |  +--rw incremental-sync?       boolean
+              |  |          {stateful-sync-opt}?
+              |  +--rw sr {sr}?
+              |     +--rw enabled?   boolean
+              +--rw pce-info
+              |  +--rw scope
+              |  |  +--rw intra-area-scope?           boolean
+              |  |  +--rw intra-area-pref?            uint8
+              |  |  +--rw inter-area-scope?           boolean
+              |  |  +--rw inter-area-scope-default?   boolean
+              |  |  +--rw inter-area-pref?            uint8
+              |  |  +--rw inter-as-scope?             boolean
+              |  |  +--rw inter-as-scope-default?     boolean
+              |  |  +--rw inter-as-pref?              uint8
+              |  |  +--rw inter-layer-scope?          boolean
+              |  |  +--rw inter-layer-pref?           uint8
+              |  +--rw neigh-domains
+              |     +--rw domain* [domain-type domain]
+              |        +--rw domain-type    domain-type
+              |        +--rw domain         domain
+              +--rw delegation-pref?        uint8 {stateful}?
+              +--rw auth
+              |  +--rw (auth-type-selection)?
+              |     +--:(auth-key-chain)
+              |     |  +--rw key-chain?
+              |     |          key-chain:key-chain-ref
+              |     +--:(auth-key)
+              |     |  +--rw crypto-algorithm    identityref
+              |     |  +--rw key-string
+              |     |     +--rw (key-string-style)?
+              |     |        +--:(keystring)
+              |     |        |  +--rw keystring?            string
+              |     |        +--:(hexadecimal)
+              |     |                 {key-chain:hex-key-string}?
+              |     |           +--rw hexadecimal-string?
+              |     |                   yang:hex-string
+              |     +--:(auth-tls) {tls}?
+              |        +--rw (role)?
+              |           +--:(server)
+              |           |  +--rw tls-server
+              |           |     +--rw server-identity
+              |           |     |  +--rw (local-or-keystore)
+              |           |     |     +--:(local)
+              |           |     |     |  +--rw algorithm
+              |           |     |     |  |       ct:key-algorithm-ref
+              |           |     |     |  +--rw public-key
+              |           |     |     |  |       binary
+              |           |     |     |  +--rw private-key
+              |           |     |     |  |       union
+              |           |     |     |  +--rw cert
+              |           |     |     |  |       ct:end-entity-cert-cms
+              |           |     |     |  +---n certificate-expiration
+              |           |     |     |     +-- expiration-date?
+              |           |     |     |             yang:date-and-time
+              |           |     |     +--:(keystore)
+              |           |     |              {keystore-implemented}?
+              |           |     |        +--rw reference
+              |           |     |                ks:asymmetric-key-certificate-ref
+              |           |     +--rw client-auth
+              |           |     |  +--rw pinned-ca-certs?
+              |           |     |  |       ta:pinned-certificates-ref
+              |           |     |  +--rw pinned-client-certs?
+              |           |     |          ta:pinned-certificates-ref
+              |           |     +--rw hello-params
+              |           |             {tls-server-hello-params-config}?
+              |           |        +--rw tls-versions
+              |           |        |  +--rw tls-version*
+              |           |        |          identityref
+              |           |        +--rw cipher-suites
+              |           |           +--rw cipher-suite*
+              |           |                   identityref
+              |           +--:(client)
+              |              +--rw tls-client
+              |                 +--rw client-identity
+              |                 |  +--rw (auth-type)?
+              |                 |     +--:(certificate)
+              |                 |        +--rw certificate
+              |                 |           +--rw (local-or-keystore)
+              |                 |              +--:(local)
+              |                 |              |  +--rw algorithm
+              |                 |              |  |       ct:key-algorithm-ref
+              |                 |              |  +--rw public-key
+              |                 |              |  |       binary
+              |                 |              |  +--rw private-key
+              |                 |              |  |       union
+              |                 |              |  +--rw cert
+              |                 |              |  |       ct:end-entity-cert-cms
+              |                 |              |  +---n certificate-expiration
+              |                 |              |     +-- expiration-date?
+              |                 |              |             yang:date-and-time
+              |                 |              +--:(keystore)
+              |                 |                       {keystore-implemented}?
+              |                 |                 +--rw reference
+              |                 |                         ks:asymmetric-key-certificate-ref
+              |                 +--rw server-auth
+              |                 |  +--rw pinned-ca-certs?
+              |                 |  |       ta:pinned-certificates-ref
+              |                 |  +--rw pinned-server-certs?
+              |                 |          ta:pinned-certificates-ref
+              |                 +--rw hello-params
+              |                         {tls-client-hello-params-config}?
+              |                    +--rw tls-versions
+              |                    |  +--rw tls-version*
+              |                    |          identityref
+              |                    +--rw cipher-suites
+              |                       +--rw cipher-suite*
+              |                               identityref
+              +--ro discontinuity-time?     yang:timestamp
+              +--ro initiate-session?       boolean
+              +--ro session-exists?         boolean
+              +--ro session-up-time?        yang:timestamp
+              +--ro session-fail-time?      yang:timestamp
+              +--ro session-fail-up-time?   yang:timestamp
+              +--ro sessions
+                 +--ro session* [initiator]
+                    +--ro initiator               pcep-initiator
+                    +--ro role?
+                    |       -> /pcep/entity/role
+                    +--ro state-last-change?      yang:timestamp
+                    +--ro state?                  pcep-sess-state
+                    +--ro session-creation?       yang:timestamp
+                    +--ro connect-retry?          yang:counter32
+                    +--ro local-id?               uint32
+                    +--ro remote-id?              uint32
+                    +--ro keepalive-timer?        uint32
+                    +--ro peer-keepalive-timer?   uint32
+                    +--ro dead-timer?             uint32
+                    +--ro peer-dead-timer?        uint32
+                    +--ro ka-hold-time-rem?       uint32
+                    +--ro overloaded?             boolean
+                    +--ro overload-time?          uint32
+                    +--ro peer-overloaded?        boolean
+                    +--ro peer-overload-time?     uint32
+                    +--ro lspdb-sync?             sync-state
+                    |       {stateful}?
+                    +--ro recv-db-ver?            uint64
+                    |       {stateful,stateful-sync-opt}?
+                    +--ro of-list {objective-function}?
+                    |  +--ro objective-function* [of]
+                    |     +--ro of    objective-function
+                    +--ro pst-list
+                    |  +--ro path-setup-type* [pst]
+                    |     +--ro pst    pst
+                    +--ro assoc-type-list {association}?
+                    |  +--ro assoc-type* [at]
+                    |     +--ro at    assoc-type
+                    +--ro speaker-entity-id?      string
+                    |       {stateful-sync-opt}?
+                    +--ro discontinuity-time?     yang:timestamp
+
+  rpcs:
+    +---x trigger-resync {stateful,stateful-sync-opt}?
+       +---w input
+          +---w pcc?   -> /pcep/entity/peers/peer/addr
+
+  notifications:
+    +---n pcep-session-up
+    |  +--ro peer-addr?           -> /pcep/entity/peers/peer/addr
+    |  +--ro session-initiator?
+    |  |       -> /pcep/entity/peers/peer/sessions/session/initiator
+    |  +--ro state-last-change?   yang:timestamp
+    |  +--ro state?               pcep-sess-state
+    +---n pcep-session-down
+    |  +--ro peer-addr?           -> /pcep/entity/peers/peer/addr
+    |  +--ro session-initiator?   pcep-initiator
+    |  +--ro state-last-change?   yang:timestamp
+    |  +--ro state?               pcep-sess-state
+    +---n pcep-session-local-overload
+    |  +--ro peer-addr?           -> /pcep/entity/peers/peer/addr
+    |  +--ro session-initiator?
+    |  |       -> /pcep/entity/peers/peer/sessions/session/initiator
+    |  +--ro overloaded?          boolean
+    |  +--ro overload-time?       uint32
+    +---n pcep-session-local-overload-clear
+    |  +--ro peer-addr?    -> /pcep/entity/peers/peer/addr
+    |  +--ro overloaded?   boolean
+    +---n pcep-session-peer-overload
+    |  +--ro peer-addr?            -> /pcep/entity/peers/peer/addr
+    |  +--ro session-initiator?
+    |  |       -> /pcep/entity/peers/peer/sessions/session/initiator
+    |  +--ro peer-overloaded?      boolean
+    |  +--ro peer-overload-time?   uint32
+    +---n pcep-session-peer-overload-clear
+       +--ro peer-addr?         -> /pcep/entity/peers/peer/addr
+       +--ro peer-overloaded?   boolean
+
+  grouping info
+    +-- domain
+    |  +-- domain* [domain-type domain]
+    |     +-- domain-type?   domain-type
+    |     +-- domain?        domain
+    +-- capability
+       +-- gmpls?                 boolean {gmpls}?
+       +-- bi-dir?                boolean
+       +-- diverse?               boolean
+       +-- load-balance?          boolean
+       +-- synchronize?           boolean {svec}?
+       +-- objective-function?    boolean {objective-function}?
+       +-- add-path-constraint?   boolean
+       +-- prioritization?        boolean
+       +-- multi-request?         boolean
+       +-- gco?                   boolean {gco}?
+       +-- p2mp?                  boolean {p2mp}?
+       +-- stateful {stateful}?
+       |  +-- enabled?                boolean
+       |  +-- active?                 boolean
+       |  +-- pce-initiated?          boolean {pce-initiated}?
+       |  +-- include-db-ver?         boolean {stateful-sync-opt}?
+       |  +-- trigger-resync?         boolean {stateful-sync-opt}?
+       |  +-- trigger-initial-sync?   boolean {stateful-sync-opt}?
+       |  +-- incremental-sync?       boolean {stateful-sync-opt}?
+       +-- sr {sr}?
+          +-- enabled?   boolean
+  grouping lsp-state
+    +-- plsp-id?              uint32
+    +-- pcc-id?               inet:ip-address
+    +-- lsp-ref
+    |  +-- source?               -> /te:te/lsps-state/lsp/source
+    |  +-- destination?
+    |  |       -> /te:te/lsps-state/lsp/destination
+    |  +-- tunnel-id?            -> /te:te/lsps-state/lsp/tunnel-id
+    |  +-- lsp-id?               -> /te:te/lsps-state/lsp/lsp-id
+    |  +-- extended-tunnel-id?
+    |          -> /te:te/lsps-state/lsp/extended-tunnel-id
+    +-- admin-state?          boolean
+    +-- operational-state?    operational-state
+    +-- delegated
+    |  +-- enabled?   boolean
+    |  +-- peer?      -> /pcep/entity/peers/peer/addr
+    |  +-- srp-id?    uint32
+    +-- initiation {pce-initiated}?
+    |  +-- enabled?   boolean
+    |  +-- peer?      -> /pcep/entity/peers/peer/addr
+    +-- symbolic-path-name?   string
+    +-- last-error?           lsp-error
+    +-- pst?                  pst
+  grouping pce-scope
+    +-- intra-area-scope?           boolean
+    +-- intra-area-pref?            uint8
+    +-- inter-area-scope?           boolean
+    +-- inter-area-scope-default?   boolean
+    +-- inter-area-pref?            uint8
+    +-- inter-as-scope?             boolean
+    +-- inter-as-scope-default?     boolean
+    +-- inter-as-pref?              uint8
+    +-- inter-layer-scope?          boolean
+    +-- inter-layer-pref?           uint8
+  grouping of-list
+    +-- objective-function* [of]
+       +-- of?   objective-function
+  grouping pst-list
+    +-- path-setup-type* [pst]
+       +-- pst?   pst
+  grouping session-grouping
+    +--ro sessions
+       +--ro session* [initiator]
+          +--ro initiator?              pcep-initiator
+          +--ro role?                   -> /pcep/entity/role
+          +--ro state-last-change?      yang:timestamp
+          +--ro state?                  pcep-sess-state
+          +--ro session-creation?       yang:timestamp
+          +--ro connect-retry?          yang:counter32
+          +--ro local-id?               uint32
+          +--ro remote-id?              uint32
+          +--ro keepalive-timer?        uint32
+          +--ro peer-keepalive-timer?   uint32
+          +--ro dead-timer?             uint32
+          +--ro peer-dead-timer?        uint32
+          +--ro ka-hold-time-rem?       uint32
+          +--ro overloaded?             boolean
+          +--ro overload-time?          uint32
+          +--ro peer-overloaded?        boolean
+          +--ro peer-overload-time?     uint32
+          +--ro lspdb-sync?             sync-state {stateful}?
+          +--ro recv-db-ver?            uint64
+          |       {stateful,stateful-sync-opt}?
+          +--ro of-list {objective-function}?
+          |  +--ro objective-function* [of]
+          |     +--ro of?   objective-function
+          +--ro pst-list
+          |  +--ro path-setup-type* [pst]
+          |     +--ro pst?   pst
+          +--ro assoc-type-list {association}?
+          |  +--ro assoc-type* [at]
+          |     +--ro at?   assoc-type
+          +--ro speaker-entity-id?      string {stateful-sync-opt}?
+          +--ro discontinuity-time?     yang:timestamp
+  grouping pcep-entity-info
+    +-- connect-timer?          uint32
+    +-- connect-max-retry?      uint32
+    +-- init-backoff-timer?     uint32
+    +-- max-backoff-timer?      uint32
+    +-- open-wait-timer?        uint32
+    +-- keep-wait-timer?        uint32
+    +-- keep-alive-timer?       uint32
+    +-- dead-timer?             uint32
+    +-- allow-negotiation?      boolean
+    +-- max-keep-alive-timer?   uint32
+    +-- max-dead-timer?         uint32
+    +-- min-keep-alive-timer?   uint32
+    +-- min-dead-timer?         uint32
+    +-- sync-timer?             uint32 {svec}?
+    +-- request-timer?          uint32
+    +-- max-sessions?           uint32
+    +-- max-unknown-reqs?       uint32
+    +-- max-unknown-msgs?       uint32
+  grouping path-key
+    +-- enabled?         boolean
+    +-- discard-timer?   uint32
+    +-- reuse-time?      uint32
+    +-- pce-id?          inet:ip-address
+  grouping capability
+    +-- gmpls?                 boolean {gmpls}?
+    +-- bi-dir?                boolean
+    +-- diverse?               boolean
+    +-- load-balance?          boolean
+    +-- synchronize?           boolean {svec}?
+    +-- objective-function?    boolean {objective-function}?
+    +-- add-path-constraint?   boolean
+    +-- prioritization?        boolean
+    +-- multi-request?         boolean
+    +-- gco?                   boolean {gco}?
+    +-- p2mp?                  boolean {p2mp}?
+    +-- stateful {stateful}?
+    |  +-- enabled?                boolean
+    |  +-- active?                 boolean
+    |  +-- pce-initiated?          boolean {pce-initiated}?
+    |  +-- include-db-ver?         boolean {stateful-sync-opt}?
+    |  +-- trigger-resync?         boolean {stateful-sync-opt}?
+    |  +-- trigger-initial-sync?   boolean {stateful-sync-opt}?
+    |  +-- incremental-sync?       boolean {stateful-sync-opt}?
+    +-- sr {sr}?
+       +-- enabled?   boolean
+  grouping path-key-state
+    +-- path-keys* [path-key]
+       +-- path-key?        uint16
+       +-- cps
+       |  +-- explicit-route-objects* [index]
+       |     +-- index?                 uint32
+       |     +-- (type)?
+       |        +--:(num-unnum-hop)
+       |        |  +-- num-unnum-hop
+       |        |     +-- node-id?      te-types:te-node-id
+       |        |     +-- link-tp-id?   te-types:te-tp-id
+       |        |     +-- hop-type?     te-hop-type
+       |        |     +-- direction?    te-link-direction
+       |        +--:(as-number)
+       |        |  +-- as-number-hop
+       |        |     +-- as-number?   binary
+       |        |     +-- hop-type?    te-hop-type
+       |        +--:(label)
+       |           +-- label-hop
+       |              +-- te-label
+       |                 +-- (technology)?
+       |                 |  +--:(generic)
+       |                 |     +-- generic?
+       |                 |             rt-types:generalized-label
+       |                 +-- direction?       te-label-direction
+       +-- pcc-original?    -> /pcep/entity/peers/peer/addr
+       +-- req-id?          uint32
+       +-- retrieved?       boolean
+       +-- pcc-retrieved?   -> /pcep/entity/peers/peer/addr
+       +-- creation-time?   yang:timestamp
+       +-- discard-time?    uint32
+       +-- reuse-time?      uint32
+  grouping authentication
+    +-- auth
+       +-- (auth-type-selection)?
+          +--:(auth-key-chain)
+          |  +-- key-chain?          key-chain:key-chain-ref
+          +--:(auth-key)
+          |  +-- crypto-algorithm    identityref
+          |  +-- key-string
+          |     +-- (key-string-style)?
+          |        +--:(keystring)
+          |        |  +-- keystring?            string
+          |        +--:(hexadecimal) {key-chain:hex-key-string}?
+          |           +-- hexadecimal-string?   yang:hex-string
+          +--:(auth-tls) {tls}?
+             +-- (role)?
+                +--:(server)
+                |  +-- tls-server
+                |     +-- server-identity
+                |     |  +-- (local-or-keystore)
+                |     |     +--:(local)
+                |     |     |  +-- algorithm
+                |     |     |  |       ct:key-algorithm-ref
+                |     |     |  +-- public-key                binary
+                |     |     |  +-- private-key               union
+                |     |     |  +-- cert
+                |     |     |  |       ct:end-entity-cert-cms
+                |     |     |  +---n certificate-expiration
+                |     |     |     +-- expiration-date?
+                |     |     |             yang:date-and-time
+                |     |     +--:(keystore) {keystore-implemented}?
+                |     |        +-- reference
+                |     |                ks:asymmetric-key-certificate-ref
+                |     +-- client-auth
+                |     |  +-- pinned-ca-certs?
+                |     |  |       ta:pinned-certificates-ref
+                |     |  +-- pinned-client-certs?
+                |     |          ta:pinned-certificates-ref
+                |     +-- hello-params
+                |             {tls-server-hello-params-config}?
+                |        +-- tls-versions
+                |        |  +-- tls-version*   identityref
+                |        +-- cipher-suites
+                |           +-- cipher-suite*   identityref
+                +--:(client)
+                   +-- tls-client
+                      +-- client-identity
+                      |  +-- (auth-type)?
+                      |     +--:(certificate)
+                      |        +-- certificate
+                      |           +-- (local-or-keystore)
+                      |              +--:(local)
+                      |              |  +-- algorithm
+                      |              |  |       ct:key-algorithm-ref
+                      |              |  +-- public-key
+                      |              |  |       binary
+                      |              |  +-- private-key
+                      |              |  |       union
+                      |              |  +-- cert
+                      |              |  |       ct:end-entity-cert-cms
+                      |              |  +---n certificate-expiration
+                      |              |     +-- expiration-date?
+                      |              |             yang:date-and-time
+                      |              +--:(keystore)
+                      |                       {keystore-implemented}?
+                      |                 +-- reference
+                      |                         ks:asymmetric-key-certificate-ref
+                      +-- server-auth
+                      |  +-- pinned-ca-certs?
+                      |  |       ta:pinned-certificates-ref
+                      |  +-- pinned-server-certs?
+                      |          ta:pinned-certificates-ref
+                      +-- hello-params
+                              {tls-client-hello-params-config}?
+                         +-- tls-versions
+                         |  +-- tls-version*   identityref
+                         +-- cipher-suites
+                            +-- cipher-suite*   identityref
+  grouping notification-session-hdr
+    +-- session-initiator?
+            -> /pcep/entity/peers/peer/sessions/session/initiator
+  grouping assoc-type-list
+    +-- assoc-type* [at]
+       +-- at?   assoc-type
+  grouping association
+    +-- type?            assoc-type
+    +-- id?              uint16
+    +-- source?          inet:ip-address
+    +-- global-source?   uint32
+    +-- extended-id?     string
+  grouping domain
+    +-- domain-type?   domain-type
+    +-- domain?        domain
+  grouping association-ref
+    +-- type?
+    |       -> /pcep/entity/lsp-db/association-list/type
+    +-- id?              -> /pcep/entity/lsp-db/association-list/id
+    +-- source?
+    |       -> /pcep/entity/lsp-db/association-list/source
+    +-- global-source?
+    |       -> /pcep/entity/lsp-db/association-list/global-source
+    +-- extended-id?
+            -> /pcep/entity/lsp-db/association-list/extended-id
+  grouping notification-instance-hdr
+    +-- peer-addr?   -> /pcep/entity/peers/peer/addr
+  grouping pce-info
+    +-- scope
+    |  +-- intra-area-scope?           boolean
+    |  +-- intra-area-pref?            uint8
+    |  +-- inter-area-scope?           boolean
+    |  +-- inter-area-scope-default?   boolean
+    |  +-- inter-area-pref?            uint8
+    |  +-- inter-as-scope?             boolean
+    |  +-- inter-as-scope-default?     boolean
+    |  +-- inter-as-pref?              uint8
+    |  +-- inter-layer-scope?          boolean
+    |  +-- inter-layer-pref?           uint8
+    +-- neigh-domains
+       +-- domain* [domain-type domain]
+          +-- domain-type?   domain-type
+          +-- domain?        domain
+  grouping stateful-pce-parameter
+    +-- state-timeout?          uint32
+    +-- redelegation-timeout?   uint32
+    +-- rpt-non-pcep-lsp?       boolean

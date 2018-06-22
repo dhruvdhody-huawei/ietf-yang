@@ -1,0 +1,195 @@
+
+module: ietf-pcep-stats
+  augment /p:pcep/p:entity/p:peers/p:peer:
+    +--ro num-sess-setup-ok?     yang:counter32
+    +--ro num-sess-setup-fail?   yang:counter32
+    +--ro pcep-stats
+       +--ro avg-rsp-time?               uint32
+       +--ro lwm-rsp-time?               uint32
+       +--ro hwm-rsp-time?               uint32
+       +--ro num-pcreq-sent?             yang:counter32
+       +--ro num-pcreq-rcvd?             yang:counter32
+       +--ro num-pcrep-sent?             yang:counter32
+       +--ro num-pcrep-rcvd?             yang:counter32
+       +--ro num-pcerr-sent?             yang:counter32
+       +--ro num-pcerr-rcvd?             yang:counter32
+       +--ro num-pcntf-sent?             yang:counter32
+       +--ro num-pcntf-rcvd?             yang:counter32
+       +--ro num-keepalive-sent?         yang:counter32
+       +--ro num-keepalive-rcvd?         yang:counter32
+       +--ro num-unknown-rcvd?           yang:counter32
+       +--ro num-corrupt-rcvd?           yang:counter32
+       +--ro num-req-sent?               yang:counter32
+       +--ro num-req-sent-pend-rep?      yang:counter32
+       +--ro num-req-sent-ero-rcvd?      yang:counter32
+       +--ro num-req-sent-nopath-rcvd?   yang:counter32
+       +--ro num-req-sent-cancel-rcvd?   yang:counter32
+       +--ro num-req-sent-error-rcvd?    yang:counter32
+       +--ro num-req-sent-timeout?       yang:counter32
+       +--ro num-req-sent-cancel-sent?   yang:counter32
+       +--ro num-req-rcvd?               yang:counter32
+       +--ro num-req-rcvd-pend-rep?      yang:counter32
+       +--ro num-req-rcvd-ero-sent?      yang:counter32
+       +--ro num-req-rcvd-nopath-sent?   yang:counter32
+       +--ro num-req-rcvd-cancel-sent?   yang:counter32
+       +--ro num-req-rcvd-error-sent?    yang:counter32
+       +--ro num-req-rcvd-cancel-rcvd?   yang:counter32
+       +--ro num-rep-rcvd-unknown?       yang:counter32
+       +--ro num-req-rcvd-unknown?       yang:counter32
+       +--ro svec {p:svec}?
+       |  +--ro num-svec-sent?       yang:counter32
+       |  +--ro num-svec-req-sent?   yang:counter32
+       |  +--ro num-svec-rcvd?       yang:counter32
+       |  +--ro num-svec-req-rcvd?   yang:counter32
+       +--ro stateful {p:stateful}?
+       |  +--ro num-pcrpt-sent?             yang:counter32
+       |  +--ro num-pcrpt-rcvd?             yang:counter32
+       |  +--ro num-pcupd-sent?             yang:counter32
+       |  +--ro num-pcupd-rcvd?             yang:counter32
+       |  +--ro num-rpt-sent?               yang:counter32
+       |  +--ro num-rpt-rcvd?               yang:counter32
+       |  +--ro num-rpt-rcvd-error-sent?    yang:counter32
+       |  +--ro num-upd-sent?               yang:counter32
+       |  +--ro num-upd-rcvd?               yang:counter32
+       |  +--ro num-upd-rcvd-unknown?       yang:counter32
+       |  +--ro num-upd-rcvd-undelegated?   yang:counter32
+       |  +--ro num-upd-rcvd-error-sent?    yang:counter32
+       |  +--ro initiation {p:pce-initiated}?
+       |     +--ro num-pcinitiate-sent?            yang:counter32
+       |     +--ro num-pcinitiate-rcvd?            yang:counter32
+       |     +--ro num-initiate-sent?              yang:counter32
+       |     +--ro num-initiate-rcvd?              yang:counter32
+       |     +--ro num-initiate-rcvd-error-sent?   yang:counter32
+       +--ro path-key {p:path-key}?
+       |  +--ro num-unknown-path-key?      yang:counter32
+       |  +--ro num-exp-path-key?          yang:counter32
+       |  +--ro num-dup-path-key?          yang:counter32
+       |  +--ro num-path-key-no-attempt?   yang:counter32
+       +--ro num-req-sent-closed?        yang:counter32
+       +--ro num-req-rcvd-closed?        yang:counter32
+  augment /p:pcep/p:entity/p:peers/p:peer/p:sessions/p:session:
+    +--ro pcep-stats
+       +--ro avg-rsp-time?               uint32
+       +--ro lwm-rsp-time?               uint32
+       +--ro hwm-rsp-time?               uint32
+       +--ro num-pcreq-sent?             yang:counter32
+       +--ro num-pcreq-rcvd?             yang:counter32
+       +--ro num-pcrep-sent?             yang:counter32
+       +--ro num-pcrep-rcvd?             yang:counter32
+       +--ro num-pcerr-sent?             yang:counter32
+       +--ro num-pcerr-rcvd?             yang:counter32
+       +--ro num-pcntf-sent?             yang:counter32
+       +--ro num-pcntf-rcvd?             yang:counter32
+       +--ro num-keepalive-sent?         yang:counter32
+       +--ro num-keepalive-rcvd?         yang:counter32
+       +--ro num-unknown-rcvd?           yang:counter32
+       +--ro num-corrupt-rcvd?           yang:counter32
+       +--ro num-req-sent?               yang:counter32
+       +--ro num-req-sent-pend-rep?      yang:counter32
+       +--ro num-req-sent-ero-rcvd?      yang:counter32
+       +--ro num-req-sent-nopath-rcvd?   yang:counter32
+       +--ro num-req-sent-cancel-rcvd?   yang:counter32
+       +--ro num-req-sent-error-rcvd?    yang:counter32
+       +--ro num-req-sent-timeout?       yang:counter32
+       +--ro num-req-sent-cancel-sent?   yang:counter32
+       +--ro num-req-rcvd?               yang:counter32
+       +--ro num-req-rcvd-pend-rep?      yang:counter32
+       +--ro num-req-rcvd-ero-sent?      yang:counter32
+       +--ro num-req-rcvd-nopath-sent?   yang:counter32
+       +--ro num-req-rcvd-cancel-sent?   yang:counter32
+       +--ro num-req-rcvd-error-sent?    yang:counter32
+       +--ro num-req-rcvd-cancel-rcvd?   yang:counter32
+       +--ro num-rep-rcvd-unknown?       yang:counter32
+       +--ro num-req-rcvd-unknown?       yang:counter32
+       +--ro svec {p:svec}?
+       |  +--ro num-svec-sent?       yang:counter32
+       |  +--ro num-svec-req-sent?   yang:counter32
+       |  +--ro num-svec-rcvd?       yang:counter32
+       |  +--ro num-svec-req-rcvd?   yang:counter32
+       +--ro stateful {p:stateful}?
+       |  +--ro num-pcrpt-sent?             yang:counter32
+       |  +--ro num-pcrpt-rcvd?             yang:counter32
+       |  +--ro num-pcupd-sent?             yang:counter32
+       |  +--ro num-pcupd-rcvd?             yang:counter32
+       |  +--ro num-rpt-sent?               yang:counter32
+       |  +--ro num-rpt-rcvd?               yang:counter32
+       |  +--ro num-rpt-rcvd-error-sent?    yang:counter32
+       |  +--ro num-upd-sent?               yang:counter32
+       |  +--ro num-upd-rcvd?               yang:counter32
+       |  +--ro num-upd-rcvd-unknown?       yang:counter32
+       |  +--ro num-upd-rcvd-undelegated?   yang:counter32
+       |  +--ro num-upd-rcvd-error-sent?    yang:counter32
+       |  +--ro initiation {p:pce-initiated}?
+       |     +--ro num-pcinitiate-sent?            yang:counter32
+       |     +--ro num-pcinitiate-rcvd?            yang:counter32
+       |     +--ro num-initiate-sent?              yang:counter32
+       |     +--ro num-initiate-rcvd?              yang:counter32
+       |     +--ro num-initiate-rcvd-error-sent?   yang:counter32
+       +--ro path-key {p:path-key}?
+          +--ro num-unknown-path-key?      yang:counter32
+          +--ro num-exp-path-key?          yang:counter32
+          +--ro num-dup-path-key?          yang:counter32
+          +--ro num-path-key-no-attempt?   yang:counter32
+
+  grouping pcep-stats
+    +-- avg-rsp-time?               uint32
+    +-- lwm-rsp-time?               uint32
+    +-- hwm-rsp-time?               uint32
+    +-- num-pcreq-sent?             yang:counter32
+    +-- num-pcreq-rcvd?             yang:counter32
+    +-- num-pcrep-sent?             yang:counter32
+    +-- num-pcrep-rcvd?             yang:counter32
+    +-- num-pcerr-sent?             yang:counter32
+    +-- num-pcerr-rcvd?             yang:counter32
+    +-- num-pcntf-sent?             yang:counter32
+    +-- num-pcntf-rcvd?             yang:counter32
+    +-- num-keepalive-sent?         yang:counter32
+    +-- num-keepalive-rcvd?         yang:counter32
+    +-- num-unknown-rcvd?           yang:counter32
+    +-- num-corrupt-rcvd?           yang:counter32
+    +-- num-req-sent?               yang:counter32
+    +-- num-req-sent-pend-rep?      yang:counter32
+    +-- num-req-sent-ero-rcvd?      yang:counter32
+    +-- num-req-sent-nopath-rcvd?   yang:counter32
+    +-- num-req-sent-cancel-rcvd?   yang:counter32
+    +-- num-req-sent-error-rcvd?    yang:counter32
+    +-- num-req-sent-timeout?       yang:counter32
+    +-- num-req-sent-cancel-sent?   yang:counter32
+    +-- num-req-rcvd?               yang:counter32
+    +-- num-req-rcvd-pend-rep?      yang:counter32
+    +-- num-req-rcvd-ero-sent?      yang:counter32
+    +-- num-req-rcvd-nopath-sent?   yang:counter32
+    +-- num-req-rcvd-cancel-sent?   yang:counter32
+    +-- num-req-rcvd-error-sent?    yang:counter32
+    +-- num-req-rcvd-cancel-rcvd?   yang:counter32
+    +-- num-rep-rcvd-unknown?       yang:counter32
+    +-- num-req-rcvd-unknown?       yang:counter32
+    +-- svec {p:svec}?
+    |  +-- num-svec-sent?       yang:counter32
+    |  +-- num-svec-req-sent?   yang:counter32
+    |  +-- num-svec-rcvd?       yang:counter32
+    |  +-- num-svec-req-rcvd?   yang:counter32
+    +-- stateful {p:stateful}?
+    |  +-- num-pcrpt-sent?             yang:counter32
+    |  +-- num-pcrpt-rcvd?             yang:counter32
+    |  +-- num-pcupd-sent?             yang:counter32
+    |  +-- num-pcupd-rcvd?             yang:counter32
+    |  +-- num-rpt-sent?               yang:counter32
+    |  +-- num-rpt-rcvd?               yang:counter32
+    |  +-- num-rpt-rcvd-error-sent?    yang:counter32
+    |  +-- num-upd-sent?               yang:counter32
+    |  +-- num-upd-rcvd?               yang:counter32
+    |  +-- num-upd-rcvd-unknown?       yang:counter32
+    |  +-- num-upd-rcvd-undelegated?   yang:counter32
+    |  +-- num-upd-rcvd-error-sent?    yang:counter32
+    |  +-- initiation {p:pce-initiated}?
+    |     +-- num-pcinitiate-sent?            yang:counter32
+    |     +-- num-pcinitiate-rcvd?            yang:counter32
+    |     +-- num-initiate-sent?              yang:counter32
+    |     +-- num-initiate-rcvd?              yang:counter32
+    |     +-- num-initiate-rcvd-error-sent?   yang:counter32
+    +-- path-key {p:path-key}?
+       +-- num-unknown-path-key?      yang:counter32
+       +-- num-exp-path-key?          yang:counter32
+       +-- num-dup-path-key?          yang:counter32
+       +-- num-path-key-no-attempt?   yang:counter32
