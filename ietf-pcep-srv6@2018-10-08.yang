@@ -1,0 +1,159 @@
+module ietf-pcep-srv6 {
+
+    yang-version 1.1;
+
+    namespace "urn:ietf:params:xml:ns:yang:ietf-pcep-srv6";
+    prefix ps;
+
+
+    import ietf-te-types {
+       prefix "te-types";
+       reference "RFC XXXX";
+    }
+
+    import ietf-pcep {
+       prefix p;
+       reference "RFC XXXX";
+    }
+
+    import ietf-yang-types {
+        prefix "yang";
+        reference "RFC 6991";
+    }
+
+
+
+    organization
+        "IETF PCE (Path Computation Element) Working Group";
+
+    contact
+        "WG Web:   <http://tools.ietf.org/wg/pce/>
+         WG List:  <mailto:pce@ietf.org>
+         Editor:   Dhruv Dhody
+                   <mailto:dhruv.ietf@gmail.com>";
+    description
+        "The YANG module augments the PCEP yang operational
+        model with SRv6";
+
+
+    revision 2018-10-08 {
+        description "Initial revision.";
+        reference
+            "RFC XXXX:  A YANG Data Model for Path Computation
+                        Element Communications Protocol
+                        (PCEP) - Segement Routing in IPv6 
+                        (SRv6)";
+    }
+
+
+    identity path-setup-srv6 {
+        base te-types:path-signaling-type;
+        description
+          "SRv6 path setup type";
+    }
+
+
+
+    /*
+     * Augment modules to add SRv6
+     */
+
+
+
+
+    augment "/p:pcep/p:entity/p:peers/p:peer" {
+        description
+            "Augmenting the statistics";
+        leaf num-sess-setup-ok{
+            type yang:counter32;
+            config false;
+            description
+                "The number of PCEP sessions successfully
+                 successfully established with the peer,
+                 including any current session.  This
+                 counter is incremented each time a
+                 session with this peer is successfully
+                 established.";
+        }
+
+        leaf num-sess-setup-fail{
+            type yang:counter32;
+            config false;
+            description
+               "The number of PCEP sessions with the peer
+                that have been attempted but failed
+                before being fully established. This
+                counter is incremented each time a
+                session retry to this peer fails.";
+        }
+        container pcep-stats {
+            config false;
+            description
+                "The container for all statistics at peer
+                 level.";
+            uses pcep-stats{
+                description
+                    "Since PCEP sessions can be
+                    ephemeral, the peer statistics tracks
+                    a peer even when no PCEP session
+                    currently exists to that peer. The
+                    statistics contained are an aggregate
+                    of the statistics for all successive
+                    sessions to that peer.";
+            }
+
+            leaf num-req-sent-closed{
+                when "../../p:role = 'pce'" +
+                     "or " +
+                     "../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCE";
+                }
+                type yang:counter32;
+                description
+                    "The number of requests that were
+                     sent to the peer and implicitly
+                     cancelled when the session they were
+                     sent over was closed.";
+            }
+
+            leaf num-req-rcvd-closed{
+                when "../../p:role = 'pcc'" +
+                     "or " +
+                     "../../p:role = 'pcc-and-pce'"
+                {
+                    description
+                        "Valid for PCEP Peer as PCC";
+                }
+                type yang:counter32;
+                description
+                    "The number of requests that were
+                     received from the peer and
+                     implicitly cancelled when the
+                     session they were received over
+                     was closed.";
+            }
+        }//pcep-stats
+    }//augment
+
+    augment "/p:pcep/p:entity/p:peers/p:peer/" +
+            "p:sessions/p:session" {
+        description
+            "Augmenting the statistics";
+        container pcep-stats {
+            description
+                "The container for all statistics
+                 at session level.";
+            uses pcep-stats{
+                description
+                    "The statistics contained are
+                     for the current sessions to
+                     that peer. These are lost
+                     when the session goes down.
+                     ";
+            }
+        }//pcep-stats
+    }//augment
+
+}//module
