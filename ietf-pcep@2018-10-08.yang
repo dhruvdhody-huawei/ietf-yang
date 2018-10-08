@@ -471,72 +471,72 @@ module ietf-pcep {
     }
 
     identity no-error-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "No error, LSP is fine.";
         reference "RFC8231";             
     }
 
     identity unknown-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "Unknown reason.";
         reference "RFC8231";             
     }
 
     identity limit-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "Limit reached for PCE-controlled LSPs.";
         reference "RFC8231";             
     }
 
     identity pending-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "Too many pending LSP update requests.";
         reference "RFC8231";             
     }    
 
     identity unacceptable-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "Unacceptable parameters.";
         reference "RFC8231";             
     }               
 
     identity internal-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "Internal error.";
         reference "RFC8231";             
     }                    
 
     identity admin-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "LSP administratively brought down.";
         reference "RFC8231";             
     }                    
 
     identity preempted-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "LSP preempted.";
         reference "RFC8231";             
     }                    
 
     identity rsvp-lsp-error {
-        if-feature stateful;
         base lsp-error;
+        if-feature stateful;
         description
             "RSVP signaling error.";
         reference "RFC8231";             

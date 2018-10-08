@@ -16,13 +16,6 @@ module ietf-pcep-srv6 {
        reference "RFC XXXX";
     }
 
-    import ietf-yang-types {
-        prefix "yang";
-        reference "RFC 6991";
-    }
-
-
-
     organization
         "IETF PCE (Path Computation Element) Working Group";
 
@@ -52,108 +45,46 @@ module ietf-pcep-srv6 {
           "SRv6 path setup type";
     }
 
+    feature srv6 {
+        description
+            "Support Segment Routing in IPv6 (SRv6) for PCE.";
+    }
 
+    grouping srv6 {
+        description
+            "SRv6";
+        container srv6 {
+            if-feature srv6;
+            description
+                "If SRv6 is supported";
+            leaf enabled{
+                type boolean;
+                description
+                    "Enabled or Disabled";
+            }
+        }
+    }
 
     /*
      * Augment modules to add SRv6
      */
-
-
-
-
-    augment "/p:pcep/p:entity/p:peers/p:peer" {
+    augment "/p:pcep/p:entity/p:capability"{
         description
-            "Augmenting the statistics";
-        leaf num-sess-setup-ok{
-            type yang:counter32;
-            config false;
-            description
-                "The number of PCEP sessions successfully
-                 successfully established with the peer,
-                 including any current session.  This
-                 counter is incremented each time a
-                 session with this peer is successfully
-                 established.";
-        }
-
-        leaf num-sess-setup-fail{
-            type yang:counter32;
-            config false;
-            description
-               "The number of PCEP sessions with the peer
-                that have been attempted but failed
-                before being fully established. This
-                counter is incremented each time a
-                session retry to this peer fails.";
-        }
-        container pcep-stats {
-            config false;
-            description
-                "The container for all statistics at peer
-                 level.";
-            uses pcep-stats{
-                description
-                    "Since PCEP sessions can be
-                    ephemeral, the peer statistics tracks
-                    a peer even when no PCEP session
-                    currently exists to that peer. The
-                    statistics contained are an aggregate
-                    of the statistics for all successive
-                    sessions to that peer.";
-            }
-
-            leaf num-req-sent-closed{
-                when "../../p:role = 'pce'" +
-                     "or " +
-                     "../../p:role = 'pcc-and-pce'"
-                {
-                    description
-                        "Valid for PCEP Peer as PCE";
-                }
-                type yang:counter32;
-                description
-                    "The number of requests that were
-                     sent to the peer and implicitly
-                     cancelled when the session they were
-                     sent over was closed.";
-            }
-
-            leaf num-req-rcvd-closed{
-                when "../../p:role = 'pcc'" +
-                     "or " +
-                     "../../p:role = 'pcc-and-pce'"
-                {
-                    description
-                        "Valid for PCEP Peer as PCC";
-                }
-                type yang:counter32;
-                description
-                    "The number of requests that were
-                     received from the peer and
-                     implicitly cancelled when the
-                     session they were received over
-                     was closed.";
-            }
-        }//pcep-stats
-    }//augment
-
-    augment "/p:pcep/p:entity/p:peers/p:peer/" +
-            "p:sessions/p:session" {
+            "Augmenting SRv6";
+        uses srv6;    
+    }
+    augment "/p:pcep/p:entity/p:peers/p:peer/p:capability"{
         description
-            "Augmenting the statistics";
-        container pcep-stats {
+            "Augmenting SRv6";
+        uses srv6;    
+    }    
+    augment "/p:pcep/p:entity/p:lsp-db/p:lsp"{
+        description
+            "Augmenting SRv6";
+        container srv6 {
+            if-feature srv6;
             description
-                "The container for all statistics
-                 at session level.";
-            uses pcep-stats{
-                description
-                    "The statistics contained are
-                     for the current sessions to
-                     that peer. These are lost
-                     when the session goes down.
-                     ";
-            }
-        }//pcep-stats
-    }//augment
-
+                "If SRv6 is supported";
+        }    
+    }        
 }//module
