@@ -16,6 +16,11 @@ module ietf-pcep-srv6 {
        reference "RFC XXXX";
     }
 
+    import ietf-srv6-types {
+        prefix st;
+        reference "RFC XXXX";
+    }
+
     organization
         "IETF PCE (Path Computation Element) Working Group";
 
@@ -65,6 +70,34 @@ module ietf-pcep-srv6 {
         }
     }
 
+    grouping segment-list {
+        description
+            "Segment list grouping";
+        container segment-list {
+            description 
+                "Segments for given segment list";
+
+            list segment {
+                key "index";
+                description "Configure Segment/hop at the index";
+                uses segment-properties;
+            }
+        }
+    }
+
+    grouping segment-properties {
+        description "Segment properties grouping";
+        leaf index {
+            type uint32;
+            description "Segment index";
+        }
+        leaf sid-value {
+            type st:srv6-sid;
+            description "SRv6 SID value";
+        }
+    }        
+    
+
     /*
      * Augment modules to add SRv6
      */
@@ -82,9 +115,14 @@ module ietf-pcep-srv6 {
         description
             "Augmenting SRv6";
         container srv6 {
+            when "/p:pcep/p:entity/p:lsp-db/p:lsp/pst = 'path-setup-srv6'" {
+                description 
+                    "For SRv6 path";
+            }
             if-feature srv6;
+            uses segment-list;
             description
-                "If SRv6 is supported";
+                "SRv6";
         }    
     }        
 }//module
