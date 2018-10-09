@@ -11,3 +11,18 @@ module: ietf-pcep-srv6
           +--ro segment* [index]
              +--ro index        uint32
              +--ro sid-value?   st:srv6-sid
+  groupings:
+  segment-list
+      +---- segment-list
+         +---- segment* [index]
+            +---- index?       uint32
+            +---- sid-value?   st:srv6-sid
+
+  segment-properties
+      +---- index?       uint32
+      +---- sid-value?   st:srv6-sid
+
+  srv6
+      +---- srv6 {srv6}?
+         +---- enabled?   boolean
+
