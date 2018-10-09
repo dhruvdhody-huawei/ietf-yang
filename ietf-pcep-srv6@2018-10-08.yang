@@ -67,6 +67,18 @@ module ietf-pcep-srv6 {
                 description
                     "Enabled or Disabled";
             }
+            leaf max-sl {
+                type uint8;
+                description
+                    "Max value of the segment left field in SRH";
+            }
+            leaf sl-limit{
+                type boolean;
+                default false;
+                description
+                    "True indicates no limit on SL, the 
+                    leaf max-sl is ignored";
+            }            
         }
     }
 

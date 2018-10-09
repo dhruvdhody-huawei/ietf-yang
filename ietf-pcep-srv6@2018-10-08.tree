@@ -1,10 +1,14 @@
 module: ietf-pcep-srv6
   augment /p:pcep/p:entity/p:capability:
     +--rw srv6 {srv6}?
-       +--rw enabled?   boolean
+       +--rw enabled?    boolean
+       +--rw max-sl?     uint8
+       +--rw sl-limit?   boolean
   augment /p:pcep/p:entity/p:peers/p:peer/p:capability:
     +--rw srv6 {srv6}?
-       +--rw enabled?   boolean
+       +--rw enabled?    boolean
+       +--rw max-sl?     uint8
+       +--rw sl-limit?   boolean
   augment /p:pcep/p:entity/p:lsp-db/p:lsp:
     +--ro srv6 {srv6}?
        +--ro segment-list
@@ -24,5 +28,7 @@ module: ietf-pcep-srv6
 
   srv6
       +---- srv6 {srv6}?
-         +---- enabled?   boolean
+         +---- enabled?    boolean
+         +---- max-sl?     uint8
+         +---- sl-limit?   boolean
 

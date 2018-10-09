@@ -1065,6 +1065,25 @@ module ietf-pcep {
                 description
                     "Enabled or Disabled";
             }
+            leaf msd{
+                type uint8;
+                description
+                    "Maximum SID Depth";
+            }
+            leaf msd-limit{
+                type boolean;
+                default false;
+                description
+                    "True indicates no limit on MSD, the 
+                    leaf msd is ignored";
+            }
+            leaf nai{
+                type boolean;
+                default false;
+                description
+                    "True indicates capability to resolve NAI
+                    to SID";
+            }
 
         }
     }//capability
