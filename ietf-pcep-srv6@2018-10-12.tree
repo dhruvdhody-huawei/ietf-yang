@@ -1,0 +1,34 @@
+module: ietf-pcep-srv6
+  augment /p:pcep/p:entity/p:capability:
+    +--rw srv6 {srv6}?
+       +--rw enabled?    boolean
+       +--rw max-sl?     uint8
+       +--rw sl-limit?   boolean
+  augment /p:pcep/p:entity/p:peers/p:peer/p:capability:
+    +--rw srv6 {srv6}?
+       +--rw enabled?    boolean
+       +--rw max-sl?     uint8
+       +--rw sl-limit?   boolean
+  augment /p:pcep/p:entity/p:lsp-db/p:lsp:
+    +--ro srv6 {srv6}?
+       +--ro segment-list
+          +--ro segment* [index]
+             +--ro index        uint32
+             +--ro sid-value?   st:srv6-sid
+  groupings:
+  segment-list
+      +---- segment-list
+         +---- segment* [index]
+            +---- index?       uint32
+            +---- sid-value?   st:srv6-sid
+
+  segment-properties
+      +---- index?       uint32
+      +---- sid-value?   st:srv6-sid
+
+  srv6
+      +---- srv6 {srv6}?
+         +---- enabled?    boolean
+         +---- max-sl?     uint8
+         +---- sl-limit?   boolean
+
