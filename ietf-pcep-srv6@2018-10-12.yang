@@ -39,7 +39,7 @@ module ietf-pcep-srv6 {
         reference
             "RFC XXXX:  A YANG Data Model for Path Computation
                         Element Communications Protocol
-                        (PCEP) - Segement Routing in IPv6 
+                        (PCEP) - Segement Routing in IPv6
                         (SRv6)";
     }
 
@@ -76,9 +76,9 @@ module ietf-pcep-srv6 {
                 type boolean;
                 default false;
                 description
-                    "True indicates no limit on SL, the 
+                    "True indicates no limit on SL, the
                     leaf max-sl is ignored";
-            }            
+            }
         }
     }
 
@@ -86,7 +86,7 @@ module ietf-pcep-srv6 {
         description
             "Segment list grouping";
         container segment-list {
-            description 
+            description
                 "Segments for given segment list";
 
             list segment {
@@ -107,8 +107,8 @@ module ietf-pcep-srv6 {
             type st:srv6-sid;
             description "SRv6 SID value";
         }
-    }        
-    
+    }
+
 
     /*
      * Augment modules to add SRv6
@@ -116,25 +116,26 @@ module ietf-pcep-srv6 {
     augment "/p:pcep/p:entity/p:capability"{
         description
             "Augmenting SRv6";
-        uses srv6;    
+        uses srv6;
     }
     augment "/p:pcep/p:entity/p:peers/p:peer/p:capability"{
         description
             "Augmenting SRv6";
-        uses srv6;    
-    }    
+        uses srv6;
+    }
     augment "/p:pcep/p:entity/p:lsp-db/p:lsp"{
         description
             "Augmenting SRv6";
         container srv6 {
             when "/p:pcep/p:entity/p:lsp-db/p:lsp/pst = 'path-setup-srv6'" {
-                description 
+                description
                     "For SRv6 path";
             }
             if-feature srv6;
             uses segment-list;
             description
                 "SRv6";
-        }    
-    }        
+        }
+    }
+    
 }//module
