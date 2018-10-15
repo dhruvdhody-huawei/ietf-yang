@@ -1,31 +1,29 @@
 module: ietf-ntp
     +--rw ntp!
-       +--rw port?                    uint16 {ntp-port}?
+       +--rw port?                    inet:port-number {ntp-port}?
        +--rw refclock-master!
        |  +--rw master-stratum?   ntp-stratum
        +--rw authentication
        |  +--rw auth-enabled?          boolean
-       |  +--rw trusted-keys* [key-id]
-       |  |  +--rw key-id    leafref
        |  +--rw authentication-keys* [key-id]
        |     +--rw key-id       uint32
        |     +--rw algorithm?   identityref
-       |     +--rw password?    ianach:crypt-hash
+       |     +--rw key?         ianach:crypt-hash
+       |     +--rw istrusted?   boolean
        +--rw access-rules
        |  +--rw access-rule* [access-mode]
-       |     +--rw access-mode    access-modes
-       |     +--rw acl?           -> /acl:access-lists/acl/name
+       |     +--rw access-mode    access-mode
+       |     +--rw acl?           -> /acl:acls/acl/name
        +--ro clock-state
        |  +--ro system-status
        |     +--ro clock-state                  ntp-clock-status
        |     +--ro clock-stratum                ntp-stratum
        |     +--ro clock-refid                  union
-       |     +--ro associations-address?
-       |     |       -> /ntp/associations/address
+       |     +--ro associations-address?        -> /ntp/associations/address
        |     +--ro associations-local-mode?
        |     |       -> /ntp/associations/local-mode
-       |     +--ro associations-isConfigured?
-       |     |       -> /ntp/associations/isConfigured
+       |     +--ro associations-isconfigured?
+       |     |       -> /ntp/associations/isconfigured
        |     +--ro nominal-freq                 decimal64
        |     +--ro actual-freq                  decimal64
        |     +--ro clock-precision              uint8
@@ -47,12 +45,12 @@ module: ietf-ntp
        |  +--rw source?           if:interface-ref
        |  +--rw minpoll?          ntp-minpoll
        |  +--rw maxpoll?          ntp-maxpoll
-       |  +--rw port?             uint16 {ntp-port}?
+       |  +--rw port?             inet:port-number {ntp-port}?
        |  +--rw version?          ntp-version
-       +--ro associations* [address local-mode isConfigured]
+       +--ro associations* [address local-mode isconfigured]
        |  +--ro address           inet:host
-       |  +--ro local-mode        association-modes
-       |  +--ro isConfigured      boolean
+       |  +--ro local-mode        association-mode
+       |  +--ro isconfigured      boolean
        |  +--ro stratum?          ntp-stratum
        |  +--ro refid?            union
        |  +--ro authentication?
@@ -61,7 +59,7 @@ module: ietf-ntp
        |  +--ro peer-interface?   if:interface-ref
        |  +--ro minpoll?          ntp-minpoll
        |  +--ro maxpoll?          ntp-maxpoll
-       |  +--ro port?             uint16 {ntp-port}?
+       |  +--ro port?             inet:port-number {ntp-port}?
        |  +--ro version?          ntp-version
        |  +--ro reach?            uint8
        |  +--ro unreach?          uint8
@@ -90,12 +88,11 @@ module: ietf-ntp
        |     |  |        +--rw key-id?   leafref
        |     |  +--rw minpoll?          ntp-minpoll
        |     |  +--rw maxpoll?          ntp-maxpoll
-       |     |  +--rw port?             uint16 {ntp-port}?
+       |     |  +--rw port?             inet:port-number {ntp-port}?
        |     |  +--rw version?          ntp-version
        |     +--rw broadcast-client!
        |     +--rw multicast-server* [address]
-       |     |  +--rw address
-       |     |  |       rt-types:ip-multicast-group-address
+       |     |  +--rw address           rt-types:ip-multicast-group-address
        |     |  +--rw ttl?              uint8
        |     |  +--rw authentication
        |     |  |  +--rw (authentication-type)?
@@ -103,15 +100,14 @@ module: ietf-ntp
        |     |  |        +--rw key-id?   leafref
        |     |  +--rw minpoll?          ntp-minpoll
        |     |  +--rw maxpoll?          ntp-maxpoll
-       |     |  +--rw port?             uint16 {ntp-port}?
+       |     |  +--rw port?             inet:port-number {ntp-port}?
        |     |  +--rw version?          ntp-version
        |     +--rw multicast-client* [address]
        |     |  +--rw address    rt-types:ip-multicast-group-address
        |     +--rw manycast-server* [address]
        |     |  +--rw address    rt-types:ip-multicast-group-address
        |     +--rw manycast-client* [address]
-       |        +--rw address
-       |        |       rt-types:ip-multicast-group-address
+       |        +--rw address           rt-types:ip-multicast-group-address
        |        +--rw authentication
        |        |  +--rw (authentication-type)?
        |        |     +--:(symmetric-key)
@@ -122,10 +118,40 @@ module: ietf-ntp
        |        +--rw beacon?           uint8
        |        +--rw minpoll?          ntp-minpoll
        |        +--rw maxpoll?          ntp-maxpoll
-       |        +--rw port?             uint16 {ntp-port}?
+       |        +--rw port?             inet:port-number {ntp-port}?
        |        +--rw version?          ntp-version
        +--ro ntp-statistics
           +--ro packet-sent?        yang:counter32
           +--ro packet-sent-fail?   yang:counter32
           +--ro packet-received?    yang:counter32
           +--ro packet-dropped?     yang:counter32
+  groupings:
+  authentication
+      +---- (authentication-type)?
+         +--:(symmetric-key)
+            +---- key-id?
+                    -> /ntp/authentication/authentication-keys/key-id
+
+  statistics
+      +---- packet-sent?        yang:counter32
+      +---- packet-sent-fail?   yang:counter32
+      +---- packet-received?    yang:counter32
+      +---- packet-dropped?     yang:counter32
+
+  authentication-key
+      +---- key-id?      uint32
+      +---- algorithm?   identityref
+      +---- key?         ianach:crypt-hash
+      +---- istrusted?   boolean
+
+  association-ref
+      +---- associations-address?        -> /ntp/associations/address
+      +---- associations-local-mode?     -> /ntp/associations/local-mode
+      +---- associations-isconfigured?   -> /ntp/associations/isconfigured
+
+  common-attributes
+      +---- minpoll?   ntp-minpoll
+      +---- maxpoll?   ntp-maxpoll
+      +---- port?      inet:port-number {ntp-port}?
+      +---- version?   ntp-version
+
