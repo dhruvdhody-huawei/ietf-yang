@@ -1,5 +1,6 @@
+
 module: ietf-pcep-stats
-  augment /p:pcep/p:entity/p:peers/p:peer:
+  augment /pcep:pcep/pcep:entity/pcep:peers/pcep:peer:
     +--ro num-sess-setup-ok?     yang:counter32
     +--ro num-sess-setup-fail?   yang:counter32
     +--ro pcep-stats
@@ -35,12 +36,12 @@ module: ietf-pcep-stats
        +--ro num-req-rcvd-cancel-rcvd?   yang:counter32
        +--ro num-rep-rcvd-unknown?       yang:counter32
        +--ro num-req-rcvd-unknown?       yang:counter32
-       +--ro svec {p:svec}?
+       +--ro svec {pcep:svec}?
        |  +--ro num-svec-sent?       yang:counter32
        |  +--ro num-svec-req-sent?   yang:counter32
        |  +--ro num-svec-rcvd?       yang:counter32
        |  +--ro num-svec-req-rcvd?   yang:counter32
-       +--ro stateful {p:stateful}?
+       +--ro stateful {pcep:stateful}?
        |  +--ro num-pcrpt-sent?             yang:counter32
        |  +--ro num-pcrpt-rcvd?             yang:counter32
        |  +--ro num-pcupd-sent?             yang:counter32
@@ -53,20 +54,21 @@ module: ietf-pcep-stats
        |  +--ro num-upd-rcvd-unknown?       yang:counter32
        |  +--ro num-upd-rcvd-undelegated?   yang:counter32
        |  +--ro num-upd-rcvd-error-sent?    yang:counter32
-       |  +--ro initiation {p:pce-initiated}?
+       |  +--ro initiation {pcep:pce-initiated}?
        |     +--ro num-pcinitiate-sent?            yang:counter32
        |     +--ro num-pcinitiate-rcvd?            yang:counter32
        |     +--ro num-initiate-sent?              yang:counter32
        |     +--ro num-initiate-rcvd?              yang:counter32
        |     +--ro num-initiate-rcvd-error-sent?   yang:counter32
-       +--ro path-key {p:path-key}?
+       +--ro path-key {pcep:path-key}?
        |  +--ro num-unknown-path-key?      yang:counter32
        |  +--ro num-exp-path-key?          yang:counter32
        |  +--ro num-dup-path-key?          yang:counter32
        |  +--ro num-path-key-no-attempt?   yang:counter32
        +--ro num-req-sent-closed?        yang:counter32
        +--ro num-req-rcvd-closed?        yang:counter32
-  augment /p:pcep/p:entity/p:peers/p:peer/p:sessions/p:session:
+  augment /pcep:pcep/pcep:entity/pcep:peers/pcep:peer/pcep:sessions
+            /pcep:session:
     +--ro pcep-stats
        +--ro avg-rsp-time?               uint32
        +--ro lwm-rsp-time?               uint32
@@ -100,12 +102,12 @@ module: ietf-pcep-stats
        +--ro num-req-rcvd-cancel-rcvd?   yang:counter32
        +--ro num-rep-rcvd-unknown?       yang:counter32
        +--ro num-req-rcvd-unknown?       yang:counter32
-       +--ro svec {p:svec}?
+       +--ro svec {pcep:svec}?
        |  +--ro num-svec-sent?       yang:counter32
        |  +--ro num-svec-req-sent?   yang:counter32
        |  +--ro num-svec-rcvd?       yang:counter32
        |  +--ro num-svec-req-rcvd?   yang:counter32
-       +--ro stateful {p:stateful}?
+       +--ro stateful {pcep:stateful}?
        |  +--ro num-pcrpt-sent?             yang:counter32
        |  +--ro num-pcrpt-rcvd?             yang:counter32
        |  +--ro num-pcupd-sent?             yang:counter32
@@ -118,13 +120,13 @@ module: ietf-pcep-stats
        |  +--ro num-upd-rcvd-unknown?       yang:counter32
        |  +--ro num-upd-rcvd-undelegated?   yang:counter32
        |  +--ro num-upd-rcvd-error-sent?    yang:counter32
-       |  +--ro initiation {p:pce-initiated}?
+       |  +--ro initiation {pcep:pce-initiated}?
        |     +--ro num-pcinitiate-sent?            yang:counter32
        |     +--ro num-pcinitiate-rcvd?            yang:counter32
        |     +--ro num-initiate-sent?              yang:counter32
        |     +--ro num-initiate-rcvd?              yang:counter32
        |     +--ro num-initiate-rcvd-error-sent?   yang:counter32
-       +--ro path-key {p:path-key}?
+       +--ro path-key {pcep:path-key}?
           +--ro num-unknown-path-key?      yang:counter32
           +--ro num-exp-path-key?          yang:counter32
           +--ro num-dup-path-key?          yang:counter32
