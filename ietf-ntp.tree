@@ -1,167 +1,130 @@
 module: ietf-ntp
-    +--rw ntp!
-       +--rw port?                    inet:port-number
-       |       {ntp-port}?
-       +--rw refclock-master!
-       |  +--rw master-stratum?   ntp-stratum
-       +--rw authentication
-       |  +--rw auth-enabled?          boolean
-       |  +--rw authentication-keys* [key-id]
-       |     +--rw key-id       uint32
-       |     +--rw algorithm?   identityref
-       |     +--rw key?         ianach:crypt-hash
-       |     +--rw istrusted?   boolean
-       +--rw access-rules
-       |  +--rw access-rule* [access-mode]
-       |     +--rw access-mode    access-mode
-       |     +--rw acl?           -> /acl:acls/acl/name
-       +--ro clock-state
-       |  +--ro system-status
-       |     +--ro clock-state                  ntp-clock-status
-       |     +--ro clock-stratum                ntp-stratum
-       |     +--ro clock-refid                  union
-       |     +--ro associations-address?
-       |     |       -> /ntp/associations/address
-       |     +--ro associations-local-mode?
-       |     |       -> /ntp/associations/local-mode
-       |     +--ro associations-isconfigured?
-       |     |       -> /ntp/associations/isconfigured
-       |     +--ro nominal-freq                 decimal64
-       |     +--ro actual-freq                  decimal64
-       |     +--ro clock-precision              uint8
-       |     +--ro clock-offset?                decimal64
-       |     +--ro root-delay?                  decimal64
-       |     +--ro root-dispersion?             decimal64
-       |     +--ro reference-time?              yang:date-and-time
-       |     +--ro sync-state                   ntp-sync-state
-       +--rw unicast-configuration* [address type]
-       |  +--rw address           inet:host
-       |  +--rw type              unicast-configuration-type
-       |  +--rw authentication
-       |  |  +--rw (authentication-type)?
-       |  |     +--:(symmetric-key)
-       |  |        +--rw key-id?   leafref
-       |  +--rw prefer?           boolean
-       |  +--rw burst?            boolean
-       |  +--rw iburst?           boolean
-       |  +--rw source?           if:interface-ref
-       |  +--rw minpoll?          ntp-minpoll
-       |  +--rw maxpoll?          ntp-maxpoll
-       |  +--rw port?             inet:port-number {ntp-port}?
-       |  +--rw version?          ntp-version
-       +--ro associations* [address local-mode isconfigured]
-       |  +--ro address           inet:host
-       |  +--ro local-mode        association-mode
-       |  +--ro isconfigured      boolean
-       |  +--ro stratum?          ntp-stratum
-       |  +--ro refid?            union
-       |  +--ro authentication?   leafref
-       |  +--ro prefer?           boolean
-       |  +--ro peer-interface?   if:interface-ref
-       |  +--ro minpoll?          ntp-minpoll
-       |  +--ro maxpoll?          ntp-maxpoll
-       |  +--ro port?             inet:port-number {ntp-port}?
-       |  +--ro version?          ntp-version
-       |  +--ro reach?            uint8
-       |  +--ro unreach?          uint8
-       |  +--ro poll?             uint8
-       |  +--ro now?              uint32
-       |  +--ro offset?           decimal64
-       |  +--ro delay?            decimal64
-       |  +--ro dispersion?       decimal64
-       |  +--ro originate-time?   yang:date-and-time
-       |  +--ro receive-time?     yang:date-and-time
-       |  +--ro transmit-time?    yang:date-and-time
-       |  +--ro input-time?       yang:date-and-time
-       |  +--ro ntp-statistics
-       |     +--ro packet-sent?        yang:counter32
-       |     +--ro packet-sent-fail?   yang:counter32
-       |     +--ro packet-received?    yang:counter32
-       |     +--ro packet-dropped?     yang:counter32
-       +--rw interfaces
-       |  +--rw interface* [name]
-       |     +--rw name                if:interface-ref
-       |     +--rw broadcast-server!
-       |     |  +--rw ttl?              uint8
-       |     |  +--rw authentication
-       |     |  |  +--rw (authentication-type)?
-       |     |  |     +--:(symmetric-key)
-       |     |  |        +--rw key-id?   leafref
-       |     |  +--rw minpoll?          ntp-minpoll
-       |     |  +--rw maxpoll?          ntp-maxpoll
-       |     |  +--rw port?             inet:port-number
-       |     |  |       {ntp-port}?
-       |     |  +--rw version?          ntp-version
-       |     +--rw broadcast-client!
-       |     +--rw multicast-server* [address]
-       |     |  +--rw address
-       |     |  |       rt-types:ip-multicast-group-address
-       |     |  +--rw ttl?              uint8
-       |     |  +--rw authentication
-       |     |  |  +--rw (authentication-type)?
-       |     |  |     +--:(symmetric-key)
-       |     |  |        +--rw key-id?   leafref
-       |     |  +--rw minpoll?          ntp-minpoll
-       |     |  +--rw maxpoll?          ntp-maxpoll
-       |     |  +--rw port?             inet:port-number
-       |     |  |       {ntp-port}?
-       |     |  +--rw version?          ntp-version
-       |     +--rw multicast-client* [address]
-       |     |  +--rw address
-       |     |          rt-types:ip-multicast-group-address
-       |     +--rw manycast-server* [address]
-       |     |  +--rw address
-       |     |          rt-types:ip-multicast-group-address
-       |     +--rw manycast-client* [address]
-       |        +--rw address
-       |        |       rt-types:ip-multicast-group-address
-       |        +--rw authentication
-       |        |  +--rw (authentication-type)?
-       |        |     +--:(symmetric-key)
-       |        |        +--rw key-id?   leafref
-       |        +--rw ttl?              uint8
-       |        +--rw minclock?         uint8
-       |        +--rw maxclock?         uint8
-       |        +--rw beacon?           uint8
-       |        +--rw minpoll?          ntp-minpoll
-       |        +--rw maxpoll?          ntp-maxpoll
-       |        +--rw port?             inet:port-number
-       |        |       {ntp-port}?
-       |        +--rw version?          ntp-version
-       +--ro ntp-statistics
-          +--ro packet-sent?        yang:counter32
-          +--ro packet-sent-fail?   yang:counter32
-          +--ro packet-received?    yang:counter32
-          +--ro packet-dropped?     yang:counter32
-  groupings:
-  authentication
-      +---- (authentication-type)?
-         +--:(symmetric-key)
-            +---- key-id?   leafref
-
-  statistics
-      +---- packet-sent?        yang:counter32
-      +---- packet-sent-fail?   yang:counter32
-      +---- packet-received?    yang:counter32
-      +---- packet-dropped?     yang:counter32
-
-  authentication-key
-      +---- key-id?      uint32
-      +---- algorithm?   identityref
-      +---- key?         ianach:crypt-hash
-      +---- istrusted?   boolean
-
-  association-ref
-      +---- associations-address?
-      |       -> /ntp/associations/address
-      +---- associations-local-mode?
-      |       -> /ntp/associations/local-mode
-      +---- associations-isconfigured?
-              -> /ntp/associations/isconfigured
-
-  common-attributes
-      +---- minpoll?   ntp-minpoll
-      +---- maxpoll?   ntp-maxpoll
-      +---- port?      inet:port-number {ntp-port}?
-      +---- version?   ntp-version
-
+  +--rw ntp!
+     +--rw port?                    inet:port-number {ntp-port}?
+     +--rw refclock-master!
+     |  +--rw master-stratum?   ntp-stratum
+     +--rw authentication
+     |  +--rw auth-enabled?          boolean
+     |  +--rw authentication-keys* [key-id]
+     |     +--rw key-id       uint32
+     |     +--rw algorithm?   identityref
+     |     +--rw key?         ianach:crypt-hash
+     |     +--rw istrusted?   boolean
+     +--rw access-rules
+     |  +--rw access-rule* [access-mode]
+     |     +--rw access-mode    access-mode
+     |     +--rw acl?           -> /acl:acls/acl/name
+     +--ro clock-state
+     |  +--ro system-status
+     |     +--ro clock-state                  ntp-clock-status
+     |     +--ro clock-stratum                ntp-stratum
+     |     +--ro clock-refid                  union
+     |     +--ro associations-address?
+     |     |       -> /ntp/associations/address
+     |     +--ro associations-local-mode?
+     |     |       -> /ntp/associations/local-mode
+     |     +--ro associations-isconfigured?
+     |     |       -> /ntp/associations/isconfigured
+     |     +--ro nominal-freq                 decimal64
+     |     +--ro actual-freq                  decimal64
+     |     +--ro clock-precision              uint8
+     |     +--ro clock-offset?                decimal64
+     |     +--ro root-delay?                  decimal64
+     |     +--ro root-dispersion?             decimal64
+     |     +--ro reference-time?              yang:date-and-time
+     |     +--ro sync-state                   ntp-sync-state
+     +--rw unicast-configuration* [address type]
+     |  +--rw address           inet:host
+     |  +--rw type              unicast-configuration-type
+     |  +--rw authentication
+     |  |  +--rw (authentication-type)?
+     |  |     +--:(symmetric-key)
+     |  |        +--rw key-id?   leafref
+     |  +--rw prefer?           boolean
+     |  +--rw burst?            boolean
+     |  +--rw iburst?           boolean
+     |  +--rw source?           if:interface-ref
+     |  +--rw minpoll?          ntp-minpoll
+     |  +--rw maxpoll?          ntp-maxpoll
+     |  +--rw port?             inet:port-number {ntp-port}?
+     |  +--rw version?          ntp-version
+     +--ro associations* [address local-mode isconfigured]
+     |  +--ro address           inet:host
+     |  +--ro local-mode        association-mode
+     |  +--ro isconfigured      boolean
+     |  +--ro stratum?          ntp-stratum
+     |  +--ro refid?            union
+     |  +--ro authentication?
+     |  |       -> /ntp/authentication/authentication-keys/key-id
+     |  +--ro prefer?           boolean
+     |  +--ro peer-interface?   if:interface-ref
+     |  +--ro minpoll?          ntp-minpoll
+     |  +--ro maxpoll?          ntp-maxpoll
+     |  +--ro port?             inet:port-number {ntp-port}?
+     |  +--ro version?          ntp-version
+     |  +--ro reach?            uint8
+     |  +--ro unreach?          uint8
+     |  +--ro poll?             uint8
+     |  +--ro now?              uint32
+     |  +--ro offset?           decimal64
+     |  +--ro delay?            decimal64
+     |  +--ro dispersion?       decimal64
+     |  +--ro originate-time?   yang:date-and-time
+     |  +--ro receive-time?     yang:date-and-time
+     |  +--ro transmit-time?    yang:date-and-time
+     |  +--ro input-time?       yang:date-and-time
+     |  +--ro ntp-statistics
+     |     +--ro packet-sent?        yang:counter32
+     |     +--ro packet-sent-fail?   yang:counter32
+     |     +--ro packet-received?    yang:counter32
+     |     +--ro packet-dropped?     yang:counter32
+     +--rw interfaces
+     |  +--rw interface* [name]
+     |     +--rw name                if:interface-ref
+     |     +--rw broadcast-server!
+     |     |  +--rw ttl?              uint8
+     |     |  +--rw authentication
+     |     |  |  +--rw (authentication-type)?
+     |     |  |     +--:(symmetric-key)
+     |     |  |        +--rw key-id?   leafref
+     |     |  +--rw minpoll?          ntp-minpoll
+     |     |  +--rw maxpoll?          ntp-maxpoll
+     |     |  +--rw port?             inet:port-number {ntp-port}?
+     |     |  +--rw version?          ntp-version
+     |     +--rw broadcast-client!
+     |     +--rw multicast-server* [address]
+     |     |  +--rw address
+     |     |  |       rt-types:ip-multicast-group-address
+     |     |  +--rw ttl?              uint8
+     |     |  +--rw authentication
+     |     |  |  +--rw (authentication-type)?
+     |     |  |     +--:(symmetric-key)
+     |     |  |        +--rw key-id?   leafref
+     |     |  +--rw minpoll?          ntp-minpoll
+     |     |  +--rw maxpoll?          ntp-maxpoll
+     |     |  +--rw port?             inet:port-number {ntp-port}?
+     |     |  +--rw version?          ntp-version
+     |     +--rw multicast-client* [address]
+     |     |  +--rw address    rt-types:ip-multicast-group-address
+     |     +--rw manycast-server* [address]
+     |     |  +--rw address    rt-types:ip-multicast-group-address
+     |     +--rw manycast-client* [address]
+     |        +--rw address
+     |        |       rt-types:ip-multicast-group-address
+     |        +--rw authentication
+     |        |  +--rw (authentication-type)?
+     |        |     +--:(symmetric-key)
+     |        |        +--rw key-id?   leafref
+     |        +--rw ttl?              uint8
+     |        +--rw minclock?         uint8
+     |        +--rw maxclock?         uint8
+     |        +--rw beacon?           uint8
+     |        +--rw minpoll?          ntp-minpoll
+     |        +--rw maxpoll?          ntp-maxpoll
+     |        +--rw port?             inet:port-number {ntp-port}?
+     |        +--rw version?          ntp-version
+     +--ro ntp-statistics
+        +--ro packet-sent?        yang:counter32
+        +--ro packet-sent-fail?   yang:counter32
+        +--ro packet-received?    yang:counter32
+        +--ro packet-dropped?     yang:counter32
